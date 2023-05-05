@@ -1,0 +1,15 @@
+{
+    "environment": "local",
+    "name": "QA",
+    "production": true,
+    "apiUrl": "/api",
+    "assetsHost": "https://assets-adss.caltimesqa.com/",
+    "imagesUrl": "assets/images/",
+    "productsUrl": "products/",
+   "logoUrl": "/logo.png",
+    "templateUrl": "adTemplates/",
+    "templateSample": "/sample.jpg",
+    "pageSize": 15,
+    "adminUrl": "http://adss.caltimesqa.com" ,
+    "portalUrl": ".caltimesqa.com/admin/portal"
+}

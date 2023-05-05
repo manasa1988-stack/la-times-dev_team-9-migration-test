@@ -1,0 +1,72 @@
+﻿<div class="m-0 p-0">
+    <div class="col-md-12">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h4 class="d-inline-block text-uppercase theme pb-2 b-b-4 font-weight-bold">DRAFTS</h4>
+            </div>
+            <div class="col-md-12" *ngIf="customerNumber?.length > 0">
+                <h4 class="d-inline-block text-uppercase">Account Number: {{customerNumber}}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-1" *ngIf="isAdItInReadOnlyMode">
+        <div class="col-md-12">
+            <p class="text-danger">Please note, because of scheduled system updates, your profile and orders are unable to be edited at this time. Also, newly placed orders may have a 24-48 hour delay before appearing back later or contact us at 1-800-528-4637, ext. 73445 or {{customerSupportEmail}} with any requests.</p>
+        </div>
+    </div>
+  <div ng-sticky [offSet]="0" [addClass]="'stickyMe'" class="filterbtn-warpper col-md-12 bg-white z-1 p-0 py-2 m-0 clearfix border-bottom sticky-top">
+    <!--<div ng-sticky [offSet]="0" [addClass]="" class="col-md-12 bg-white z-1 p-0 py-2 m-0 border-bottom sticky-top">-->
+    <div class="col m-0 p-0" data-spy="affix" data-offset-top="197">
+      <div class="d-inline-block selectall-checkbox">
+        <mat-checkbox class="m-2 d-block d-lg-inline text-center" type="checkbox" [checked]="selectAll" (change)="initialize($event)">
+          <span class="position-relative bottom-4 d-block d-sm-inline-block">Select All</span>
+        </mat-checkbox>
+
+      </div>
+      <div class="d-inline-block m-0 mx-md-2">
+        <button (click)="deleteSelected()" class="bg-transparent border-0 delete-btn" auto-test="deleteMulipleDrafts">
+          <i class="material-icons position-relative bottom-4 d-block d-sm-inline-block">delete</i>
+          Delete Selected
+        </button>
+      </div>
+      <div class="d-inline float-right filter-popover m-0 p-0">
+        <orderlist-filter (passFilter)="applyFilter($event)"></orderlist-filter>
+      </div>
+    </div>
+
+  </div>
+
+
+    <div class="data-table mx-4">
+        <order-header [isDraft]="'true'"></order-header>
+
+        <div *ngIf="!isDraftListReady; else orderListContent" class="my-5">
+            <mat-spinner></mat-spinner>
+        </div>
+
+        <ng-template #orderListContent class="my-5">
+            <div *ngIf="draftOrders === undefined" class="my-5">
+                <error-alert></error-alert>
+            </div>
+
+            <div *ngIf="draftOrders !== undefined">
+                <order-list [data]="draftOrders" [isDraft]="'true'" [filterApplied]="filterApplied" [checkAll]="selectAll" (passEvent)="readFrom($event)"></order-list>
+            </div>
+
+            <div class="col-md-12">
+                <div *ngIf="!loadingMore; else showSpinner">
+                    <div *ngIf="draftOrders !== undefined && draftOrders.Results.length > 0 && (draftOrders.PageNumber < draftOrders.NumberOfPages);  else showEndMessage"
+                        class="d-block text-center border-secondary text-primary pt-3">
+                        <a (click)="loadMore()" auto-test="loadMore15Drafts" mat-button class="d-block">LOAD NEXT {{pageSize}} ORDERS</a>
+                    </div>
+                    <ng-template #showEndMessage>
+                        <div *ngIf="draftOrders !== undefined && draftOrders.Results.length > 0" class="text-muted small text-uppercase d-block text-center my-3">End of result</div>
+                    </ng-template>
+                </div>
+                <ng-template #showSpinner>
+                    <mat-spinner [diameter]="60" class="my-2"></mat-spinner>
+                </ng-template>
+            </div>
+        </ng-template>
+    </div>
+</div>

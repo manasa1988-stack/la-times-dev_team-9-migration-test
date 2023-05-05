@@ -1,0 +1,83 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>ADSS APPLICATION SETTINGS - {{environmentName}}</h1>
+    </div>
+
+
+    <div class="col-md-12" *ngIf="!isDataReady; else dataReady">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <ng-template #dataReady>
+        <div class="col-md-12" *ngIf="displayError">
+            <error-alert></error-alert>
+        </div>
+        <div class="col-md-12" *ngIf="!displayError">
+            <div class="table-responsive">
+                <form [formGroup]="adminSettingsFormGroup">
+                    <table class="table adminSettings">
+                        <thead>
+                            <tr class="bg-secondary text-white">
+                                <td>
+                                    SETTINGS
+                                </td>
+                                <td>
+                                    VALUE
+                                </td>
+                                <td>
+                                    LAST UPDATED
+                                </td>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let setting of settingArray; let i = index">
+                            <td>
+                                {{setting.Key}}
+                            </td>
+                            <td>
+                                <div *ngIf="setting.Type == 'boolean'">
+                                    <mat-slide-toggle color="primary" [formControlName]="setting.Key" (change)="saveBooleanSetting(setting, i)">{{(setting.Value == 'false') ? 'OFF' : 'ON'}}</mat-slide-toggle>
+                                </div>
+                                <div *ngIf="setting.Type == 'text' && setting.Key != 'AgencyCustomerMapping'">
+                                    <div class="clearfix mb-2">
+                                        <textarea matInput matTextareaAutosize [formControlName]="setting.Key" class="form-control float-left"></textarea>
+                                        <div *ngIf="adminSettingsFormGroup.controls[setting.Key].disabled">
+                                            <button mat-icon-button class="float-left pl-1" title="Edit" (click)="adminSettingsFormGroup.controls[setting.Key].enable()">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div *ngIf="adminSettingsFormGroup.controls[setting.Key].enabled">
+                                            <button mat-icon-button class="pl-1" title="Save" (click)="saveTextFieldSetting(setting, i)">
+                                                <mat-icon>save</mat-icon>
+                                            </button>
+                                            <button mat-icon-button title="Cancel" (click)="cancelChanges(setting, i)">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <ngb-alert type="danger" [dismissible]="false" *ngIf="setting.ShowError">
+                                        <b *ngIf="!setting.NoChangesDetected">Entered value is not in correct format or is invalid. Please check: </b>
+                                        <div *ngFor="let error of errorMsg">
+                                            {{error}}
+                                        </div>
+                                    </ngb-alert>
+
+                                </div>
+                                <div *ngIf="setting.Key == 'AgencyCustomerMapping'">
+                                    <a [href]="setting.Value" target="_blank">Go to {{setting.Key}}</a>
+                                </div>
+                            </td>
+                            <td *ngIf="!setting.UpdatedJustNow;else justNowMessage">
+                                {{setting.UpdateDate | date:"MM/dd/yyyy,EE"}}
+                            </td>
+                            <ng-template #justNowMessage>
+                                <td>
+                                    Just now
+                                </td>
+                            </ng-template>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </ng-template>
+</div>

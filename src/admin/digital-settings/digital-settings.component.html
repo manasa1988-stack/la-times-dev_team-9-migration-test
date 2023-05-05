@@ -1,0 +1,47 @@
+<div class="row digital-settings">
+    <div class="col-md-12">
+        <h1>ADSS DIGITAL SETTINGS - {{environmentName}}</h1>
+    </div>
+    <div class="col-md-12">
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>DFP Target State Management</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngIf="!isStatesReady; else showGeoTemplate">
+                    <mat-spinner class="row my-5"></mat-spinner>
+                </div>
+                <ng-template #showGeoTemplate>
+                    <div *ngIf="geoTargetStates === undefined || geoTargetStates === null; else showGeoTargets">
+                        <error-alert></error-alert>
+                    </div>
+                    <ng-template #showGeoTargets>
+                        <target-states [marketSettingsListData]="marketSettingsListData" [geoTargetStates]="geoTargetStates">
+                        </target-states>
+                    </ng-template>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+    <div class="col-md-12">
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)"  class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>HTML Editor Style Management</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngIf="!isStylesReady; else showStyleTemplate">
+                    <mat-spinner class="row my-5"></mat-spinner>
+                </div>
+                <ng-template #showStyleTemplate>
+                    <div *ngIf="htmlStyles === undefined || htmlStyles === null; else showStyles">
+                        <error-alert></error-alert>
+                    </div>
+                    <ng-template #showStyles>
+                        <html-editor [marketSettingsListData]="marketSettingsListData" [htmlStyles]="htmlStyles">
+                        </html-editor>
+                    </ng-template>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

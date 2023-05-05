@@ -1,0 +1,166 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase" *ngIf="!card.Id">Add Credit Card</h4>
+  <h4 class="modal-title text-uppercase" *ngIf="card.Id">Edit Credit Card</h4>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="closeCreditCard" (click)="onClose()"
+    [disabled]="isFormDisabled">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <form [formGroup]="addCardForm" (ngSubmit)="saveCard()" novalidate>
+    <fieldset [disabled]="isFormDisabled">
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="First Name" type="text" formControlName="FirstName">
+            <mat-error *ngIf="addCardForm.controls.FirstName.hasError('required')">
+              {{cardFirstNameRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.FirstName.hasError('maxlength') && !addCardForm.controls.FirstName.hasError('required')">
+              {{firstNameMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.FirstName.hasError('invalidCharacterString') && !addCardForm.controls.FirstName.hasError('maxlength') && !addCardForm.controls.FirstName.hasError('required')">
+              {{invalidFirstNameMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6  mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Last Name" type="text" formControlName="LastName">
+            <mat-error *ngIf="addCardForm.controls.LastName.hasError('required')">
+              {{cardLastNameRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.LastName.hasError('maxlength') && !addCardForm.controls.LastName.hasError('required')">
+              {{lastNameMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.LastName.hasError('invalidCharacterString') && !addCardForm.controls.LastName.hasError('maxlength') && !addCardForm.controls.LastName.hasError('required')">
+              {{invalidLastNameMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Address" type="text" formControlName="Address1">
+            <mat-error class="mb-1" *ngIf="addCardForm.controls.Address1.hasError('required')">
+              {{addressRequiredMessage}}
+            </mat-error>
+            <mat-error class="mb-1" *ngIf="addCardForm.controls.Address1.hasError('maxlength') && !addCardForm.controls.Address1.hasError('required')">
+              {{addressMaxLengthMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-xl-6  mb-2 mt-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="City" type="text" formControlName="City">
+            <mat-error *ngIf="addCardForm.controls.City.hasError('required')">
+              {{cardCityRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.City.hasError('maxlength') && !addCardForm.controls.City.hasError('required')">
+              {{cityMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.City.hasError('invalidCharacterString') && !addCardForm.controls.City.hasError('maxlength') && !addCardForm.controls.City.hasError('required')">
+              {{invalidCityMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-xl-3 mb-2">
+          <small class="state text-muted">State</small>
+          <small class="state required-color">*</small>
+          <select placeholder="State" formControlName="State" class="custom-select-box mt-n5 rounded-0 form-control required">
+            <option value="" disabled>SELECT</option>
+            <option *ngFor="let state of states" [value]="state.Key">{{ state.Value }}</option>
+          </select>
+          <div *ngIf="addCardForm.controls.State.touched && addCardForm.controls.State.hasError('required')">
+            <small class="required-color">{{stateRequiredMessage}}</small>
+          </div>
+
+        </div>
+        <div class="col-12 col-xl-3 mb-2 mt-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Zip" formControlName="Zip">
+            <mat-error *ngIf="addCardForm.controls.Zip.hasError('required')">
+              {{cardZipcodeRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.Zip.hasError('invalidZipcode') && !addCardForm.controls.Zip.hasError('required')">
+              {{cardZipcodeInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <!--  <img src="assets/img/cc_logo-Visa.png" class="mr-2" />
+        <img src="assets/img/cc_logo-MasterCard.png" class="mr-2" />
+        <img src="assets/img/cc_logo-American Express.png" class="mr-2" />
+        <img src="assets/img/cc_logo-Discover.png" class="mr-2" />-->
+
+          <i class="fa fa-cc-visa fa-2x mr-2" [ngClass]="{'text-success' : card.Type == 1 }"></i>
+          <i class="fa fa-cc-mastercard fa-2x mr-2" [ngClass]="{'text-success' : card.Type == 2 }"></i>
+          <i class="fa fa-cc-amex fa-2x mr-2" [ngClass]="{'text-success' : card.Type == 3 }"></i>
+          <i class="fa fa-cc-discover fa-2x mr-2" [ngClass]="{'text-success' : card.Type == 4 }"></i>
+
+        </div>
+        <div class="col-12 col-xl-6 mb-2"></div>
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Card Number" formControlName="Number" [readonly]="card.Id ? 'true': 'false'"
+              maxlength="{{cardNumberMaxLength}}">
+            <mat-error *ngIf="addCardForm.controls.Number.hasError('required')">
+              {{cardNumberRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.Number.hasError('invalidCardNumber') && !addCardForm.controls.Number.hasError('required')">
+              {{cardNumberInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Code" formControlName="SecurityCode" maxlength='{{cardCodeMaxLength}}'>
+            <mat-error *ngIf="addCardForm.controls.SecurityCode.hasError('required')">
+              {{codeRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="addCardForm.controls.SecurityCode.hasError('invalidCode') && !addCardForm.controls.SecurityCode.hasError('required')">
+              {{codeInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <!-- mt-3 -->
+        <div class="col-12 col-xl-3 mb-2">
+          <small class="state text-muted">Month</small>
+          <small class="state required-color">*</small>
+          <select placeholder="ExpirationMonth" formControlName="ExpirationMonth" class="custom-select-box rounded-0 form-control required">
+            <option value="" disabled>MONTH</option>
+            <option *ngFor="let month of months" [value]="month.monthNumber">{{ month.monthName }}</option>
+          </select>
+          <div *ngIf="addCardForm.controls.ExpirationMonth.touched && addCardForm.controls.ExpirationMonth.hasError('required')">
+            <small class="required-color">{{monthRequiredMessage}}</small>
+          </div>
+        </div>
+        <div class="col-12 col-xl-3 mb-2">
+          <small class="state text-muted">Year</small>
+          <small class="state required-color">*</small>
+          <select placeholder="ExpirationMonth" formControlName="ExpirationYear" class="custom-select-box rounded-0 form-control required">
+            <option value="" disabled>YEAR</option>
+            <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+          </select>
+          <div *ngIf="addCardForm.controls.ExpirationYear.touched && addCardForm.controls.ExpirationYear.hasError('required')">
+            <small class="required-color">{{yearRequiredMessage}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!serverResponse?.IsSuccess">
+        <error-message [serverResponse]="serverResponse"></error-message>
+        <!-- Add error message component here -->
+      </div>
+      <div class="modal-footer border-0 d-flex justify-content-start pl-0">
+        <button mat-raised-button color="primary" [disabled]="isFormDisabled" auto-test="saveCreditCard" class="text-uppercase"
+          type="submit" value="Submit Form">Save</button>
+      </div>
+    </fieldset>
+  </form>
+</div>

@@ -1,0 +1,23 @@
+<mat-accordion>
+
+    <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+        <mat-expansion-panel-header class="bg-light pl-5">
+            <mat-panel-title>
+                Select Number of Impressions
+            </mat-panel-title>
+        </mat-expansion-panel-header>      
+        <div class="row">
+            <div class="col-xs-12 col-lg-7">
+                <p>
+                    Select the number of impressions you would like to purchase.
+                </p>
+                <mat-radio-group class="radio-group">
+                    <mat-radio-button *ngFor="let impression of impressions" [value]="impression.Name" [checked]="currentOrderItem.NumImpressions == impression.NumImpressions && currentOrderItem.NumDays == impression.NumDays"
+                        auto-test="selectImpression" (change)="selectImpression(impression)">
+                        {{impression.Name}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

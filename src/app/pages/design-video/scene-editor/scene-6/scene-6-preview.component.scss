@@ -1,0 +1,210 @@
+::ng-deep .--tile {
+    padding: 0 !important;
+
+}
+
+::ng-deep .tile {
+    box-shadow: none !important;
+
+}
+
+button {
+    display: none !important;
+}
+
+.ngucarouselPoint {
+    list-style-type: none;
+    text-align: center;
+    padding: 12px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: auto;
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+    left: 0;
+    box-sizing: border-box;
+}
+
+.ngucarouselPoint li {
+    display: inline-block;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    padding: 5px;
+    margin: 0 3px;
+    transition: 0.4s ease all;
+}
+.ngucarouselPoint li.active {
+    background: white;
+    width: 10px;
+}
+
+.controls {
+    display: block;
+    list-style: none;
+    text-align: center;
+
+    li {
+        display: inline;
+    }
+}
+
+::ng-deep .slider-dot {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+
+    i {
+        border: solid;
+        border-radius: 50%;
+        border-color: #db3021;
+        color: #db3021;
+        border-width: 0;
+    }
+
+    i.active {
+        color: white;
+        border-width: 2px;
+
+    }
+
+
+}
+
+::ng-deep .slide-title {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+}
+
+::ng-deep .leftRs,
+::ng-deep .rightRs {
+    display: none !important;
+}
+
+.loading-container {
+    position: relative;
+    display: flex;
+    background-color: white;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    margin: 0;
+
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+
+        p {
+            text-align: center;
+        }
+    }
+}
+
+.loading-container::after {
+    content: '';
+    float: left;
+    padding-top: 56%;
+}
+
+.preview-container {
+    display: block;
+}
+
+.beige-block {
+    position:absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: #d2cbb6;
+    z-index: 1;
+}
+
+.black-block {
+    position:absolute;
+    left: 785px;
+    top: 0;
+    bottom: 0;
+    right: 40px;
+    background: #272624;
+    z-index: 2;
+}
+
+.red-block {
+    position:absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 560px;
+    background: #ff0954;
+    z-index: 2;
+}
+
+
+.image-block {
+    position:absolute;
+    left: 140px;
+    top: 140px;
+    width: 550px;
+    height: 420px;
+    z-index: 3;
+    background-color: black;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.text-block {
+    position:absolute;
+    left: 814px;
+    top: 50%;
+    z-index: 4;
+    padding: 0;
+    transform: translateY(-50%);
+
+    .text {
+        font-size: 29px;
+        line-height: 40px;
+        max-height: 520px;
+        max-width: 352px;
+        overflow: hidden;
+        color: #fbf8f9;
+        font-family: FrankRuhlLibre-Medium;
+        margin-bottom: 15px;
+        text-align: left;
+    }
+
+    .text-decoration {
+        width: 200px;
+        border-bottom: solid;
+        border-bottom-color: #ff0041;
+        border-bottom-width: 7px;
+    }
+}
+
+.caption-block {
+    position:absolute;
+    background: #fff;
+    z-index: 4;
+    top: 525px;
+
+    padding: 12px;
+    max-width: 190px;
+    box-shadow: 12px 10px 0px 0px rgba(0,0,0,1);
+    font-size: 20px;
+    line-height: 23px;
+    color: #000;
+    font-family: 'FiraSans-Medium';
+    text-align: left;
+}
+
+.left {
+    left: 70px;
+    right: auto;
+}
+
+.right {
+    left: auto;
+    right: 470px;
+}

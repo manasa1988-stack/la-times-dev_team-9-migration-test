@@ -1,0 +1,236 @@
+<div class="row py-3 layout-Servicesdd" *ngIf="layoutData">
+    <div class="col-12 col-md-6 col-lg-4 mb-3" *ngIf="currentOrderItem?.ClassCodeGroup?.ClassCodes?.length > 1">
+        <h4 class="mb-2 required">{{currentOrderItem?.ClassCodeGroup?.ClassCodeHeaderName}}</h4>
+        <select auto-test="selectCategoryOption" class="form-control" [formControl]="categoryOption" (change)="onSelectCategory($event.target.value)">
+            <option value="" selected></option>
+            <option *ngFor="let classCode of currentOrderItem?.ClassCodeGroup?.ClassCodes" auto-test="selectCategory" [value]="classCode.Value">{{classCode.Description}}</option>
+        </select>
+        <small class="required-color" *ngIf="categoryOption.touched && (!currentOrderItem?.ClassCodeValue || currentOrderItem?.ClassCodeValue?.length == 0)">
+            This field is required.
+        </small>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 mb-3" *ngIf="currentOrderItem.TypeId == orderItemTypes['PrintDisplayOrderItem'] && currentOrderItem?.Position?.HasHeaders">
+        <h4 class="mb-2">Select a Category</h4>
+        <select auto-test="selectPositionHeaderOption" class="form-control" [formControl]="positionHeaderFormControl" (change)="onSelectPositionHeader($event.target.value)">
+            <!-- <option value="" disabled selected>Select Option</option> -->
+            <option *ngFor="let header of currentOrderItem.Position.Headers" auto-test="selectPositionHeader" [value]="header.Id">{{header.Name}}</option>
+        </select>
+        <small class="required-color" *ngIf="positionHeaderFormControl.touched && (!currentOrderItem?.PositionHeaderId || currentOrderItem?.PositionHeaderId?.length == 0)">
+            This field is required.
+        </small>
+    </div>
+
+    <div class="col-12 col-md-12 " [hidden]="layoutData?.ApiapplicableAdSize?.length < 2 " *ngIf="!currentOrderItem?.IsDfpOrderItem">
+        <ad-size [order]="order " [currentOrderItem]="currentOrderItem" [adSizeList]="layoutData?.ApiapplicableAdSize" (passEvent)="onNotify($event) "></ad-size>
+        <!-- <mat-accordion>
+            <mat-expansion-panel [expanded]="true " class="custom-panel mb-4 border ">
+                <mat-expansion-panel-header class="bg-light pl-5 ">
+                    <mat-panel-title>
+                        Select ad size
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="row col-12 col-md-12 ">
+                    <carousel class="slider-wrapper selectad-size " [order]="order " [currentOrderItem]="currentOrderItem
+                " [itemsList]="adSizeList " [type]=" 'layout' " (passEvent)="onNotify($event) "></carousel>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion> -->
+    </div>
+
+    <div class="col-12 col-md-12 " *ngIf="layoutData?.ShowColorOption ">
+        <div class="card mb-4 ">
+            <div class="card-header font-weight-bold ">
+                <div class="float-left pl-1 ">
+                    <b>Choose: Color or Black & White</b>
+                </div>
+            </div>
+            <div class="card-body ">
+                <div class="row ">
+                    <div class="col-12 col-md-12 ">
+                        <mat-radio-group [formControl]="selectedColor" auto-test="changeColor" (change)="onChangeColor() ">
+                            <mat-radio-button value="true" class="mr-3" [checked]="selectedColor.value">Color</mat-radio-button>
+                            <mat-radio-button value="false" [checked]="!selectedColor.value">Black and White</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-12" *ngIf="currentOrderItem?.TypeId==orderItemTypes['OnlineDisplayOrderItem']">
+        <div class="card mb-4 rounded-0 ">
+            <div class="card-header font-weight-bold ">
+                <div class="float-left pl-1 ">Click-Through URL for Ad</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        Please enter a complete URL (e.g. http://www.address.com) and click "Test Link " to verify that the link resolves to the
+                        correct page.
+                        <form [formGroup]="clickThroughURLForm">
+                            <mat-form-field class="w-100 required mt-2 ">
+                                <input matInput placeholder="Click Through Url" type="text" formControlName="Url" (focusout)="urlChanged($event)">
+                                <mat-error *ngIf="clickThroughURLForm?.controls?.Url.hasError('required')" class="mb-2 ">
+                                    {{clickThroughUrlRequiredMessage}}
+                                </mat-error>
+                                <mat-error *ngIf="!clickThroughURLForm?.controls?.Url.hasError('required') && clickThroughURLForm?.controls?.Url.hasError('invalid')"
+                                    class="mb-2 ">
+                                    {{clickThroughUrlInvalid}}
+                                </mat-error>
+                            </mat-form-field>
+                        </form>
+                        <a class="help-icon" (click)="openUrl()">
+                            <u>Test Link</u>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-12 designad-material-panel " *ngIf="layoutData?.ApiapplicableAdSize?.length> 0">
+        <div class="card rounded-0">
+            <div class="card-header font-weight-bold">
+                <div class="float-left pl-1">
+                    <b>{{layoutData?.AdMaterialStepText}}</b>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row" *ngIf="!currentOrderItem?.HasAdMaterialDefined; else materialTemplate">
+                    <div class="col-12 col-md-12 mb-2">
+                        Choose one of our customizable template(s)
+                        <span *ngIf="!layoutData?.IsDesignAdOnly"> or upload your own design to continue</span>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 pr-md-0" [ngClass]="!layoutData?.IsDesignAdOnly ? 'col-md-7' : 'col-md-12'">
+                                <div class="row">
+                                    <div class="col-7 col-sm-3 col-md-4 col-lg-3" [ngClass]="!layoutData?.IsDesignAdOnly ? 'col-lg-3' : 'col-lg-2'">
+                                        <h5 class="text-uppercase pb-2 d-inline-block">
+                                            <i class="material-icons icon-title">view_carousel</i>
+                                            <span>Template(s)</span>
+                                        </h5>
+                                    </div>
+                                    <div class="col-12 col-md-12" *ngIf="templates?.length > 0; else NoTemplateMessage">
+                                        <carousel class="slider-wrapper designad-img" [ngClass]="layoutData?.IsDesignAdOnly ? '' : 'designad-plus-upload'" [order]="order"
+                                            [currentOrderItem]="currentOrderItem" [itemsList]="templates" [type]="'template'"
+                                            [isColor]="currentOrderItem?.IsColor" [IsDesignAdOnly]="layoutData?.IsDesignAdOnly"
+                                            [imageWidth]="selectedAdSize.AdSize.WidthInPixels < 100 ? selectedAdSize.AdSize.WidthInPixels : '100'"
+                                            (passEvent)="onNotify($event)"></carousel>
+                                    </div>
+                                    <ng-template #NoTemplateMessage>
+                                        <div class="col-12 col-md-12">
+                                            <p>No templates available</p>
+                                        </div>
+                                    </ng-template>
+
+                                </div>
+                            </div>
+                            <div class="col-md-1 d-none d-md-block border-left px-md-0" *ngIf="!layoutData?.IsDesignAdOnly"></div>
+                            <div class="col-12 col-sm-12 col-md-4 pl-md-0" *ngIf="!layoutData?.IsDesignAdOnly">
+                                <div class="row">
+                                    <div class="col-7 col-sm-4 col-md-9 col-lg-6 mb-2">
+                                        <h5 class="text-uppercase pb-2 d-inline-block">
+                                            <mat-icon class="icon-title">file_upload</mat-icon>
+                                            <span>Upload Material</span>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-12 col-sm-5 col-md-12 col-lg-8 btn-file mb-2">
+                                        <button class="w-100" title="Upload Image" mat-raised-button color="primary" auto-test="uploadImage" (click)="openImageEditorModal()">
+                                            <mat-icon>file_upload</mat-icon>
+                                            UPLOAD MATERIAL
+                                        </button>
+                                    </div>
+                                    <div class="col-md-12 col-12">
+                                        <p class="mb-0 text-muted">
+                                            <b>File types:</b> {{selectedAdSize?.FileTypesPermittedForUploadedAdForDisplay}}</p>
+                                    </div>
+                                    <div class="col-md-12 col-12">
+                                        <p class="mb-0 text-muted">
+                                            <b>Max. file size:</b> {{selectedAdSize?.MaxFileSizeForUploadedAd}}</p>
+                                    </div>
+                                    <div class="col-md-12 col-12">
+                                        <p class="mb-0 text-muted" *ngIf="currentOrderItem.TypeId == orderItemTypes['OnlineDisplayOrderItem'];else otherOrders">
+                                            <b>Photo size:</b> {{selectedAdSize?.AdSize?.WidthInPixels}} pixels x {{selectedAdSize?.AdSize?.HeightInPixels}}
+                                            pixels
+                                        </p>
+                                        <ng-template #otherOrders>
+                                            <p class="mb-0 text-muted">
+                                                <b>Photo size:</b> {{selectedAdSize?.AdSize?.WidthInInches.toFixed(2)}} inches
+                                                x {{selectedAdSize?.AdSize?.HeightInInches.toFixed(2)}} inches
+                                            </p>
+                                        </ng-template>
+                                    </div>
+                                    <div class="col-md-12 col-12">
+                                        <p class="mb-0 text-muted">
+                                            <b>Max. DPI:</b> {{selectedAdSize?.MaximumDPI}}</p>
+                                    </div>
+                                    <div class="col-md-12 col-12 mt-2" *ngIf="currentOrderItem?.TypeId == orderItemTypes['PrintDisplayOrderItem']">
+                                        <a class="text-left text-primary help-icon" (click)="openGuidelinesComponent()">
+                                            View ad creation guidelines »
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <ng-template #materialTemplate>
+                    <div class="col-12 col-md-12">
+                        Proofread or update Material
+                    </div>
+                    <div class="col-12 col-md-8 py-3">
+                        <div class="text-left button-row">
+                            <button title="Preview" mat-mini-fab color="primary" auto-test="preview" (click)="preview()">
+                                <mat-icon>zoom_in</mat-icon>
+                            </button>
+                            <button *ngIf="currentOrderItem?.HasUploadedAd" title="Crop Material" mat-mini-fab color="primary" auto-test="crop" (click)="openImageEditorModal('editUploadedImage')">
+                                <mat-icon>crop</mat-icon>
+                            </button>
+                            <button *ngIf="currentOrderItem?.HasUploadedAd" title="Upload New Material" mat-mini-fab color="primary" auto-test="new"
+                                (click)="openImageEditorModal()">
+                                <mat-icon>fiber_new</mat-icon>
+                            </button>
+                            <button *ngIf="currentOrderItem?.HasDesignedAd" title="Edit your template" mat-mini-fab color="primary" auto-test="viewCarousel"
+                                (click)="openDesignMaterial({routerLink: '/drafts/'+order?.AdSSId +'/' + currentOrderItem?.Id +'/design-ad', queryParams: { noTemplateChange: false, adSizeId: currentOrderItem?.AdSizeId, templateCode: currentOrderItem?.AdMaterial[0]?.AdTemplateCode, adMaterialId: currentOrderItem?.AdMaterial[0]?.Id, externalMaterialId: currentOrderItem?.AdMaterial[0]?.ExternalId, isColor: currentOrderItem?.IsColor, sectionId: currentOrderItem?.SectionId,selectedRunDate:currentOrderItem?.RunDates, positionId: currentOrderItem?.PositionId, packageCode: order?.PackageCode, buCode: currentOrderItem?.Section?.Product?.BusinessUnit?.Code, isEditing: true}})">
+
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button title="Start over" mat-mini-fab color="primary" auto-test="startOver" (click)="startOver()">
+                                <mat-icon>undo</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-12 mb-2" [ngClass]="{'bg-secondary' : !isWhite, 'bg-white': isWhite}">
+                        <div class="py-4 pl-3">
+                            <img [src]="currentOrderItem?.AdMaterialUrl" class="img-fluid preview-img">
+
+                        </div>
+                        <div class="fab-buttons text-right bg-toggle-btn">
+                            <button title="Preview ad on a dark background. Background will not display in final ad." class="border-0 bg-transparent"
+                                auto-test="toggle" (click)="isWhite = !isWhite">
+                                <i class="material-icons">format_color_fill</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-12 " *ngIf="IsWarningMessageShown">
+                        <p class="text-warning">
+                            <span>
+                                <b>Warning: </b>Ad material is smaller than the recommended size and may not reproduce well
+                                in print (web if online ad). We recommend uploading a larger file for the best results. To
+                                continue with this material, choose Review and Submit, below.</span>
+                        </p>
+                    </div>
+                    <div class="col-md-12 col-12" *ngIf="layoutData?.IsPrepopulated">
+                        <p>
+                            <span>Ad material copied from previous configured product</span>
+                        </p>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

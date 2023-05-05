@@ -1,0 +1,269 @@
+.--scene-card {
+    width: 12.125rem;
+    margin: 0.5rem;
+    display: inline-flex;
+}
+
+
+.card-body {
+    position: relative;
+}
+
+.scene-container {
+    display: flex;
+}
+
+.control {
+    width: 3.5rem;
+}
+
+.content {
+    display: flex;
+    flex-grow: 3;
+    overflow: hidden;
+}
+
+.roll {
+    /* overflow-x: scroll; */
+    white-space: nowrap;
+
+    /* .container */
+}
+
+.card-body::after {
+    content: '';
+    float: left;
+    padding-top: 60%;
+}
+
+.card-body-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.--flex-inline {
+    display: inline-flex;
+}
+
+.card-footer {
+    text-align: center;
+    white-space: normal;
+    position: relative;
+
+    .card-icon {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+    }
+
+    .green {
+        color: green;
+    }
+
+    .red {
+        color: red;
+    }
+}
+
+.scene-selected {
+    border-color: #2196f3;
+    background-color: rgba(33,150,243,0.15);
+}
+
+::ng-deep {
+  .button-reorder {
+    right: 15px;
+    top: -45px;
+  }
+}
+
+::ng-depp .card {
+    border-width: 0.125rem;
+}
+
+::ng-deep .card-footer {
+    border: none;
+    background-color: transparent;
+}
+
+.slick-list {
+  flex: 1;
+}
+
+::ng-deep .slick-list {
+  flex: 1;
+  .card-footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+::ng-deep .slick-track {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+img {
+    width: 100%;
+}
+
+.blockrow {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+
+.block {
+    display: inline-block;
+    border: solid;
+    width: 250px;
+    height: 50px;
+}
+
+
+
+.cahgne-list-btn {
+    margin: 15px;
+    padding: 8px 16px;
+}
+
+.list-with-scroll {
+    display: flex;
+    margin: 5px;
+    scroll-behavior: smooth;
+}
+
+.list {
+    flex-grow: 1;
+    display: flex;
+    overflow-x: scroll;
+}
+
+.list::-webkit-scrollbar {
+    display: none;
+}
+
+::ng-deep .scroll-button,
+::ng-deep .scroll-button:hover {
+    position: relative;
+    min-width: 25px;
+    font-size: 28px;
+    box-shadow: none;
+    border: none;
+    display: inline-flex;
+    border-radius: 3px;
+    transition: color .3s;
+    color: rgb(197, 48, 48);
+    &.slick-disabled {
+      color: #afafaf;
+    }
+}
+
+::ng-deep .scroll-button > i {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
+.disable,
+.disable:hover {
+    /* background-color: rgba(0, 0, 0, 0.12);*/
+    color: rgba(0, 0, 0, 0.26);
+    border: none;
+}
+
+#scroll-left {
+    order: -1; /* To pevent ExpressionChangedAfterItHasBeenCheckedError */
+}
+
+
+.new-card {
+    padding: 0.5rem;
+}
+
+.new-card-frame {
+    width: 100%;
+    height: 100%;
+    background: #e4e4e4;
+    border: dashed;
+    border-width: 1px;
+    border-color: #a7a7a7;
+    border-radius: 4px;
+}
+
+.new-card-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@media screen and (min-width: 576px){
+    .--scene-card {
+        width: 15.125rem;
+    }
+
+    ::ng-deep .scroll-button,
+    ::ng-deep .scroll-button:hover {
+        min-width: 50px;
+    }
+}
+
+.smooth-scroll {
+    display: flex;
+}
+
+.roll {
+    overflow: hidden;
+    width: 100%;
+    display: inline-flex;
+}
+
+.film {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-left: 25px;
+    transition: transform 0.25s ease-in;
+}
+
+::ng-deep #adss > main > app-root > div > div > div > div > design-video > div > div > div > scene-selector > mat-slider > div > div.mat-slider-thumb-container > div.mat-slider-thumb {
+    width: 50px;
+    border-radius: 10px;
+}
+
+
+::ng-deep mat-slider > div > div.mat-slider-thumb-container > div.mat-slider-thumb {
+    width: 30px;
+    border-radius: 10px;
+}
+
+.scroll-frame {
+    margin: 0.5rem;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.devices {
+    display: inline-flex;
+}
+
+.desktop {
+    display: none;
+}
+
+@media screen and (min-width: 576px) {
+    .devices {
+        display: none;
+    }
+
+    .desktop {
+        display: inline-flex;
+    }
+}

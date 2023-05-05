@@ -1,0 +1,55 @@
+<div *ngIf="!isDataReady; else dataReady">
+  <mat-spinner></mat-spinner>
+</div>
+<ng-template #dataReady>
+  <div *ngIf="userDetails === undefined; else showAccountInfo">
+    <error-alert></error-alert>
+  </div>
+  <ng-template #showAccountInfo>
+    <div class="float-right">
+      <button mat-icon-button *ngIf="!isReadOnly" (click)="openAccountInfoComponent()" title="Edit" auto-test="editAccount">
+        <mat-icon>mode_edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="openChangePasswordComponent()" title="Change Password" auto-test="editChangePassword">
+        <mat-icon>lock</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="isDataReady">
+      <h4 class="font-weight-normal mt-1 mb-1">
+        {{userDetails?.CustomerName}}
+      </h4>
+      <p class="mb-1" *ngIf="userDetails?.IsBusinessUser && userDetails?.BusinessName">
+        <mat-icon class="float-left mr-2">
+          business_center
+        </mat-icon>
+        {{userDetails?.BusinessName}}
+      </p>
+      <p class="mb-1" *ngIf="userDetails?.IsBusinessUser && userDetails?.BusinessType?.SubcategoryName">
+        {{userDetails?.BusinessType.SubcategoryName}}
+      </p>
+      
+      <p class="mb-1">
+        <span class="d-inline-block">
+        <mat-icon class=" mr-2 align-middle">
+          account_circle
+        </mat-icon>
+        <strong>{{userDetails?.SsorEmail}}</strong>
+      </span>
+        <span class="ml-2 d-inline-block" *ngIf="userDetails?.AditEmail && userDetails?.AditEmail != userDetails?.SsorEmail">
+          <mat-icon class="mr-2 align-middle">
+            email
+          </mat-icon> {{userDetails?.AditEmail}}
+        </span>
+      </p>
+      <p class="mb-1">
+        {{userDetails?.Address?.Address1}} {{userDetails?.Address?.Address2}}
+      </p>
+
+      <p class="mb-1">
+        <span *ngIf="userDetails?.Address?.City">{{userDetails?.Address?.City}}</span>
+        <span *ngIf="userDetails?.Address?.State">, {{userDetails?.Address?.State}} </span>
+        <span>{{userDetails?.Address?.Zip}}</span>
+      </p>
+    </div>
+  </ng-template>
+</ng-template>

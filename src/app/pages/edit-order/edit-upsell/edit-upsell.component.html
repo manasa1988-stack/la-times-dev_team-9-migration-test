@@ -1,0 +1,40 @@
+<div class="bg-primary text-white text-uppercase pl-3 pt-3 pb-1">
+    <p class="text-uppercase text-white">{{attribute?.DisplayName}}</p>
+</div>
+<div class="card rounded-0">
+    <div class="row card-body edit-upsell">
+
+        <div class="image-list-item col-12 col-sm-6 col-md-3 mb-4" *ngFor="let upsellImage of upsellImageList;let photoIndex = index">
+            <div class="border text-center pb-2">
+                <div *ngIf="upsellImage && upsellImage != 'blank'; else defaultPhoto" class="row pt-2">
+                    <div class="col-12 col-md-12">
+                        <button mat-icon-button auto-test="cropImage" (click)="openImageEditor(photoIndex, 'original')">
+                            <mat-icon>crop</mat-icon>
+                        </button>
+                        <button mat-icon-button auto-test="deletePhoto" (click)="deletePhoto( photoIndex)">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-12 col-md-12">
+                        <div class="img-wrapper">
+                            <img [src]="upsellImage" class="placeholder-img pt-2" />
+                        </div>
+                    </div>
+                </div>
+                <ng-template #defaultPhoto>
+                    <div class="pt-5">
+                        <img [src]="'wwwroot/assets/img/photo.jpg'" class="placeholder-img pt-2" />
+                    </div>
+                </ng-template>
+                <div class="btn-file py-3 col-10 col-sm-8 col-md-12">
+                    <input [formControl]="photoInput" title="Upload Image" class="help-icon" type="file" (change)="fileUpload($event, photoIndex)"
+                    />
+                    <button title="Upload Image" mat-raised-button color="primary" auto-test="uploadImage">
+                        Select an Image
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="isErrorMessageShown" class="text-danger col-12 col-md-12">{{errorMessage}}</div>
+    </div>
+</div>

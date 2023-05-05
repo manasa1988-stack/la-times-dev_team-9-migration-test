@@ -1,0 +1,25 @@
+﻿<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase">Preview Ad-Material</h4>
+
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="closePreview" (click)="activeModal.close()">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="bg-warning p-2">
+      {{ heading }}
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mat-slider [min]="min" [max]="max" [step]="step" [value]="height" (input)="changeInHeight($event.value)"></mat-slider>
+    </div>
+    <div class="col-md-12 text-center" [style.font-size.px]="height" *ngIf="isDesignAdMaterialPreview; else materialPreview">
+      <img id="target" alt="" [src]="imageUrl"  [style.width]="imgWidth" class="preview-img" style="display: block; height: auto; max-width: 100%;margin: 0 auto;">
+    </div>
+    <ng-template #materialPreview>
+      <div class="col-md-12 text-center"> 
+        <img id="target" alt="" [src]="imageUrl" [style.width]="height+'px'" class="preview-img" style="display: block;height: auto;max-width: 100%;margin: 0 auto;">
+      </div>
+    </ng-template>
+  </div>
+</div>

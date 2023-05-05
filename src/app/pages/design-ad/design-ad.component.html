@@ -1,0 +1,464 @@
+<div class="row">
+  <div class="col-md-12">
+    <h4 *ngIf="isEditingDesignOnlyAd(); else showDesignMaterialHeading" class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold">Edit
+      Your Material</h4>
+    <ng-template #showDesignMaterialHeading>
+      <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold">Design Your Material</h4>
+    </ng-template>
+    <button mat-icon-button type="button" class="p-0 m-0 close" (click)="onClose()" aria-label="Close" auto-test="close"
+      *ngIf="!isFromAdit">
+      <mat-icon aria-label="Close">close</mat-icon>
+    </button>   
+
+    <a *ngIf="isFromAdit" class="p-0 m-0 design-link-btn float-right font-weight-bold" [routerLink]="['/system/adit/'+adssId +'/upload-doc']"
+      [queryParams]="{ adSizeId: adSizeId, isColor: isColor, externalMaterialId: externalMaterialId, sectionId: sectionId, positionId: (positionID != null ?  positionID : ''), isEditing: isEditing, packageCode: packageCode}">
+      UPLOAD A WORD DOCUMENT
+      <mat-icon>chevron_right</mat-icon>
+    </a>
+  </div>
+</div>
+
+<div *ngIf="isFromAdit" class="row mt-4 mb-1 mx-0">
+  <div class="col-md-12 pl-1 text-uppercase">
+    ORDER NUMBER: {{adssId}}
+  </div>
+  <mat-divider></mat-divider>
+</div>
+
+
+<div class="designmaterial-wrapper border border-light pb-4 px-0 px-sm-3" [ngClass]="marketNotAvailable == true ? 'without-market' : ''"
+  *ngIf="isComponentReady">
+  <div class="row">
+    <div class="col-md-12 my-4 slider-wrapper designad-img">
+      <ngu-carousel #templateCarousel [inputs]="designAdCarousel" class="slide-ad border-bottom border-light pb-3">
+        <ngu-tile NguCarouselItem *ngFor="let item of templates; let i = index;">
+          <div class="wBg" [ngClass]="item.Code == templateCode ? 'active-ad-tile' : ''">
+            <div (click)="selectTemplate(item)" class="sliderimg-wrapper">
+              <a [routerLink]="isFromAdit ? ['/system/adit/'+ adssId +'/design-ad'] : ['/drafts/'+ adssId +'/' + currentOrderItemId +'/design-ad']"
+                [queryParams]="{ adSizeId: adSizeId,  templateCode: item.Code, pid: templateCode, adMaterialId: adMaterialId, 
+                                externalMaterialId: externalMaterialId, isColor: isColor, sectionId: sectionId, 
+                                positionId: positionID, selectedPubDate: PubDatesCsv, packageCode: packageCode, buCode: buCode, 
+                                isEditing: isEditing, CustomerNumber: customerNumber, 
+                                aditId: aditId, noTemplateChange: noTemplateChange}">
+                <img class="tile border cursor-pointer img-fluid" [src]="templateUrl + item.Code + templateSample" [style.max-width]="item.WidthInPixels < 125 ?  item.WidthInPixels + 'px' : '125px'">
+              </a>
+              <p *ngIf="item.Name != ''" class="text-center img-dimensions small">{{item.Name}}</p>
+            </div>
+          </div>
+        </ngu-tile>
+        <button NguCarouselPrev class="leftRs">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button NguCarouselNext class="rightRs">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </ngu-carousel>
+    </div>
+    <div class="col-md-12 text-danger" *ngIf="showLinesexceededMsg">
+      You have exceeded the maximum number of lines ({{adTemplate?.MaxLines}}) permitted for this template.
+    </div>
+
+  </div>
+  <div *ngIf="!showError">
+    <!--    position-relative-->
+
+    <!-- stickyMe z-200 h-100 - materialbtn-wrapper m-0 p-0 sticky-top col-md-5 order-md-2 -->
+    <div ng-sticky [offSet]="0" [addClass]="'stickyMe'" class="materialbtn-wrapper sticky-top float-md-right">
+      <div data-spy="affix" data-offset-top="197">
+        <!--  <div ng-sticky [offSet]="0" [addClass]="'stickyMe bg-border'" class="sticky-top m-0 clearfix cartbtn-warpper pb-2 mt-3 mt-md-0 ">
+            <div data-spy="affix" data-offset-top="197"> -->
+
+        <div class="col-md-12 p-0">
+          <div class="summary-popover text-center m-0 p-0">
+            <div class="">
+              <button mat-raised-button color="accent" auto-test="materialPreview" class="bg-light text-dark text-uppercase rounded-0 border border-info w-100"
+                placement="bottom" [ngbPopover]="materialPreviewContent" (click)="popOverClicked()" #popOver="ngbPopover">
+                <div class="d-inline-block">
+                  <i class="material-icons align-middle">{{isPreviewOpen ? "arrow_drop_down" : "arrow_drop_up"}}</i>
+                  <span>Material Preview</span>
+                </div>
+              </button>
+            </div>
+
+            <ng-template #materialPreviewContent class="border border-info w-100">
+              <ul class="bg-primary text-white list-group text-uppercase font-14 clearfix p-2" *ngIf="isFromAdit; else fromAdss">
+                <li *ngIf="showLines" class="list-group-item text-center bg-transparent pr-1 border-left-0  border-right-0">Lines :
+                  {{designAdPreview?.NumberOfLine}}</li>
+                <li class="list-group-item text-center bg-transparent pr-1 border-left-0  border-right-0">Gross :
+                  {{designAdPreview?.OrderPrice}}</li>
+                <li class="list-group-item text-center bg-transparent pr-1 border-left-0  border-right-0">Commission :
+                  {{designAdPreview?.Commission}}</li>
+                <li class="list-group-item text-center bg-transparent pr-1 border-left-0  border-right-0">Total :
+                  {{designAdPreview?.NetPrice}}</li>
+              </ul>
+              <ng-template #fromAdss>
+                <div class="bg-primary text-white text-uppercase font-14 clearfix p-2">
+                  <div *ngIf="showLines" class="float-left pl-1">Lines :
+                    {{designAdPreview?.NumberOfLine}}</div>
+                  <div class="float-right text-right pr-1">Price : {{designAdPreview?.OrderPrice}}</div>
+                </div>
+              </ng-template>
+              <div class="d-flex action-btn justify-content-center my-2">
+
+                <button mat-mini-fab class="mr-1" color="primary" placement="bottom" ngbTooltip="Refresh with copy you have entered on the left"
+                  (click)="getPreview()" auto-test="getPreview">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+                <button mat-mini-fab color="primary" ngbTooltip="Preview at full resolution" placement="bottom"
+                  auto-test="zoomIn" (click)="openMaterialPreview()">
+                  <mat-icon>zoom_in</mat-icon>
+                </button>
+              </div>
+
+              <div class="row m-0 mb-1 ml-1 p-3" [ngClass]="{'bg-secondary' : !isWhite, 'bg-white': isWhite}" *ngIf="!fetchingPreview, else showFetchingPreview">
+                <div class="d-block text-right w-100 mb-2">
+                  <button title="Preview ad on a dark background. Background will not display in final ad." class="border-0 bg-transparent"
+                    auto-test="toggle" (click)="isWhite = !isWhite">
+                    <i class="material-icons">format_color_fill</i>
+                  </button>
+                </div>
+                <div class="alert alert-danger w-100" *ngIf="errorMesgsFromPreviewAPI?.length > 0">
+                  Error(s) encountered while generating preview.
+                </div>
+                <div class="col-12 text-center mb-2">
+                  <img #previewImg [src]="designAdPreview?.ImageUrlX2" class="img-fluid">
+                </div>
+
+                <div class="col-12 text-center mt-1">
+                  <p>
+                    {{previewMsg}}
+                  </p>
+                </div>
+              </div>
+              <ng-template #showFetchingPreview>
+                <div class="p-3">
+                  <mat-spinner [diameter]="60"></mat-spinner>
+                </div>
+              </ng-template>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row m-0 py-3 designmaterial-form">
+      <div class="col-md-12 m-0 p-0 order-md-1">
+        <div class="text-uppercase  mb-4" *ngIf="designAdMaterial?.IsObit || documentAdMaterial?.IsObit">
+          <a class="text-left text-primary help-icon" (click)="openFormattingGuidelines()">
+            <u>Recommended Formatting Guidelines »</u>
+          </a>
+        </div>
+
+        <div *ngIf="isFormReady">
+          <div class="design-admaterial ">
+            <form [formGroup]="designAdForm" novalidate>
+              <fieldset>
+                <div *ngFor="let dataFieldGroup of dataFieldGroups">
+                  <div class="row">
+                    <div class="col-md-10 col-lg-12">
+                      <h3 class="font-weight-bold">{{dataFieldGroup.Name}}</h3>
+                    </div>
+                  </div>
+
+                  <div [ngClass]="{'showThree' :attribute.NumOfColumn == 4,'showFour' :attribute.NumOfColumn == 3, 'showTwo' :(attribute.NumOfColumn == 6 || attribute.NumOfColumn == 5) , 'showOne' : (attribute.NumOfColumn == 12 || !attribute.NumOfColumn)}" *ngFor="let attribute of dataFieldGroup.Fields">
+                    <div class="mb-4" *ngIf="attribute.IsHtmlEditorRequired && (designAdMaterial?.UseRichTextEditor || documentAdMaterial?.UseRichTextEditor); else htmlNotRequired">
+                      <div class="row ml-0 mr-0 mb-3">
+                        <div class="col-md-4 col-lg-6 col-sm-6 col-12 text-muted">
+                          <small class="lbl-txt"> {{attribute.Name}}</small>
+                          <small class="required-color" *ngIf="attribute.IsRequired">*</small>
+                        </div>
+
+                        <div class="col-md-12 col-lg-6 col-sm-6 col-12" [ngClass]="IsSmallScreen() || IsMediumScreen() ? '' : 'text-right'">
+                          Insert
+                          <a class="symbols" title="Heart" (click)="insertSymbol('heart', attribute)">
+                            <i class="fa fa-heart" aria-hidden="true"></i>
+                          </a>
+                          <a class="symbols" title="Star" (click)="insertSymbol('star', attribute)">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                          </a>
+                          <a class="symbols" title="Diamond" (click)="insertSymbol('diamond', attribute)">
+                            <span class="diamond_icon">♦</span>
+                          </a>
+                          <a class="symbols" title="Bullet" (click)="insertSymbol('circle', attribute)">
+                            <i class="fa fa-circle" aria-hidden="true"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-md-10 col-lg-12 mb-3">
+                        <quill-editor [formControlName]="attribute.InDesignTagName" [options]="editorConfig" (focus)="focused(attribute)" (focusout)="dataChanged(attribute.InDesignTagName)"></quill-editor>
+                        <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                          <small>This field is required.</small>
+                        </mat-error>
+                        <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                          <small>{{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}</small>
+                        </mat-error>
+                        <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                          <small>{{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}</small>
+                        </mat-error>
+                      </div>
+                    </div>
+                    <ng-template #htmlNotRequired>
+
+                      <div class="col-md-10 col-lg-12" *ngIf="attribute.ElementType == fieldTypes['WebId'] && (designAdMaterial?.UseWebId || documentAdMaterial?.UseWebId)">
+
+                        <mat-form-field class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                          <input matInput placeholder="{{attribute.Name ? attribute.Name : attribute.InDesignTagName}}" [maxLength]="attribute.MaxLength > 0 ? attribute.MaxLength : 50000"
+                            type="text" [formControlName]="attribute.InDesignTagName" readonly>
+
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-md-10 col-lg-12 pb-2" *ngIf="attribute.ElementType == fieldTypes['DropDownList'] && (attribute.Class == 'month' || attribute.Class == 'year' || attribute.Class == 'day'); else others">
+                        <label class="custom-label-select mb-0 required" [ngClass]="{'required' : attribute.IsRequired == true }"
+                          *ngIf="designAdForm.controls[attribute.InDesignTagName].value && designAdForm.controls[attribute.InDesignTagName].value.length > 0">
+                          {{attribute.Name}}
+                        </label>
+                        <select [ngClass]="{'required' : attribute.IsRequired == true }" class="custom-select-box mw-100 rounded-0 form-control"
+                          [formControlName]="attribute.InDesignTagName" (change)="updateDayList($event, attribute)">
+                          <!-- <option value="" selected></option> -->
+                          <option value="" selected>{{attribute.Name}} {{attribute.IsRequired == true ? '*' : ''}}</option>
+                          <option *ngFor="let option of attribute.Options" [value]="option.Value">{{option.Value}}</option>
+                        </select>
+                        <small class="required-color" *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                          This field is required.
+                        </small>
+                        <small *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                          {{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}
+                        </small>
+                        <small class="required-color" *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                          {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                        </small>
+                      </div>
+
+                      <ng-template #others>
+                        <div class="col-md-10 col-lg-12 pb-2" *ngIf="attribute.ElementType == fieldTypes['DropDownList'] ">
+
+                          <label class="custom-label-select mb-0 required" [ngClass]="{'required' : attribute.IsRequired == true }"
+                            *ngIf="designAdForm.controls[attribute.InDesignTagName].value && designAdForm.controls[attribute.InDesignTagName].value.length > 0 || attribute.Options[0]?.RelatedFields">
+                            {{attribute.Name}}
+                          </label>
+                          <select [ngClass]="{'required' : attribute.IsRequired == true }" class="custom-select-box mw-100 rounded-0 form-control"
+                            [formControlName]="attribute.InDesignTagName" (change)="updateForm($event, attribute)">
+                            <!-- <option value="" selected *ngIf="!attribute.Options[0]?.RelatedFields"></option> -->
+                            <option value="" selected *ngIf="!attribute.Options[0]?.RelatedFields">{{attribute.Name}}
+                              {{attribute.IsRequired == true ? '*' : ''}}</option>
+                            <option *ngFor="let option of attribute.Options" [value]="option.Value">{{option.Value}}</option>
+                          </select>
+                          <small class="required-color" *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                            This field is required.
+                          </small>
+                          <small class="required-color" *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                          </small>
+                        </div>
+                      </ng-template>
+                      <div class="col-md-10 col-lg-12" *ngIf="attribute.ElementType == fieldTypes['SingleLineDataField']">
+                        <mat-form-field class="w-100" [ngClass]="{'required' : attribute.IsRequired == true, 'custom-wrap' : focusOut[attribute.Name] }">
+                          <input matInput placeholder="{{attribute.Name}}" [maxLength]="attribute.MaxLength > 0 ? attribute.MaxLength : 50000" type="text"
+                            [formControlName]="attribute.InDesignTagName" (focus)="focusOut[attribute.Name] = false; focused(attribute)"
+                            (focusout)="focusOut[attribute.Name] = true; dataChanged(attribute.InDesignTagName)">
+
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                            This field is required.
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+
+                      <div *ngIf="attribute.ElementType == fieldTypes['MultiLineDataField']">
+                        <div class="col-md-10 col-lg-12 mb-3 multilinedatafield">
+                          <mat-form-field class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                            <textarea matInput type="text" placeholder="{{attribute.Name}}" [maxLength]="attribute.MaxLength > 0 ? attribute.MaxLength : 50000"
+                              [formControlName]="attribute.InDesignTagName" (focus)="focused(attribute)" (focusout)="getWorngWords(attribute)"></textarea>
+                            <mat-hint align="end" *ngIf="attribute.ShowCharCount">{{designAdForm.controls[attribute.InDesignTagName].value.length}}
+                              / {{attribute.MaxLength > 0
+                              ? attribute.MaxLength : 1000}}</mat-hint>
+                            <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                              This field is required.
+                            </mat-error>
+                            <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                              {{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}
+                            </mat-error>
+                            <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                              {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                            </mat-error>
+                            <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('wordError')">
+                                 <div    innerHTML="{{designAdForm.controls[attribute.InDesignTagName].errors['wordError']}}"></div>
+                            </mat-error>
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div class="col-md-10 col-lg-12" *ngIf="attribute.ElementType == fieldTypes['NumberField']">
+                        <mat-form-field class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                          <input matInput placeholder="{{attribute.Name}}" type="number" [formControlName]="attribute.InDesignTagName"
+                            (focus)="focused(attribute)" (focusout)="dataChanged(attribute.InDesignTagName)">
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                            This field is required.
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-10 col-lg-12" *ngIf="attribute.ElementType == fieldTypes['DateField']">
+                        <mat-form-field class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                          <input matInput placeholder="{{attribute.Name}}" type="date" [formControlName]="attribute.InDesignTagName"
+                            (focus)="focused(attribute)" (focusout)="dataChanged(attribute.InDesignTagName)">
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                            This field is required.
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-10 col-lg-12" *ngIf="attribute.ElementType == fieldTypes['EmailField']">
+                        <mat-form-field class="w-100" [ngClass]="{'required' : attribute.IsRequired == true, 'custom-wrap' : focusOut[attribute.Name] }">
+                          <input matInput placeholder="{{attribute.Name}}" type="text" (focus)=" focusOut[attribute.Name] = false; focused(attribute)"
+                            (focusout)="focusOut[attribute.Name] = true; dataChanged(attribute.InDesignTagName)">
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].touched && designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                            This field is required.
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('invalidEmail') && !designAdForm.controls[attribute.InDesignTagName].hasError('required')">
+                            {{emailInvalidMessage}}
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('defaultValue')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['defaultValue']}}
+                          </mat-error>
+                          <mat-error *ngIf="designAdForm.controls[attribute.InDesignTagName].hasError('serverError')">
+                            {{designAdForm.controls[attribute.InDesignTagName].errors['serverError']}}
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-10 col-lg-12 mb-3" *ngIf="attribute.IsImage">
+                        <div class="w-100 text-muted">
+                          <small class="lbl-txt"> {{attribute.Name}}</small>
+                          <small class="required-color" *ngIf="attribute.IsRequired || !attribute.NotForMaterial">*</small>
+                        </div>
+                        <div class="row" *ngIf="attribute.ElementType == fieldTypes['Emblem']; else logoOrImage">
+                          <div class="col-12 thumbnail-img">
+                            <div class="d-block">
+                              <img src="{{(attribute.Value && attribute.Value.includes('false')) ? 'api/designAd/GetAdTemplateImage?systemName=' + systemName +'&systemKey='+adssId+'&adMaterialId='+adMaterialId+'&externalAdMaterialId='+externalMaterialId+'&adTemplateDataFieldIdsName='+attribute.InDesignTagName+'&isEmblem=true&isTemp=false&pathType=Original&ts='+date : (attribute.Value && attribute.Value.includes('http')) ? attribute.Value : emblemImage}}"
+                                alt="Upload an emblem" class="mb-1">
+                            </div>
+                            <button title="Upload Emblem" mat-raised-button color="primary" auto-test="selectEmblem"
+                              (click)="selectEmblem(attribute.InDesignTagName)">
+                              SELECT AN EMBLEM
+                            </button>
+                          </div>
+                          <div class="col-12">
+                            <mat-error *ngIf="isImageRequired && (attribute.IsRequired || !attribute.NotForMaterial) && attribute.Value == undefined"
+                              class="mt-1">
+                              <small>Please upload emblem</small>
+                            </mat-error>
+
+                          </div>
+                        </div>
+                        <ng-template #logoOrImage>
+                          <div class="row">
+                            <div class="col-12 mb-2 thumbnail-img" *ngIf="attribute.ElementType == fieldTypes['CustomImage'] && attribute.Description.toLowerCase().includes('logo'); else image">
+                              <img src="{{(attribute.Value && attribute.Value.includes('false')) ? 'api/designAd/GetAdTemplateImage?systemName=' + systemName +'&systemKey='+adssId+'&adMaterialId='+adMaterialId+'&externalAdMaterialId='+externalMaterialId+'&adTemplateDataFieldIdsName='+attribute.InDesignTagName+'&isEmblem=false&isTemp=false&pathType=Cropped&ts='+date : logoImageUrl}}"
+                                alt="Upload an image" class="mb-1">
+
+                            </div>
+                            <div class="col-12 mb-1" *ngIf="logosCount > 0 && attribute.ElementType == fieldTypes['CustomImage'] && attribute.Description.toLowerCase().includes('logo')">
+                              <button mat-raised-button color="primary" auto-test="selectLogo" (click)="selectLogo(attribute.InDesignTagName)"
+                                class="select-logo-btn">SELECT A LOGO</button>
+                              <button mat-raised-button color="primary" auto-test="showUploadLogo" (click)="showUploadLogo = !showUploadLogo"
+                                class="select-dd-btn">
+                                <i class="fa fa-caret-down "></i>
+                              </button>
+                            </div>
+
+                            <div class="col-12 upload-btn-wrapper" *ngIf="attribute.ElementType == fieldTypes['CustomImage'] && attribute.Description.toLowerCase().includes('logo')">
+                              <button mat-raised-button color="primary" auto-test="uploadLogo" (click)="openImageEditorModal(attribute, 'logo')"
+                                *ngIf="showUploadLogo">UPLOAD A LOGO</button>
+                            </div>
+                          </div>
+
+                          <ng-template #image>
+                            <div class="col-12 mb-2 thumbnail-img">
+
+                              <img src="{{(attribute.Value && attribute.Value.includes('false')) ? 'api/designAd/GetAdTemplateImage?systemName=' + systemName +'&systemKey='+adssId+'&adMaterialId='+adMaterialId+'&externalAdMaterialId='+externalMaterialId+'&adTemplateDataFieldIdsName='+attribute.InDesignTagName+'&isEmblem=false&isTemp=false&pathType=Cropped&ts='+date : photoImageUrl}}"
+                                alt="Upload an image" class="mb-1">
+                            </div>
+                            <div class="col-12">
+                              <button title="Upload Image" mat-raised-button color="primary" auto-test="uploadImage"
+                                (click)="openImageEditorModal(attribute, 'photo')">
+                                <mat-icon>file_upload</mat-icon>
+                                {{(attribute.Value && attribute.Value.includes('false')) ? 'CHANGE IMAGE' : 'SELECT AN IMAGE'}}
+                              </button>
+
+                            </div>
+                          </ng-template>
+                          <div class="w-100">
+                            <mat-error *ngIf="isImageRequired && (attribute.IsRequired || !attribute.NotForMaterial) && (attribute.Value == undefined || attribute.Value.includes('true'))"
+                              class="mt-1">
+                              <small>Please upload photo</small>
+                            </mat-error>
+
+                          </div>
+                        </ng-template>
+
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="row m-0 col-12 text-danger" *ngFor="let errorMessage of errorMesgsFromAPI">
+                  <div>
+                    {{errorMessage}}
+                  </div>
+                </div>
+                <div class="row m-0 my-2" *ngFor="let errorMessage of errorMesgsFromPreviewAPI">
+                  <div class="col-12  py-1 alert alert-danger">
+                    <mat-icon class="mx-1 align-bottom">warning</mat-icon> {{errorMessage}}
+                  </div>
+                </div>
+
+                <div class="row m-0 my-2" *ngFor="let errorMessage of designAdErrors">
+                  <div class="col-12 py-2 bg-danger text-white">
+                    <mat-icon class="mx-1 align-bottom">warning</mat-icon> {{errorMessage}}
+                  </div>
+                </div>
+
+                <div class="row pl-md-3 mt-3">
+                  <div class="col-12 col-sm-6 col-md-7 col-lg-5 submit-btn pr-sm-0">
+                    <button mat-raised-button color="primary" class="text-uppercase w-100 mb-2" type="submit" auto-test="saveAndContinue"
+                      value="Submit Form" (click)="saveAndContinue()">Save & Continue Booking</button>
+                  </div>
+                  <div class="col-12 col-sm-3 col-md-3 col-lg-2 submit-btn" *ngIf="!isFromAdit">
+                    <button mat-raised-button color="accent" class="text-uppercase w-100 mb-2" (click)="onClose()"
+                      auto-test="cancel">Cancel</button>
+                  </div>
+                </div>
+
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12" *ngIf="showError">
+    <error-alert></error-alert>
+  </div>
+</div>
+
+
+<div class="row py-3" *ngIf="!showError && !isFormReady">
+  <mat-spinner></mat-spinner>
+</div>

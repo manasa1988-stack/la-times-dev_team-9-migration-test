@@ -1,0 +1,82 @@
+﻿<div>
+    <div class="row mb-2">
+        <div class="col-md-12">
+            <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block mb-0">Order Details</h4>
+            <div *ngIf="orderId" class="d-inline-block">
+                <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block" aria-hidden="true"></i>
+                    <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold px-md-0 px-lg-1 mb-0">Edit Order</h4>
+                    <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                        <h4 class="text-uppercase theme pb-2 px-md-0 px-lg-1 d-none d-md-inline-block mb-0">Confirmation</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 mb-1 mx-0">
+        <div class="col-md-12 pl-1 text-uppercase">
+            ORDER NUMBER: {{editableOrder?.Order?.AditId}}
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div *ngIf="isOrderReady; else showLoading">
+
+        <div *ngIf="order === undefined || order === null; else showOrders" class="my-5">
+            <error-alert></error-alert>
+        </div>
+        <ng-template #showOrders>
+            <div class="row my-3">
+                <!-- <div class="col-md-12">
+                    <product-toggle *ngIf="(order?.HasMultipleConfigurableItems && order?.OrderItems?.length > 1) && !currentOrderItem?.IsDfpOrderItem"
+                        [order]="order" [currentOrderItem]="currentOrderItem" [isOnConfigure]="false"></product-toggle>
+                </div> -->
+
+                <div class="col-md-12 text-center" *ngIf="currentOrderItem">
+                    <img class="col-md-3 m-2 img-200x200" [src]="productsUrl + currentOrderItem?.Section?.Product.Id + logoUrl" [alt]="currentOrderItem?.Section?.Product.Name"
+                    />
+                    <br/>
+                    <b class="mt-1">{{currentOrderItem?.TypeDescription}}</b>
+                    <br/> {{currentOrderItem?.Section?.Product?.Name}}
+                    <br/> {{currentOrderItem?.SectionAndPositionName}}
+                </div>
+            </div>
+
+            <div class="row my-3" *ngIf="currentOrderItem.HasAdMaterial">
+                <div class="col-12">
+                    <edit-material [editableOrder]="editableOrder" [orderItemId]="orderItemId" [externalId]="externalAdMaterialId" [hasUploadedNewMaterial]="isRedirectedFromDesignAd"
+                        [isCallFromAdit]="isCallFromAdit()" (passUpdatedAdMaterial)="getUpdatedMaterial($event)"></edit-material>
+                </div>
+            </div>
+            
+            <div class="row my-3" *ngIf="editTextForms.length > 0">
+                <div class="col-12">
+                    <edit-text [editTextForms]="editTextForms" [order]="order" (passUpdatedInputAttributes)="getUpdatedInputAttributes($event)"></edit-text>
+                </div>
+            </div>
+
+            <div class="row my-3" *ngIf="currentOrderItem?.UpsellAttributes.length > 0">
+                <div class="col-12">
+                    <edit-upsell [order]="order" [currentOrderItem]="currentOrderItem" [upsellImageList]="upsellImage['upsellImageList']" [upsellId]="upsellImage['id']"
+                        [isCallFromAdit]="isCallFromAdit()" (passUpdatedImageList)="getUpdatedImageList($event)"></edit-upsell>
+                </div>
+            </div>
+        </ng-template>
+
+
+        <div class="row m-0 mb-2" *ngIf="errorMessage">
+            <div class="col-12 py-2 bg-danger text-white">
+                <mat-icon class="mx-1 align-bottom">warning</mat-icon> {{errorMessage}}</div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 col-sm-4 col-md-4 col-lg-3 submit-btn pr-sm-1">
+                <button [disabled]="!isEdited" class="mb-2 w-100" mat-raised-button color="primary" auto-test="submitOrder" (click)="submit()">SUBMIT</button>
+            </div>
+            <div class="col-12 col-sm-4 col-md-4 col-lg-3 submit-btn px-sm-2" *ngIf="!isCallFromAdit()">
+                <button class="mb-2 w-100" mat-raised-button color="accent" (click)="cancel()" auto-test="cancelOrder">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #showLoading>
+    <mat-spinner class="row my-5"></mat-spinner>
+</ng-template>

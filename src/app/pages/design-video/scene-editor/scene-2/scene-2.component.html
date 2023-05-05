@@ -1,0 +1,75 @@
+
+<form #sceneBody="ngForm" *ngIf="sceneHelper">
+    <div class="row pt-4">
+        <div class="col-12 col-md-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <textarea
+                    maxlength="150"
+                    rows="5"
+                    matInput
+                    placeholder="Text"
+                    #descriptionInput="ngModel"
+                    name="descriptionInput"
+                    required
+                    spellcheck
+                    (keydown.enter)="$event.preventDefault()"
+                    (ngModelChange)="sceneHelper.model.description = $event.replace(regexp,'')"
+                    (ngModelChange)="validate($event, 'description')"
+                    [ngModel]="sceneHelper.model.description">
+                </textarea>
+                <mat-hint *ngIf="!descriptionInput.valid">
+                    <span class="mat-error">Text is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!descriptionInput.valid">
+                    Text is <strong>required</strong>
+                </mat-error>
+                <mat-hint *ngIf="sceneHelper.currentLines.description > sceneHelper.lineLimits?.description">
+                    <span class="mat-error">Text is too long</span>
+                </mat-hint>
+                <mat-hint
+                    [ngClass]="{'mat-error': sceneHelper.currentLines.description > sceneHelper.lineLimits?.description}"
+                    align="end">{{sceneHelper.model.description?.length}} / 150 characters, {{sceneHelper.currentLines.description}}/{{sceneHelper.lineLimits?.description}} lines</mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="4"
+                    matInput
+                    placeholder="Year - Only numbers"
+                    #yearInput="ngModel"
+                    name="yearInput"
+                    spellcheck
+                    (ngModelChange)="sceneHelper.model.year = $event.replace(regexp,'')"
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.year">
+                <!--mat-hint *ngIf="!yearInput.valid">
+                    <span class="mat-error">Year is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!yearInput.valid">
+                    Year is <strong>required</strong>
+                </mat-error-->
+            </mat-form-field>
+        </div>
+
+        <!--div class="col-12">
+            <div class="row">
+                <div class="col-12 --align-right">
+                    <div class="submit-btn">
+                        <button
+                            class="text-uppercase"
+                            title=""
+                            mat-raised-button
+                            (click)="_update()"
+                            color="primary">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div-->
+    </div>
+
+
+</form>

@@ -1,0 +1,49 @@
+.share-row {
+    width: 100%;
+}
+
+.share-button {
+    height: 3.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.--align-right {
+    text-align: right;
+}
+
+.is-downloading {
+    opacity: 0.5;
+}
+
+a {
+    cursor: pointer;
+}
+
+.pop-message {
+    position: absolute;
+    bottom:100%;
+    left:0;
+    font-weight: bold;
+    color: gray;
+    text-shadow: rgb(99, 98, 98);
+    font-size: 1rem;
+    transition: all 1s ease-out;
+    height: 0px;
+    overflow: hidden;
+}
+
+.pop-message.active {
+    overflow: initial;
+    display: block;
+    transform: translateY(-2rem);
+}
+
+::ng-deep .sb-content ,
+::ng-deep .sb-wrapper {
+    height: 3em !important;
+}
+
+::ng-deep .sb-icon {
+    width: auto !important;
+}

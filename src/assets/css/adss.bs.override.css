@@ -1,0 +1,6 @@
+
+/* Bootstrap override*/
+
+button:focus {
+  outline: none;
+}

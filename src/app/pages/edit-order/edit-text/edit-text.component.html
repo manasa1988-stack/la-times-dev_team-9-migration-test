@@ -1,0 +1,74 @@
+<div class="bg-primary text-white text-uppercase pl-3 pt-3 pb-1">
+    <p class="text-uppercase text-white">AD TEXT: GENERAL</p>
+</div>
+<div class="card rounded-0">
+    <div class="card-body">
+        <div *ngFor="let editTextForm of editTextForms">
+            <form novalidate [formGroup]="editTextForm.attributeFormGroup">
+                <div class="row">
+                    <div class="col-12 col-md-6" *ngFor="let attribute of editTextForm.attributes">
+                        <small *ngIf="attribute.Type['Id'] == fieldType['Select']" class="required">{{attribute.Name}}</small>
+                        <select *ngIf="attribute.Type['Id'] == fieldType['Select']" class="custom-select-box mt-2 mb-2 rounded-0 form-control" [ngClass]="{'required' : attribute.IsRequired == true }"
+                            [formControlName]="attribute.Name" auto-test="onSelectingOption"  (change)="onSelectingOption($event, attribute)">
+                            <option *ngFor="let option of attribute.Options" [value]="option.Value">{{option.Value}}</option>
+                        </select>
+                        <div *ngIf="attribute.Type['Id'] == fieldType['Select']  && editTextForm.attributeFormGroup.controls[attribute.Name].touched && editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                            <small class="text-danger">{{attribute.DisplayName}} is required.</small>
+                        </div>
+                        <!-- <select *ngIf="attribute.Type['Id'] == fieldType['ChildAttribute'] " class="custom-select-box mt-2 mb-2 rounded-0 form-control"
+                            [formControlName]="attribute.Name">
+                            <option value="" disabled selected>Select {{attribute.DisplayName}}</option>
+                            <option *ngFor="let option of childAttributes" [value]="option">{{option}}</option>
+                        </select> -->
+                        <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Text']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                            <input matInput placeholder="{{attribute.DisplayName}}" type="text" [formControlName]="attribute.Name" (focusout)="notify($event, attribute)">
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                {{attribute.DisplayName}} is required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['TextArea']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                            <textarea matInput placeholder="{{attribute.DisplayName}}" [formControlName]="attribute.Name" (focusout)="notify($event, attribute)"></textarea>
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                {{attribute.DisplayName}} is required.
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Number']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                            <input matInput placeholder="{{attribute.DisplayName}}" type="number" [formControlName]="attribute.Name" (focusout)="notify($event, attribute)">
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                {{attribute.DisplayName}} is required.
+                            </mat-error>
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('invalidDecNumber') && !editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                Please enter a valid number.
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Date']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                            <input matInput placeholder="{{attribute.DisplayName}}" type="text" [formControlName]="attribute.Name" (change)="notify($event, attribute)">
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                {{attribute.DisplayName}} is required.
+                            </mat-error>
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('invalidDate') && !editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                Please enter a valid date.
+                            </mat-error>
+
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Email']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                            <input matInput placeholder="{{attribute.DisplayName}}" type="text" [formControlName]="attribute.Name" (focusout)="notify($event, attribute)">
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                {{attribute.DisplayName}} is required.
+                            </mat-error>
+                            <mat-error *ngIf="editTextForm.attributeFormGroup.controls[attribute.Name].hasError('invalidEmail') && !editTextForm.attributeFormGroup.controls[attribute.Name].hasError('required')">
+                                {{emailInvalidMessage}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-checkbox type="checkbox" *ngIf="attribute.Type['Id'] == fieldType['Checkbox']" [ngClass]="{'required' : attribute.IsRequired == true }"
+                            [formControlName]="attribute.Name" (change)="notify($event, attribute)">{{attribute.DisplayName}}</mat-checkbox>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

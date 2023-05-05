@@ -1,0 +1,49 @@
+<!--div class="modal-body">
+    <div class="py-3">
+        <h3 class="text">Select an audio track for your video</h3>
+    </div-->
+
+    <!--div class="row mb-4"-->
+        <div class="mb-4">
+            <form #audioForm="ngForm">
+                <!--mat-select
+                    [(ngModel)]="selectedTrack"
+                    #audioTrackInput="ngModel"
+                    name="audioTrackInput"
+                    (change)="_saveParent.emit($event)"
+                    placeholder="">
+                    <mat-option *ngFor="let track of audioTracks" [value]="track">
+                        Audio track {{getTrackNumber(track)}}
+                    </mat-option>
+                </mat-select-->
+
+                <select
+                    [(ngModel)]="selectedTrack"
+                    #audioTrackInput="ngModel"
+                    name="audioTrackInput"
+                    class="custom-select-box mw-100 rounded-0 form-control"
+                    (change)="_saveParent.emit($event)">
+                    <!-- <option value="" selected></option> -->
+                    <option *ngFor="let track of audioTracks" [value]="track">
+                        Audio track {{getTrackNumber(track)}}
+                    </option>
+                </select>
+            </form>
+        </div>
+    <!--/div-->
+
+    <!--div class="row py-3">
+        <div class="col-12 --align-right">
+            <div class="submit-btn">
+                <button
+                    class="text-uppercase"
+                    title=""
+                    mat-raised-button
+                    (click)="close()"
+                    color="primary">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div-->

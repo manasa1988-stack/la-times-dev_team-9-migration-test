@@ -1,0 +1,111 @@
+.--scene-card {
+    width: 100%;
+    display: inline-flex;
+    margin: 0.5rem;
+}
+
+.card-body {
+    position: relative;
+}
+
+.scene-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.card-body::after {
+    content: '';
+    float: left;
+    padding-top: 60%;
+}
+
+.card-body-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+img {
+    width: 100%;
+}
+
+.card-footer {
+    text-align: left;
+}
+
+::ng-depp .card {
+    border-width: 0.125rem;
+}
+
+::ng-deep .card-footer {
+    border: none;
+    background-color: transparent;
+}
+
+.--align-right {
+    text-align: right;
+}
+
+/* button {
+    width: 10rem;
+    height: 3rem;
+}*/
+
+.row {
+    padding: 0;
+    margin: 0;
+}
+
+.footer-content {
+    font-size: 1rem;
+    line-height: 1.3rem;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+
+.submit-btn .mat-raised-button.mat-primary {
+    background-color: #db3021 !important;
+}
+
+
+button {
+    width: 100%;
+    height: 3rem;
+}
+
+.submit-btn {
+    width: 100%;
+    height: 3rem;
+    display: inline-flex;
+    margin-bottom: 1rem;
+    margin-left: 0;
+    margin-top: 1rem;
+}
+
+.--align-right {
+    text-align: right;
+}
+
+@media screen and (min-width: 768px) {
+    .submit-btn {
+        width: 10rem;
+        margin-left: 2rem;
+        margin-top: 0;
+    }
+
+    button {
+        width: 10rem;
+    }
+
+    .--ml-2 {
+        margin-left: 1rem;
+    }
+}

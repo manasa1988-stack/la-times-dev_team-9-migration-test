@@ -1,0 +1,44 @@
+<div class="row">
+    <div class="col-12 col-sm-6">
+        <select class="custom-select-box border border-secondary mw-100 rounded-0 form-control" (change)="getSelectedStylesForBU($event.target.value)">
+            <option value="">-- Select Business Unit --</option>
+            <option *ngFor="let option of marketSettingsListData" [value]="option.Id">{{option.MarketName}}
+                ({{option.Code}})</option>
+        </select>
+    </div>
+    <div class="col-12 col-sm-6">
+        <a class="mr-2 text-primary" (click)="updateCheckValue(true)"><u>Select All</u></a>
+        <a class="text-primary" (click)="updateCheckValue(false)"><u>Deselect All</u></a>
+    </div>
+</div>
+<div class="border-dotted my-3 px-3">
+    <div class="row">
+        <div class="col-md-12 font-weight-bold my-3">
+            <u>Select Styles:</u>
+        </div>
+        <div class="col-md-12 font-weight-bold font-italic mb-3">
+            Enter Package Ids in comma separated format
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <form [formGroup]="htmlStyleFormGroup">
+                <div class="row my-2" *ngFor="let htmlStyle of htmlStyles">
+                    <div class="col-md-4 col-3">
+                        <mat-checkbox type="checkbox" [checked]="htmlStyle.IsChecked" (change)="updateCheckValue($event.checked, htmlStyle)">{{htmlStyle.StyleName}}</mat-checkbox>
+                    </div>
+                    <div class="col-md-8 col-9">
+                        <textarea matInput placeholder="Packge Ids in comma separated format" class="form-control"
+                            [formControlName]="htmlStyle.StyleName" [style.height]="'80px'"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <button mat-raised-button color="accent" class="float-right mx-2" (click)="reset()">Cancel</button>
+        <button mat-raised-button color="primary" class="float-right mx-2" (click)="saveSelectedStyles()">Save</button>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="share-row">
+    <div class="mb-4">
+        <video
+            width="100%"
+            height="auto"
+            controls="">
+            <source
+                [src]="adssUrl"
+                type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div class="social-row row mb-4">
+        <div class="col-6">
+            <a href="{{youtubeBaseUrl}}/{{youtubeSegment}}" target="_blank">
+                <button mat-stroked-button >
+                    <i class="fa fa-youtube-play" aria-hidden="true"></i>
+                    Youtube
+                </button>
+            </a>
+        </div>
+        <div
+            class="col-6 --align-right"
+            *ngIf="false">
+                <button
+                    mat-stroked-button
+                    (click)="makePublic()">
+                    Make it public
+                </button>
+        </div>
+    </div>
+
+    <h3><strong>Share Video</strong></h3>
+    <div class="social-row row">
+        <div
+            class="col-6"
+            *ngIf="!passedDeadline && !isIosChrome()">
+            <a href="{{apiEndPointUrl+videoDraftId}}" download>
+                <button
+                    class="share-button-raw"
+                    >
+                    <i
+                        class="fa fa-download"
+                        aria-hidden="true"></i>
+                    Download
+                    <!--mat-progress-spinner *ngIf="isDownloading" mode="indeterminate" [diameter]="15" class="align-middle d-inline-block"></mat-progress-spinner-->
+                </button>
+            </a>
+        </div>
+
+        <div
+            [ngClass]="{'col-12': passedDeadline, 'col-6': !passedDeadline}">
+            <button class="share-button-raw" (click)="ctc()">
+                <i class="fa fa-link" aria-hidden="true"></i>
+                Copy Link
+                <div class="pop-message" [ngClass]="{'active': copy}">Copied!</div>
+            </button>
+        </div>
+
+        <div class="col-6">
+            <share-button class="share-button" [url]="youtubeBaseUrl+'/'+youtubeSegment" button="facebook">Facebook</share-button>
+        </div>
+
+        <div class="col-6" *ngIf="!isFirefox()">
+            <share-button class="share-button" [url]="youtubeBaseUrl+'/'+youtubeSegment" button="twitter">Twitter</share-button>
+        </div>
+
+        <div class="col-6">
+            <share-button class="share-button" [url]="youtubeBaseUrl+'/'+youtubeSegment" button="email">e-mail</share-button>
+        </div>
+
+        <div class="col-6" *ngIf="!isFirefox()">
+            <share-button class="share-button" [url]="youtubeBaseUrl+'/'+youtubeSegment" button="linkedin">Linkedin</share-button>
+        </div>
+    </div>
+</div>

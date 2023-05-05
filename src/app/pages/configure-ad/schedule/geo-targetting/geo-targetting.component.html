@@ -1,0 +1,26 @@
+<mat-accordion>
+
+    <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+        <mat-expansion-panel-header class="bg-light pl-5">
+            <mat-panel-title>
+                Geo Targeting
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+            <div class="col-sm-5 col-md-6 col-lg-8">
+                <div class="map-chkbox" *ngFor="let target of availableDates.OnlineDisplayTarget">
+                    <mat-checkbox [checked]="target.isChecked" [id]="target.Id" auto-test="targetSelected" (change)="targetSelected(target, $event)" (mouseenter)="mouseEvent(target.Id, $event)"
+                        (mouseleave)="mouseEvent(target.Id, $event)" [disabled]="availableDates.OnlineDisplayTarget.length == 1">
+                        {{target.Name}}
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div class="col-6 col-sm-7 col-md-6 col-lg-4 d-none d-sm-block zone-map">
+                <img [src]="availableDates?.GeoMapImageUrl" class="map-bg" alt="">
+                <div *ngFor="let map of availableDates.AvailableZoneMaps">
+                    <img [src]="map.ZoneOverlayUrl" alt="" [ngClass]="{'map-img-hover': true, 'hide' : !map.isSelected }">
+                </div>
+            </div>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

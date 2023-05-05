@@ -1,0 +1,98 @@
+<div *ngIf="!isDataReady; else dataReady">
+    <mat-spinner></mat-spinner>
+</div>
+
+<ng-template #dataReady>
+
+    <div *ngIf="displayError">
+        <error-alert></error-alert>
+    </div>
+
+    <div class="row mb-2" *ngIf="!displayError">
+        <div class="col-md-10 admin-top-nav">
+            <ul class="list-inline">
+                <li class="list-inline-item" *ngFor="let portal of portals">
+                    <a [href]="environmentName == 'PRODUCTION' ? portal.ProdHost : 'http://'+ portal.Host + portalUrl" class="btn btn-outline-primary">{{portal.Name}}</a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="/admin/portal/regression" class="btn btn-outline-primary">Regression</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-2 pl-0">
+            <ul class="list-inline text-right">
+                <li class="list-inline-item">
+                    <a class="" [href]="'/dashboard'">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a class="" [href]="'/my-orders'">
+                        Orders
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a class="" [href]="'/draftorders'">
+                        Drafts</a>
+                </li>
+            </ul>
+        </div>        
+    </div>
+
+
+    <div class="row" *ngIf="!displayError">
+        <div class="col-md-12">
+            <h1 class="text-uppercase">{{selectedPortalData.Name}} Links - {{environmentName}}</h1>
+        </div>
+        <div class="col-md-12 admin-portal-tabs">
+            <mat-tab-group class="theme">   
+                <mat-tab *ngFor="let selectedPortalProductGroup of selectedPortalProductGroups" label="selectedPortalProductGroup.Name" class="bg-light">
+                    <admin-tab-header></admin-tab-header>
+                    <ng-template mat-tab-label class="my-5">
+                        {{selectedPortalProductGroup.Name}}
+                    </ng-template>
+                    <div *ngIf="!selectedPortalProductGroup.Name.includes('Classified Package')">
+                        <div class="row row-hover border-bottom mx-0" *ngFor="let portalProduct of selectedPortalProductGroup.PortalProductGroupLinks">
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 py-2">
+                                <span class="flash-icon">
+                                    <i class="material-icons" *ngIf="portalProduct.IsRegression">flash_on</i>
+                                </span>
+                                <a [href]="'/orders/create?' + portalProduct.QueryString" target="_blank">{{portalProduct.SectionName}}</a>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 py-2 bg-light ">
+                                {{portalProduct.PositionName}}
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 py-2">
+                                {{portalProduct.Description}}
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedPortalProductGroup.Name.includes('Classified Package')" class="classified-tab-view">
+                        <div *ngFor="let package of classifiedPackage" class="row mx-0">
+                            <div class="col-md-12 bg-light py-2 border-bottom font-weight-bold">
+                                {{package.name}}
+                            </div>
+                            <div *ngFor="let portalProduct of package.value" class="col-md-12">
+                                <div class="row row-hover border-bottom">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 py-2">
+                                        <span class="flash-icon">
+                                            <i class="material-icons" *ngIf="portalProduct.IsRegression">flash_on</i>
+                                        </span>
+                                        <a [href]="'/orders/create?' + portalProduct.QueryString" target="_blank">{{portalProduct.SectionName}}</a>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 bg-light py-2">
+                                        {{portalProduct.PositionName}}
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-4 py-2 description">
+                                        {{portalProduct.Description}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+
+</ng-template>

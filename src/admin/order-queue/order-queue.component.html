@@ -1,0 +1,135 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>ORDER QUEUE - {{environmentName}}</h1>
+    </div>
+</div>
+
+<!-- <div class="row my-3" *ngIf="!isDataReady; else dataReady">
+    <mat-spinner></mat-spinner>
+</div> -->
+
+<!-- <ng-template #dataReady> -->
+
+<div *ngIf="displayError">
+    <error-alert></error-alert>
+</div>
+
+<div class="row" *ngIf="!displayError">
+    <div class="col-md-3 ml-auto">
+        <div class="form-group dropdown-field ">
+            <h5 class="mb-1">Time zone: </h5>
+            <div ngbDropdown class="timeZone">
+                <button class="form-control text-left rounded-0" id="timezoneDropDown" ngbDropdownToggle>{{selectedTimeZone.key}}</button>
+                <div ngbDropdownMenu aria-labelledby="timezoneDropDown">
+                    <button *ngFor="let timezone of timezoneOptions" (click)="timeZoneSelected(timezone)" class="dropdown-item">{{ timezone.key }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="!displayError && orderQueue?.Results?.length == 0; else orderQueueList">
+    <div class="col-md-12">
+        <strong>You do not have any orders in Order queue</strong>
+    </div>
+</div>
+
+<ng-template #orderQueueList>
+    <div ng-sticky [offSet]="0" [addClass]="'sticky-me pt-2'" class="sticky-top z-2 m-0 bg-white border-bottom pb-1 clearfix processorders-panel">
+        <div data-spy="affix" data-offset-top="197">
+            <form [formGroup]="orderQueueForm">
+                <div class="row mb-3" *ngIf="!displayError">
+                    <div class="col-md-2">
+                        <button mat-raised-button color="primary" (click)="processOrder()" [disabled]="selectedOrderIds?.length == 0">PROCESS ORDERS(S)</button>
+                    </div>
+                    <div class="col-md-7">
+                        <input class="form-control rounded-0 float-left mr-2 orderid-input" placeholder="Order Id" formControlName="orderId" type="text">
+                        <button mat-raised-button color="primary" *ngIf="!hasSearched" (click)="onSearchChange()">Search</button>
+                        <button mat-raised-button color="primary" *ngIf="hasSearched" (click)="onClearSearch()">Cancel</button>
+                        <p *ngIf="successfullyProcessedOrders?.length > 0" class="text-success pl-2 d-inline-block">
+                            {{successMessage}}{{successfullyProcessedOrders.join(",")}}
+                        </p>
+                        <p *ngIf="processingFailedOrders?.length > 0" class="text-danger pl-2 d-inline-block">
+                            {{errorMessage}}{{processingFailedOrders.join(",")}}
+                        </p>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row" *ngIf="!displayError">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table order-queue">
+                    <thead>
+                        <tr class="bg-secondary text-white">
+                            <td>
+                                <mat-checkbox class="m-2" [checked]="selectAll" [disabled]="orderQueue?.Results[0]?.IsAdItInReadOnlyMode || orderQueue?.Results?.length == 0"
+                                    (change)="selectAllOrders($event)">
+                                </mat-checkbox> ORDER ID
+                            </td>
+                            <td>
+                                DESCRIPTION
+                            </td>
+                            <td>
+                                BOOKING DEADLINE
+                            </td>
+                            <td>
+                                RUN COUNT
+                            </td>
+                            <td>
+                                LAST RUN
+                            </td>
+                            <td>
+                                STATUS
+                            </td>
+                        </tr>
+                    </thead>
+                    <tr *ngIf="!isDataReady; else dataReady">
+                       <div class="orderQ-spinner py-5"> <mat-spinner [diameter]="60"></mat-spinner> </div>
+                    </tr>
+                    <ng-template #dataReady>
+                        <tr *ngFor="let order of orderQueue?.Results">
+                            <td>
+                                <mat-checkbox class="m-2" [checked]="order.isSelected" (change)="selectOrder($event, order)" [disabled]="orderQueue?.Results[0]?.IsAdItInReadOnlyMode">
+                                </mat-checkbox> {{order.OrderId}}
+                            </td>
+                            <td>
+                                {{order.Description}}
+                            </td>
+                            <td [ngClass]="dateComparator(order.convertedBookingDeadline) ? 'text-secondary' : 'text-danger'">
+                                <span [matTooltip]="dateComparator(order.convertedBookingDeadline) ? '' : 'Deadline is missed'">{{order.convertedBookingDeadline | date:'M/d/yyyy hh:mm a' }}</span>
+                            </td>
+                            <td>
+                                {{order.RunCount}}
+                            </td>
+                            <td>
+                                {{order.LastRun | date:'M/d/yyyy'}}
+                            </td>
+                            <td>
+                                {{order.IsProcessing ? 'in process' : ''}}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </table>
+            </div>
+
+        </div>
+        <div class="col-md-12" *ngIf="isDataReady">
+            <div *ngIf="!loadingMore; else showSpinner">
+                <div *ngIf="orderQueue !== undefined && orderQueue?.Results?.length > 0 && (orderQueue?.PageNumber < orderQueue?.NumberOfPages); else showEndMessage"
+                    class="d-block text-center border-secondary text-primary pt-3">
+                    <a (click)="loadMore()" mat-button class="d-block" auto-test="loadMore15Orders">LOAD NEXT {{pageSize}} ORDERS</a>
+                </div>
+                <ng-template #showEndMessage>
+                    <div *ngIf="orderQueue !== undefined && orderQueue?.Results?.length > 0" class="text-muted small text-uppercase d-block text-center my-3">End of result</div>
+                </ng-template>
+            </div>
+            <ng-template #showSpinner>
+                <mat-spinner [diameter]="60" class="my-2"></mat-spinner>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+<!-- </ng-template> -->

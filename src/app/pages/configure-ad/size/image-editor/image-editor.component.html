@@ -1,0 +1,115 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase" *ngIf="!isEditUpsellImage;else editUpsellTemplate">Photo Upload{{isEditUpsellImage? 'Crop Image: Photo photoIndex + 1' : ''}}</h4>
+  <ng-template #editUpsellTemplate>
+    <h4 class="modal-title text-uppercase">Crop Image: Photo {{photoIndex + 1}}</h4>
+  </ng-template>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="closeImageEditor" (click)="activeModal.close()"
+    [disabled]="isUploadingImage">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <p *ngIf="isEditUpsellImage || isDocumentUploaded">Crop your uploaded material by dragging<span *ngIf="isEditUpsellImage">, rotating</span> or resizing the cropping rectangle<span *ngIf="isEditUpsellImage"> or image</span> below</p>
+  <div class="border-bottom border-dark" *ngIf="!isEditImage && !isEditUpsellImage && !isDocumentUploaded">
+    <div class="row" *ngIf="photoLibrary?.length > 0">
+      <div class="col-12 col-md-12 photo-carousel">
+        <p>Choose image from photo library</p>
+        <div class="disable-div" *ngIf="isUploadingImage">
+        </div>
+        <carousel class="slider-wrapper uploadad-img" [itemsList]="photoLibrary" [type]="'addImage'" (passEvent)="onNotify($event)"></carousel>
+      </div>
+
+    </div>
+    <div class="row or-devider" *ngIf="photoLibrary?.length > 0">
+      <div class="col-md-6 mx-auto mb-4">
+        <div class="border-top border-dark text-center mx-auto">
+          <span>OR</span>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3 upload-btn" *ngIf="!isDocumentUploaded">
+      <div class="pb-1 col-12 col-sm-6 col-md-6 col-lg-4 btn-file">
+        <input [formControl]="photoInput" title="Upload Image" type="file" (change)="uploadImage($event)" />
+        <button [disabled]="isUploadingImage" title="Upload Image" mat-raised-button color="primary" class="btn-block" auto-test="uploadImage">
+          <mat-icon>file_upload</mat-icon>
+          UPLOAD IMAGE
+        </button>
+      </div>
+      <div class="col-md-5 small pb-1 ">
+        <p class="mb-0 text-muted">
+          <b>File types:</b>
+          <span *ngIf="isFromDesignAdTemplate; else others">JPG, JPEG, PDF, PNG, GIF</span>
+          <ng-template #others>
+            <span>JPEG, TIFF, PDF</span>
+          </ng-template>
+        </p>
+        <p class="mb-0 text-muted">
+          <b>Max. file size:</b> 10 MB</p>
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col-md-12" *ngIf="showErrorMessage && showLoader">
+        <p class="m-0 text-muted pt-1">
+          <mat-error>{{errorMessage}} </mat-error>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div [style.visibility]="showLoader ? 'visible' : 'hidden'">
+    <div class="row my-3" *ngIf="!isDocumentUploaded">
+      <div class="col-12 text-center">
+        <button title="Rotate" mat-mini-fab class="bg-secondary" auto-test="rotate" (click)="rotate()">
+          <mat-icon class="rotate-icon">rotate_90_degrees_ccw</mat-icon>
+        </button>
+        <button title="Zoom In" mat-mini-fab class="bg-secondary" auto-test="zoomIn" (click)="zoomIn()">
+          <mat-icon>zoom_in</mat-icon>
+        </button>
+        <button title="Zoom Out" mat-mini-fab class="bg-secondary" auto-test="zoomOut" (click)="zoomOut()">
+          <mat-icon>zoom_out</mat-icon>
+        </button>
+        <button title="Flip Vertically" mat-mini-fab class="bg-secondary" auto-test="flipY" (click)="flipY()">
+          <mat-icon>swap_vert</mat-icon>
+        </button>
+        <button title="Flip Horizontally" mat-mini-fab class="bg-secondary" auto-test="flipX" (click)="flipX()">
+          <mat-icon>swap_horiz</mat-icon>
+        </button>
+        <button title="Reset" mat-mini-fab class="bg-secondary" auto-test="reset" (click)="reset()">
+          <mat-icon>undo</mat-icon>
+        </button>
+      </div>
+      <div class="col-12 mt-2 text-center" *ngIf="(isEditImage || isEditUpsellImage) && showErrorMessage">
+        <p class="m-0 text-muted pt-1">
+          <mat-error>{{errorMessage}} </mat-error>
+        </p>
+      </div>
+    </div>
+    <div class="row position-relative">
+      <div class="col-md-12">
+        <div class="cropperImageContainer">
+          <angular-cropper #angularCropper (touchstart)="cropperTouchStart($event)" [cropperOptions]="config" [imageUrl]="imageUrl"></angular-cropper>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2" *ngIf="showSaveToLogoLibCheckbox">
+      <mat-checkbox class="col-12" (change)="saveToLogoLibrary($event)">
+        Save this to my logo library
+      </mat-checkbox>
+    </div>
+
+    <div class="row my-3" *ngIf="serverResponse != null && !serverResponse?.IsSuccess">
+      <error-message [serverResponse]="serverResponse"></error-message>
+      <!-- Add error message component here -->
+    </div>
+
+    <div class="modalfooter my-3">
+      <button mat-raised-button color="primary" class="text-uppercase mr-2" auto-test="accept" (click)="accept()" value="Submit Form"
+        [disabled]="isUploadingImage">accept & continue</button>
+
+      <button mat-raised-button color="accent" class="text-uppercase" auto-test="closeImageEditor" [disabled]="isUploadingImage"
+        (click)="activeModal.close()">Cancel</button>
+    </div>
+  </div>
+  <div *ngIf="!showLoader" class="my-5 spinner-pos">
+    <mat-spinner [diameter]="90"></mat-spinner>
+  </div>

@@ -1,0 +1,17 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+    <h4 class="modal-title text-uppercase">Video Preview</h4>
+
+    <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="closePreview" (click)="activeModal.close()">
+        <mat-icon aria-label="Close">close</mat-icon>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <video-share
+                (update)="_update($event)"
+                [_orderLineItem]="info"
+            ></video-share>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="preview-container" #previewContainer>
+    <div class="preview-frame" #source>
+        <div class="red-block"></div>
+
+        <div class="image-block"
+            [ngStyle]="{'background-image': 'url(' + media + ')'}">
+        </div>
+
+        <div class="age" *ngIf="age">{{age}}</div>
+
+        <div class="text-block">
+            <div class="name-block" #nameBlock>
+                <div #nameBlockContent >{{name}}</div>
+            </div>
+
+            <div class="dates-block" *ngIf="year.length">
+                <ng-container *ngIf="year.length > 1; else nobreak">
+                    {{year[0]}}<br/>
+                    {{year[1]}}
+                </ng-container>
+
+                <ng-template #nobreak>
+                    {{year[0]}}
+                </ng-template>
+            </div>
+            <div class="desc-block" [ngStyle]="{ 'display' : description ? 'block' : 'none'}">
+                <div class="text" #descriptionBlock>
+                    <div #descriptionBlockContent>
+                        {{description}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<img style="display:none;" src="" #base (load)="onImageLoad()" crossorigin="anonymous"/>
+<canvas style="display:none;" #canvas></canvas>

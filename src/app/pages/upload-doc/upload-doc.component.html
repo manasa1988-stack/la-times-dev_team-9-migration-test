@@ -1,0 +1,128 @@
+<div class="row">
+  <div class="col-12 col-sm-7 col-md-7 col-lg-9">
+    <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold">Design Ad : Upload Document</h4>
+  </div>
+  <div class="col-12 col-sm-5 col-md-5 col-lg-3">
+    <a class="p-0 m-0 design-link-btn linkA float-right font-weight-bold" [routerLink]="['/system/adit/'+designAdExternalRequest.OrderID +'/design-ad']"
+      [queryParams]="{ adSizeId: designAdExternalRequest.AdSizeID, isColor: designAdExternalRequest.IsColor, externalMaterialId: designAdExternalRequest.ExternalMaterialID, sectionId: designAdExternalRequest.SectionID, positionId: designAdExternalRequest.PositionID, isEditing: designAdExternalRequest.IsEditing, packageCode: designAdExternalRequest.PackageCode, csr: designAdExternalRequest.CSR, CustomerNumber: designAdExternalRequest.CustomerNumber}">
+      DESIGN AD USING TEMPLATE(S)
+      <mat-icon>chevron_right</mat-icon>
+    </a>
+  </div>
+</div>
+
+<div class="row mt-4 mb-1 mx-0">
+  <div class="col-md-12 pl-1 text-uppercase">
+    ORDER NUMBER: {{orderId}}
+  </div>
+</div>
+<mat-divider></mat-divider>
+
+<div class="row" *ngIf="showErrorMessage">
+  <div class="col-12 col-md-12 pt-2">
+    <p class="text-danger">{{errorMessage}}</p>
+  </div>
+</div>
+
+<div class="row pt-3" *ngIf="!isDataReady; else dataReady">
+  <mat-spinner></mat-spinner>
+</div>
+
+<ng-template #dataReady>
+  <div class="row pt-3" *ngIf="!documentAdMaterial?.IsSuccessfullySubmittedOrder && documentAdMaterial?.Material?.UploadedFile == null ; else documentAlreadyUploaded">
+    <div class=" col-12 col-sm-5 col-md-4 btn-file mb-2">
+      <input [formControl]="photoInput" title="Upload Material" type="file" (change)="uploadImage($event)" />
+      <button title="Upload Material" mat-raised-button color="primary" class="btn-block" auto-test="uploadImage">
+        <mat-icon>file_upload</mat-icon>
+        UPLOAD MATERIAL
+      </button>
+    </div>
+    <div class="col-md-12 col-12">
+      <p class="mb-0 text-muted">
+        <b>File types:</b> {{documentAdMaterial?.CSRFileExtensions}}</p>
+    </div>
+    <div class="col-md-12 col-12">
+      <p class="mb-0 text-muted">
+        <b>Max. file size:</b> 10 MB</p>
+    </div>
+    <div class="col-md-12 col-12">
+      <p class="mb-0 text-muted">
+        <b>Width x height:</b> {{documentAdMaterial?.SelectedAdSize?.WidthInInches.toFixed(2)}} inches wide x min. {{documentAdMaterial?.SelectedAdSize?.HeightInInches}}
+        inch tall
+      </p>
+    </div>
+    <div class="col-md-12 col-12" *ngIf="documentAdMaterial?.Section?.Fonts?.length > 0">
+      <p class="mb-0 text-muted">
+        <b>Allowed font(s):</b> {{documentAdMaterial?.Section?.Fonts[0]}}</p>
+    </div>
+    <div class="col-md-10 col-12">
+      <div class="alert bg-warning mt-3 pl-1">
+        <i class="fa fa-exclamation-triangle"></i> Note that the following required fields have not been configured:
+          <b>material.</b>
+      </div>
+    </div>
+
+
+  </div>
+</ng-template>
+
+<ng-template #documentAlreadyUploaded>
+  <div class="row pt-3">
+    <div class="col-12 col-md-12">
+      Proofread or update material
+    </div>
+    <div class="col-12 col-md-8 py-3">
+      <div class="text-left button-row">
+        <a title="Download Your Document" *ngIf="documentAdMaterial?.DownloadLink != ''" class="mat-raised-button mat-primary mat-icon mat-mini-fab material-icons"
+          [href]="documentAdMaterial?.DownloadLink">
+          <span class="mat-button-wrapper">
+            <i class="fa fa-download text-white" aria-hidden="true"></i>
+          </span>
+        </a>
+        <button title="Preview" mat-mini-fab color="primary" auto-test="Preview" (click)="preview()">
+          <mat-icon>zoom_in</mat-icon>
+        </button>
+        <button *ngIf="documentAdMaterial?.DownloadLink != ''" title="Crop Material" mat-mini-fab color="primary" auto-test="Crop"
+          (click)="openImageEditor(true)">
+          <mat-icon>crop</mat-icon>
+        </button>
+        <div class="btn-file d-inline">
+          <input title="Upload New Document" type="file" (change)="uploadImage($event)" />
+          <button title="Upload New Document" mat-mini-fab color="primary" auto-test="New" class="btn-block">
+            <mat-icon>fiber_new</mat-icon>
+          </button>
+        </div>
+        <button title="Start Over" mat-mini-fab color="primary" auto-test="StartOver" (click)="startOver()">
+          <mat-icon>undo</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="col-12 col-md-12 mb-2">
+      <div [ngClass]="{'bg-secondary' : !isWhite, 'bg-white': isWhite}">
+        <div class="py-4 pl-3">
+          <img src="api/ad-material/preview/{{designAdExternalRequest.SystemName}}/{{designAdExternalRequest.OrderID}}/{{designAdExternalRequest.AdMaterialID}}/{{designAdExternalRequest.ExternalMaterialID}}?isColor={{designAdExternalRequest.IsColor}}&ts={{date}}"
+            class="img-fluid preview-img">
+        </div>
+        <div class="fab-buttons text-right bg-toggle-btn">
+          <button title="Preview ad on a dark background. Background will not display in final ad." class="border-0 bg-transparent pr-3"
+            auto-test="toggle" (click)="isWhite = !isWhite">
+            <i class="material-icons">format_color_fill</i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-12 pt-2">
+      <p [ngClass]="documentAdMaterial?.SelectedAdSize?.HeightInInches <= height ? 'text-success':'text-danger'">The ad material height is :
+        <b>{{height}} inch(es)</b>
+      </p>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3 submit-btn pr-sm-0 mt-2">
+      <button mat-raised-button color="primary" class="text-uppercase w-100 mb-2" [disabled]="documentAdMaterial?.SelectedAdSize?.HeightInInches > height"
+        type="submit" value="Submit Form" (click)="saveAndContinue()">Save And Continue</button>
+    </div>
+
+  </div>
+
+</ng-template>

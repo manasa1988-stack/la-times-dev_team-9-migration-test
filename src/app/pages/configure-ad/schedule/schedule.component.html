@@ -1,0 +1,201 @@
+<div class="row py-3" *ngIf="availableDates !== undefined && layoutData !== undefined">
+    <div class="col-12 col-md-12">
+        <div *ngFor="let msg of deadlineMessages">
+            <div class="alert alert-primary mb-1" *ngIf="msg?.isWarning">
+                <i class="fa fa-exclamation-triangle"></i>
+                Complete purchase by {{ msg?.deadlineDate | date:"hh:mm a" }} ({{availableDates?.DisplayTimeZone}}) {{ msg?.deadlineDate
+                | date:"MMM d, yyyy" }} to meet {{ msg?.dispPubDate | date:"MMM d, yyyy" }} run date
+            </div>
+            <div class="alert alert-danger mb-1" *ngIf="msg?.isError">
+                <i class="fa fa-times-circle-o text-danger" aria-hidden="true"></i>
+                The availability for {{ msg?.dispPubDate | date:"MMM d, yyyy" }} has expired, please return to Calendar to select dates
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-12 col-md-12" *ngIf="currentOrderItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] && !currentOrderItem?.IsDfpOrderItem && impressions !== undefined">
+        <impressions [orderId]="order?.AdSSId" [currentOrderItem]="currentOrderItem" [impressions]="impressions" (passEvent)="onNotify($event)"></impressions>
+    </div>
+    <div class="col-12 col-md-12" *ngIf="availableDates !== undefined">
+        <geo-targetting [availableDates]="availableDates" [currentOrderItem]="currentOrderItem" *ngIf="currentOrderItem?.NumTargetOptions > 0 && availableDates?.OnlineDisplayTarget?.length > 1 && !currentOrderItem?.IsDfpOrderItem; else reachContent"
+            (passEvent)="onNotify($event)"></geo-targetting>
+        <ng-template #reachContent>
+            <reach [availableDates]="availableDates" [currentOrderItem]="currentOrderItem" *ngIf="!availableDates?.IsHideZoneSection && ((availableDates?.AvailableZones?.length > 1) || (availableDates?.ZoneFullRun && availableDates?.AvailableZones?.length > 0))"
+                (passEvent)="onNotify($event)"></reach>
+        </ng-template>
+    </div>
+
+    <div class="col-12 col-md-12" *ngIf="currentOrderItem?.IsDfpOrderItem && layoutData !== undefined" [hidden]="layoutData?.ApiapplicableAdSize?.length < 2 ">
+        <ad-size [order]="order " [currentOrderItem]="currentOrderItem" [adSizeList]="layoutData?.ApiapplicableAdSize" (passEvent)="onNotify($event) "></ad-size>
+    </div>
+    
+    <div class="col-12 col-md-12">
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>
+                        Run Dates
+                        <mat-icon *ngIf="currentOrderItem?.IsDfpOrderItem" class="font-13 help-icon" placement="bottom" ngbTooltip="The number of days selected determines the number of available impressions. If you are not seeing a sufficient number of impressions, increase the number of days in your campaign.">help</mat-icon>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <p *ngIf="availableDates?.IsDefaultLayout; else redEye">
+                            First available date has been preselected for you, modify and select any additional date(s) you would like your listing to
+                            appear by clicking on available dates.
+                        </p>
+
+                        <ng-template #redEye>
+                            <p>
+                                Select the 5 day period you would like your Deals on Tap ad to run in the Red Eye
+                            </p>
+                        </ng-template>                        
+                        <div class="alert alert-info mb-3" *ngIf="currentOrderItem?.NumOfInsertions > 1">                              
+                            <i class="fa fa-info-circle"></i>
+                            Please select minimum {{currentOrderItem?.NumOfInsertions}} date(s) from the calendar
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-md-12">
+                        <div class="d-flex justify-content-center date-picker-wrapper">
+                            <ngb-datepicker [displayMonths]="numberOfDisplayMonths" [dayTemplate]="t" [firstDayOfWeek]=7 [minDate]="minDate" [maxDate]="maxDate"
+                                [markDisabled]="markDisabled" [navigation]="navigation" (select)="onDateSelection($event)">
+                            </ngb-datepicker>
+
+                            <ng-template #t let-date="date" let-focused="focused" let-disabled="disabled" let-selected="selected">
+                                <span class="custom-day" [class.bg-warning]="isSelected(date)" [class.bg-success]="isDiscounted(date) && !isSelected(date) && isPubDateSelected() && !disabled && !currentOrderItem?.IsDfpOrderItem"
+                                    [class.disabled]="disabled" [class.focused]="focused" [class.today]="isToday(date)">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-9 mt-3">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item text-uppercase">
+                                <i class="fa fa-square text-muted" aria-hidden="true"></i>
+                                <small>Todays Date </small>
+                            </li>
+                            <li class="list-inline-item text-uppercase">
+                                <i class="fa fa-square text-warning" aria-hidden="true"></i>
+                                <small>Selected Run Dates</small>
+                            </li>
+                            <li class="list-inline-item text-uppercase" *ngIf="volumeDiscounts?.length > 0">
+                                <i class="fa fa-square text-success" aria-hidden="true"></i>
+                                <small>Discount Range</small>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-md-3 text-right mt-3 submit-btn" *ngIf="currentOrderItem?.IsDfpOrderItem">
+                        <button class="mb-2 mr-2" mat-raised-button color="primary" auto-test="clearAllSelectedDates" (click)="clearAllSelectedDates()">Clear Selection</button>
+                    </div>
+
+                    <div class="col-12 border-right mr-3 discountdates" [style.min-height]="'155px'" [ngClass]="volumeDiscounts?.length > 0 ? 'col-md-6 border-right' : 'col-md-12 border-right-0'">
+                        <div>                            
+                            <strong>Your Selected Dates
+                                <span *ngIf="volumeDiscounts?.length > 0">& Discounts</span>
+                            </strong>
+                            <p class="text-muted font-weight-bold">SELECTED DATES:</p>
+                            <mat-chip-list *ngIf="(impressionNums > 0 && selectedPubDates?.length > 0) || (currentOrderItem?.IsDfpOrderItem && startDate !== undefined && endDate !== undefined); else selectedDates">
+                                <mat-chip class="mb-2 ml-0 mr-1 text-center">
+                                    <span>{{startDate | date:"EEEE, M/d/yyyy"}} - {{endDate | date:"EEEE, M/d/yyyy"}}</span>
+                                </mat-chip>
+                            </mat-chip-list>
+                            <ng-template #selectedDates>    
+                                <mat-chip-list *ngIf="selectedPubDates && !currentOrderItem?.IsDfpOrderItem; else none">
+                                    <mat-chip *ngFor="let date of selectedPubDates" title="Click to remove" auto-test="removeDate" (click)="removeDate(date)"
+                                        class="mb-2 ml-0 mr-1 cursor-pointer">
+                                        {{date | date:"MMM d"}}
+                                    </mat-chip>
+                                </mat-chip-list>
+                                <ng-template #none>
+                                    <div>none</div>
+                                </ng-template>
+                            </ng-template>
+                        </div>
+                        <div *ngIf="volumeDiscountID > -1">
+                            <div>
+                                <div class="text-muted font-weight-bold">DISCOUNT APPLIED:</div>
+                                
+                                <div> <span *ngIf="discountApplied?.SelfServiceName">{{discountApplied?.SelfServiceName}}</span> 
+                                    <span *ngIf="!discountApplied?.SelfServiceName">Save {{ discountApplied?.DiscountPercent * 100 | number:0}}% - Choose {{discountApplied?.TargetDays}}
+                                    days minimum within {{discountApplied?.RangeDays}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 d-md-none border-top my-2" *ngIf="volumeDiscounts?.length > 0"></div>
+
+                    <div class="col-12 col-md-5 pr-md-0" *ngIf="volumeDiscounts?.length > 0">
+                        <strong class="text-muted">SELECT MORE DAYS AND SAVE:</strong>
+                        <div class="row">
+                            <div class="col-12 d-lg-none text-danger discount-list">
+                                <ul class="list-unstyled mb-2">
+                                    <li class="mb-0">
+                                        <small>Discount only applies to print ad</small>
+                                    </li>
+                                    <li class="mb-0">
+                                        <small>Date range determined by first print ad</small>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="col-12 col-lg-6 pr-md-0 select-offer mb-2">
+                                <div ngbDropdown class="discounts">
+                                    <button class="form-control text-left rounded-0" id="offerSelect" ngbDropdownToggle>{{selectedDiscountText}}</button>
+                                    <div ngbDropdownMenu aria-labelledby="offerSelect">
+                                        <button auto-test="offerSelected" (click)="offerSelected('ALL OFFERS')" class="dropdown-item">ALL OFFERS</button>
+                                        <button auto-test="offerSelected" *ngFor="let discount of groupedVD" (click)="offerSelected(discount)" class="dropdown-item">{{ discount?.key*100 | number:0}}%</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 d-none d-lg-block text-danger discount-list">
+                                <ul class="list-unstyled">
+                                    <li class="mb-0">
+                                        <small>Discount only applies to print ad</small>
+                                    </li>
+                                    <li class="mb-0">
+                                        <small>Date range determined by first print ad</small>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-12 pr-0">
+                                <ul *ngIf="selectedDiscountText == 'ALL OFFERS'; else otherOffers" class="list-unstyled">
+                                    <li *ngFor="let discount of groupedVD" class="text-uppercase mb-0" [ngClass]="discountApplied?.DiscountPercent ==  discount?.key ? 'bg-success' : ''">
+                                       <span *ngIf="discount?.items[0]?.SelfServiceName">{{discount?.items[0]?.SelfServiceName}}</span> 
+                                       <span *ngIf="!discount?.items[0]?.SelfServiceName"><b> SAVE {{ discount?.key*100 | number:0 }}% </b>, SELECT {{discount.items[0]?.TargetDays}}
+                                        DAYS MINIMUM WITHIN {{discount?.items[0]?.RangeDays}} Calendar days</span>
+                                    </li>
+                                </ul>
+                                <ng-template #otherOffers>
+                                    <ul *ngIf="selectedDiscountText != 'ALL OFFERS'" class="list-unstyled">
+                                        <li *ngFor="let item of selectedDiscount?.items" class=" mb-0" [ngClass]="volumeDiscountID ==  item.Id ? 'bg-success' : ''">
+                                            <span *ngIf="item.SelfServiceName">{{item.SelfServiceName}}</span> 
+                                            <span *ngIf="!item.SelfServiceName">Save {{ item.DiscountPercent * 100 | number:0}}% - Choose {{item.TargetDays}} days minimum within {{item.RangeDays}} Calendar
+                                            days</span>
+                                        </li>
+                                    </ul>
+                                </ng-template>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+    <div class="col-12 col-md-12" *ngIf="currentOrderItem?.IsDfpOrderItem && configureDFPData !== undefined">
+        <targeting [currentOrderItem]="currentOrderItem" [order]="order" [configureDFPData]="configureDFPData" (passEvent)="onNotify($event)"></targeting>
+    </div>
+    <div class="col-12 col-md-12" *ngIf="currentOrderItem?.IsDfpOrderItem">
+        <inventory-check [currentorderItemPrice]="currentorderItemPrice" [currentOrderItem]="currentOrderItem" [order]="order" (passEvent)="onNotify($event)"></inventory-check>
+    </div>
+</div>

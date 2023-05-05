@@ -1,0 +1,205 @@
+<div class="bg-primary text-white text-uppercase pl-3 pt-3 pb-1">
+    <p class="text-uppercase text-white">EDIT AD MATERIAL</p>
+</div>
+<div class="card rounded-0">
+    <div class="card-body">
+        <div class="row mx-0">
+            <div class="col-12 col-md-6 px-md-5">
+                <div class="text-center">
+                    <h4 class="border-bottom font-weight-bold"> Current</h4>
+                </div>
+                <div class="row mb-2 border-bottom" *ngIf="currentOrderItem?.AllToBePublishedAdMaterial.length == 0">
+                    <!--Ad material-->
+                    <div class="col-md-7" *ngIf="currentOrderItem?.HasAdMaterial && currentOrderItem?.AdMaterialUrl">
+                        <div class="m-1 d-table text-center w-100">
+                            <div class="imageWrapper m-2">
+                                <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary" auto-test="preview" (click)="adMaterialPreview(currentOrderItem?.AdMaterialUrl)">
+                                    <mat-icon>zoom_in</mat-icon>
+                                </button>
+                                <img [src]="currentOrderItem?.AdMaterialUrl" class="imgWithinParent preview-img img-fluid" (click)="adMaterialPreview(currentOrderItem?.AdMaterialUrl)">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div *ngIf="currentOrderItem?.HasUploadedAd" class="px-1">
+                                <button title="Crop Material" mat-mini-fab color="primary" auto-test="Crop" (click)="openImageEditorModal('editUploadedImage')">
+                                    <mat-icon>crop</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Crop</small>
+                                </div>
+                            </div>
+                            <div *ngIf="!currentOrderItem?.IsDesignAdOnly" class="px-1">
+                                <button title="Upload New Material" mat-mini-fab color="primary" auto-test="New" (click)="openImageEditorModal()">
+                                    <mat-icon>file_upload</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Upload</small>
+                                </div>
+                            </div>
+                            <div *ngIf="currentOrderItem?.HasDesignedAd" class="px-1">
+                                <button title="Edit your template" mat-mini-fab color="primary" auto-test="edit" [routerLink]="['/drafts/' + order.AdSSId +'/' + currentOrderItem.Id +'/design-ad']"
+                                    [queryParams]="{ noTemplateChange: isNotAllowedToChangeTemplate(), aditId: order.AditId, adSizeId: currentOrderItem?.AdSizeId, templateCode: newAdMaterial?.AdTemplateCode, adMaterialId: newAdMaterial?.Id, externalMaterialId: newAdMaterial?.ExternalId, isColor: currentOrderItem?.IsColor, sectionId: currentOrderItem?.SectionId, selectedRunDate:currentOrderItem?.RunDates, positionId: currentOrderItem?.PositionId, packageCode: order.PackageCode, buCode: buCode, isEditing: true, isFromAdit: isCallFromAdit}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Edit</small>
+                                </div>
+                            </div>
+                            <div *ngIf="!currentOrderItem?.HasDesignedAd" class="px-1">
+                                <button title="Create new template" mat-mini-fab color="primary" auto-test="edit" [routerLink]="['/drafts/'+ order.AdSSId +'/' + currentOrderItem.Id +'/design-ad']"
+                                    [queryParams]="{ noTemplateChange: false, aditId: order.AditId, adSizeId: currentOrderItem?.AdSizeId, templateCode: newAdMaterial?.AdTemplateCode, adMaterialId: newAdMaterial?.Id, externalMaterialId: newAdMaterial?.ExternalId, isColor: currentOrderItem?.IsColor, sectionId: currentOrderItem?.SectionId, selectedRunDate:currentOrderItem?.RunDates,positionId: currentOrderItem?.PositionId, packageCode: order.PackageCode, buCode: buCode, isEditing: false, isFromAdit: isCallFromAdit}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Create</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Run Dates-->
+                    <div class="col-md-5">
+                        <div *ngIf="currentOrderItem?.RunDateString; else showListOfDates" class="m-1">
+                            {{ currentOrderItem?.RunDateString }}
+                        </div>
+                        <ng-template #showListOfDates>
+                            <div *ngFor="let runDate of currentOrderItem?.RunDates" class="m-1">
+                                {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                            </div>
+                        </ng-template>
+                    </div>
+
+                </div>
+                <div class="row border-bottom" *ngFor="let adMaterial of currentOrderItem?.AllToBePublishedAdMaterial">
+                    <div class="col-7 col-md-6 mb-2 pl-md-2 pl-0">
+                        <div class="m-1 d-table text-center w-100">
+                            <div class="imageWrapper m-2">
+                                <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary" auto-test="preview" (click)="adMaterialPreview(adMaterial?.AdMaterialUrl);">
+                                    <mat-icon>zoom_in</mat-icon>
+                                </button>
+                                <img [src]="adMaterial?.AdMaterialUrl" class="imgWithinParent preview-img img-fluid" (click)="adMaterialPreview(adMaterial?.AdMaterialUrl);">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div *ngIf="adMaterial.AdTemplateCode == null" class="px-1">
+                                <button title="Crop Material" mat-mini-fab color="primary" auto-test="Crop" (click)="openImageEditorModal('editUploadedImage', adMaterial)">
+                                    <mat-icon>crop</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Crop</small>
+                                </div>
+                            </div>
+                            <div *ngIf="!currentOrderItem?.IsDesignAdOnly" class="px-1">
+                                <button title="Upload New Material" mat-mini-fab color="primary" auto-test="New" (click)="openImageEditorModal()">
+                                    <mat-icon>file_upload</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Upload</small>
+                                </div>
+                            </div>
+                            <div *ngIf="!adMaterial.UploadedFile" class="px-1">
+                                <button title="Edit your template" mat-mini-fab color="primary" auto-test="edit" [routerLink]="['/drafts/'+ order.AdSSId +'/' + currentOrderItem.Id +'/design-ad']"
+                                    [queryParams]="{ noTemplateChange: isNotAllowedToChangeTemplate(), aditId: order.AditId, adSizeId: currentOrderItem?.AdSizeId, templateCode: newAdMaterial?.AdTemplateCode, adMaterialId: newAdMaterial?.Id, externalMaterialId: newAdMaterial?.ExternalId, isColor: currentOrderItem.IsColor, sectionId: currentOrderItem.SectionId,selectedRunDate:currentOrderItem?.RunDates, positionId: currentOrderItem.PositionId, packageCode: order.PackageCode, buCode: buCode, isEditing: true,isFromAdit: isCallFromAdit}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Edit</small>
+                                </div>
+                            </div>
+                            <div *ngIf="adMaterial.UploadedFile" class="px-1">
+                                <button title="Create new template" mat-mini-fab color="primary" auto-test="edit" [routerLink]="['/drafts/'+ order.AdSSId +'/' + currentOrderItem.Id +'/design-ad']"
+                                    [queryParams]="{ noTemplateChange: false, aditId: order.AditId, adSizeId: currentOrderItem?.AdSizeId, templateCode: newAdMaterial?.AdTemplateCode, adMaterialId: newAdMaterial?.Id, externalMaterialId: newAdMaterial?.ExternalId, isColor: currentOrderItem.IsColor, sectionId: currentOrderItem.SectionId, selectedRunDate:currentOrderItem?.RunDates,positionId: currentOrderItem.PositionId, packageCode: order.PackageCode, buCode: buCode, isEditing: false, isFromAdit: isCallFromAdit}">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <div class="text-center">
+                                    <small>Create</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-5 col-md-6 px-md-2 px-0 pt-2">
+                        <div *ngFor="let runDate of adMaterial.RunDates" class="ml-1">
+                            {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12 col-md-6 px-md-5" *ngIf="hasUploadedNewMaterial">
+                <div class="text-center">
+                    <h4 class="border-bottom font-weight-bold">New</h4>
+                </div>
+                <div class="row mb-2">
+
+                    <div class="my-1 col-11 col-md-11 col-lg-8 pl-4 new-image">
+                        <div class="imageWrapper m-2">
+                            <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary" auto-test="preview" (click)="adMaterialPreview(newAdMaterialUrl)">
+                                <mat-icon>zoom_in</mat-icon>
+                            </button>
+                            <img [src]="newAdMaterialUrl" class="img-fluid preview-img">
+                        </div>
+
+                    </div>
+                    <div *ngIf="currentOrderItem?.TypeId != orderItemTypes['OnlineDisplayOrderItem'] && currentOrderItem.AllSubmittedAdMaterial[0].ExternalId != newAdMaterial.ExternalId"
+                        class="my-3 col-11 col-md-11 col-lg-8 pl-0 pl-md-3">
+                        <div class="my-3" ngbDropdown>
+                            <button class="form-control text-left rounded-0" id="statusDropDown" ngbDropdownToggle>
+                                Select Date(s)
+                                <span *ngIf="selectedRunDates.length > 0"> : ({{selectedRunDates.length}})</span>
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="statusDropDown">
+                                <div class="dropdown-item" (click)="$event.stopPropagation();">
+                                    <label>
+                                        <input type="checkbox" [checked]="selectedRunDates.length === availableRunDates.length" (change)="selectAllChange($event);$event.stopPropagation();">
+                                        <strong>Select all</strong>
+                                    </label>
+                                </div>
+                                <div *ngFor="let runDate of availableRunDates" class="dropdown-item" (click)="$event.stopPropagation();">
+                                    <label>
+                                        <input [disabled]="runDate <= this.dateNow" type="checkbox" [checked]="selectedRunDates.indexOf(runDate) != -1" (change)="checkboxChange(runDate, $event);$event.stopPropagation();"> {{ runDate | date:"EEEE, MMMM dd, yyyy" }}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-1" *ngIf="selectedRunDates.length > 0">
+                            <mat-chip-list>
+                                <mat-chip class="my-1 ml-0" *ngFor="let selectedRunDate of selectedRunDates">
+                                    {{ selectedRunDate | date:"EEEE, MMMM dd, yyyy" }}
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="currentOrderItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] && hasUploadedNewMaterial" class="my-3">
+    <div class="bg-primary text-white text-uppercase pl-3 pt-3 pb-1">
+        <p class="text-uppercase text-white">Click-Through URL for Ad</p>
+    </div>
+    <div class="card rounded-0">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field class="w-100">
+                        <label>Please enter a complete URL
+                            <strong>(e.g. http://www.address.com)</strong> and click "Test Link" to verify that the link resolves
+                            to the correct page.</label>
+                        <input matInput type="text" [formControl]="clickThroughUrl">
+                        <mat-error *ngIf="invalidURL" class="mb-2">
+                            {{invalidURL}}
+                        </mat-error>
+                    </mat-form-field>
+                    <a class="help-icon" (click)="openUrl()">
+                        <u>Test Link</u>
+                    </a>
+                </div>
+                <!-- <a [href]="currentOrderItem?.ClickThroughUrl" target="_blank" [title]="orderLineItem?.ClickThroughUrl" class="small d-inline-block text-center">
+            Click through url
+            <i class="fa fa-link"></i>
+        </a> -->
+            </div>
+        </div>
+    </div>
+</div>

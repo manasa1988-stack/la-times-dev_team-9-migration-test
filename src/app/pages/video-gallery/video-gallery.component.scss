@@ -1,0 +1,69 @@
+.paginator-menu {
+    display: flex;
+}
+
+.--auto-width {
+    width: auto !important;
+}
+
+.--flex-one {
+    flex-grow: 1;
+}
+
+.card {
+    cursor: pointer;
+}
+.card-body {
+    position: relative;
+}
+.card-body::after {
+    content: '';
+    float: left;
+    padding-top: 56%;
+}
+
+.card-body-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.--video-card {
+    width: 100%;
+}
+
+.card-footer {
+    min-height: 4.5rem;
+}
+
+p.disclaimer-title {
+    font-size: 2.5rem;
+    line-height: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.--latimes-disclaimer-title {
+    font-family: jubilatbold;
+}
+p.disclaimer-sub-title {
+    font-size: 1.33rem;
+    line-height: 1.5rem;
+    margin-bottom: 1rem;
+    font-family: Arial;
+}
+
+p.disclaimer-comment {
+    font-size: 0.8rem;
+    line-height: 1.2rem;
+    margin-bottom: 0.8rem;
+    font-family: Arial;
+}
+
+.action-button {
+    width: 100%;
+}

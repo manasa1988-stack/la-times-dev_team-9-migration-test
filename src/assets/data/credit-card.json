@@ -1,0 +1,16 @@
+{
+  "Address1": "Dhayari",
+  "Address2": null,
+  "City": "Pune",
+  "ExpirationMonth": 12,
+  "ExpirationYear": 2022,
+  "FirstName": "Purushottam1",
+  "Id": 481914,
+  "IsPrimary": false,
+  "LastName": "Patil1",
+  "Number": "XXXXXXXXXXXX4242",
+  "SecurityCode": null,
+  "State": "IL",
+  "Type": 0,
+  "Zip": "12345"
+}

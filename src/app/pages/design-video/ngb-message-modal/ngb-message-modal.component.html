@@ -1,0 +1,43 @@
+<div class="modalBody">
+
+    <div class="title">
+        <h4>{{message?.title}}</h4>
+    </div>
+    <div class="body mb-4">
+        <p>{{message?.message}}</p>
+    </div>
+    <div class="footer">
+        <ng-container *ngIf="message?.secondaryActionLabel; else close">
+            <button
+                class="mr-2 mat-stroked-button text-uppercase"
+                (click)="_secondaryAction()"
+                mat-raised-button
+                color="base"
+                >
+                {{message?.secondaryActionLabel}}
+            </button>
+        </ng-container>
+        <ng-template #close>
+            <button
+                class="mr-2 mat-stroked-button text-uppercase"
+                (click)="_close()"
+                mat-raised-button
+                color="base"
+                >
+                Close
+            </button>
+        </ng-template>
+
+        <div class="submit-btn">
+            <button
+                class="text-uppercase"
+                title=""
+                mat-raised-button
+                (click)="_primaryAction()"
+                color="primary">
+                {{message?.primaryActionLabel}}
+            </button>
+        </div>
+    </div>
+
+</div>

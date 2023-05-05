@@ -1,0 +1,56 @@
+<mat-accordion>
+
+    <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+            <mat-expansion-panel-header class="bg-light pl-5">
+            <mat-panel-title>
+                    Reach
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+
+            <div class="col-12 col-sm-6 col-lg-8">
+                <div class="row">
+                    <div class="col-12">
+                        <p>
+                            Please select the zone or zones you would like to run your ad in. There are different zones available depending on the print
+                            section selected.
+                        </p>
+
+                    </div>
+                    <div class="col-12">
+                        <div class="row map-chkbox">
+                            <mat-checkbox class="col-12 col-lg-6" [id]="availableDates?.ZoneFullRun?.Id" [checked]="availableDates?.ZoneFullRun?.isChecked"
+                                auto-test="fullRunZoneSelected" (change)="fullRunZoneSelected($event)" (mouseenter)="mouseEvent(availableDates?.ZoneFullRun.Id, $event)"
+                                (mouseleave)="mouseEvent(availableDates?.ZoneFullRun?.Id, $event)" [disabled]="availableDates?.AvailableZones && availableDates?.AvailableZones.length == 0">
+                                {{availableDates?.ZoneFullRun?.Name}}
+                            </mat-checkbox>
+                            <mat-checkbox class="col-12 col-lg-6" *ngFor="let zone of availableDates?.AvailableZones" [checked]="zone.isChecked" [id]="zone?.Id"
+                                auto-test="zoneSelected" (change)="zoneSelected(zone, $event)" (mouseenter)="mouseEvent(zone?.Id, $event)" (mouseleave)="mouseEvent(zone.Id, $event)">
+                                {{zone?.Name}}
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-5 col-lg-4">
+                <div class="row">
+                    <div class="col-12">
+                        <p>
+                            <a [href]="availableDates?.ZoneMapLargeImageUrl" target="blank">View detailed map</a>
+                        </p>
+                    </div>
+                    <div class="col-md-12 zone-map d-none d-sm-block">
+                        <img [src]="availableDates?.ZoneMapImageUrl" class="map-bg" alt="">
+                        <div *ngFor="let map of availableDates?.AvailableZoneMaps">
+                            <img [src]="map.ZoneOverlayUrl" alt="" [ngClass]="{'map-img-hover': true, 'hide' : !map.isSelected }">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,133 @@
+<div class="w-100 bg-secondary text-white " *ngIf="configureDFPData !== undefined && orderItems !== undefined">
+  <h3 class="pl-3 py-2">Digital Products</h3>
+</div>
+<div class="table-responsive" *ngIf="configureDFPData !== undefined && orderItems !== undefined">
+
+  <table class="table digi-products">
+    <thead>
+      <tr>
+        <th scope="col" class="border-top-0 border-bottom-0">BUILD</th>
+        <th scope="col" class="border-top-0 border-bottom-0">SECTION</th>
+        <th scope="col" class="border-top-0 border-bottom-0">SUBSECTION</th>
+        <th scope="col" class="text-center border-top-0 border-bottom-0">STATUS</th>
+        <th scope="col" class="text-center border-top-0 border-bottom-0">DELETE PRODUCT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let digitalProduct of order?.OrderItems; let i = index" [attr.data-index]="i">
+        <td>
+          <mat-radio-group class="radio-group">
+            <mat-radio-button [checked]="currentOrderItemId == digitalProduct.Id ? true : false" auto-test="orderChanged"
+            [value]="digitalProduct.Id" class="mt-3"
+            (click)="orderChanged(digitalProduct.Id)">
+            </mat-radio-button>
+          </mat-radio-group>
+        </td>
+        <td>
+          <div *ngIf="order?.IsDraft;else inputTextBox">
+            <select [disabled]="!(currentOrderItemId === digitalProduct.Id)" [value]="digitalProduct.SectionId" class="custom-select-box mt-2 rounded-0 form-control"
+              (change)="updateSection(digitalProduct.Id, $event)">
+              <option *ngFor="let section of configureDFPData?.AdssSections" [selected]="digitalProduct.SectionId == section.ID" [value]="section.ID">
+                {{ section.Name }}
+              </option>
+            </select>
+
+          </div>
+          <ng-template #inputTextBox>
+            <mat-form-field>
+              <input matInput [type]="text" [value]="digitalProduct.Section.Name" [disabled]="true">
+            </mat-form-field>
+          </ng-template>
+        </td>
+        <td>
+
+          <div *ngIf="digitalProduct.Section?.Subsections != undefined;else inputTextBox1">
+            <select [disabled]="!(currentOrderItemId === digitalProduct.Id)" [value]="digitalProduct.SubsectionId != undefined ? digitalProduct.SubsectionId : '0' "
+              (change)="updateSubsection($event)" class="custom-select-box mt-2 rounded-0 form-control">
+              <option value="0" selected>-- Select Subsection(Optional) --</option>
+              <option *ngFor="let subSection of digitalProduct.Section?.Subsections" [value]="subSection.Id">
+                {{ subSection.Name }}
+              </option>
+            </select>
+          </div>
+          <ng-template #inputTextBox1>
+            <mat-form-field>
+              <input matInput [type]="text" [value]="currentOrderItem?.Section?.Subsection != undefined ? digitalProduct.Section.Subsection.Name : ''"
+                [disabled]="true">
+            </mat-form-field>
+          </ng-template>
+        </td>
+        <td>
+          <ul class="list-inline text-center" *ngIf="order?.OrderItems?.length == 1; else multipleDfpProducts">
+
+            <li class="list-inline-item">
+              <i class="fa fa-calendar font-21 cursor-pointer" [ngClass]="currentOrderItem?.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                aria-hidden="true" (click)="switchTab(0)" auto-test="switchTab0"></i>
+              <p class="mb-0 font-13">
+                <i class="fa fa-check-circle text-success" aria-hidden="true" *ngIf="currentOrderItem?.isScheduleCompleted"></i> Schedule
+              </p>
+            </li>
+            <li class="list-inline-item">
+              <i class="fa fa-laptop font-21 cursor-pointer" [ngClass]="currentOrderItem?.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                (click)="switchTab(1)" auto-test="switchTab1" aria-hidden="true"></i>
+
+              <p class="mb-0 font-13">
+                <i class="fa fa-check-circle text-success" aria-hidden="true" *ngIf="currentOrderItem?.isLayoutCompleted"></i> Layout
+
+              </p>
+            </li>
+
+          </ul>
+          <ng-template #multipleDfpProducts>
+            <ul class="list-inline text-center">
+
+              <li class="list-inline-item">
+                <i class="fa fa-calendar font-21 cursor-pointer" *ngIf="currentOrderItemId == digitalProduct.Id" [ngClass]="digitalProduct.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true" (click)="switchTab(0)" auto-test="switchTab0"></i>
+                <i class="fa fa-calendar font-21 cursor-pointer" *ngIf="currentOrderItemId != digitalProduct.Id" auto-test="loadOrderDetails" (click)="loadOrderDetails(digitalProduct.Id,0)"
+                  [ngClass]="digitalProduct.isScheduleCompleted ? 'text-success' : 'text-danger'" aria-hidden="true"></i>
+                <p class="mb-0 font-13">
+                  <i class="fa fa-check-circle text-success" aria-hidden="true" *ngIf="digitalProduct.isScheduleCompleted"></i> Schedule
+                </p>
+              </li>
+              <li class="list-inline-item">
+                <i class="fa fa-laptop font-21 cursor-pointer" *ngIf="currentOrderItemId == digitalProduct.Id" [ngClass]="digitalProduct.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                  (click)="switchTab(1)" auto-test="switchTab1" aria-hidden="true"></i>
+                <i class="fa fa-laptop font-21 cursor-pointer" *ngIf="currentOrderItemId != digitalProduct.Id" [ngClass]="digitalProduct.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true" auto-test="loadOrderDetails" (click)="loadOrderDetails(digitalProduct.Id,1)"></i>
+                <p class="mb-0 font-13">
+
+                  <i class="fa fa-check-circle text-success" aria-hidden="true" *ngIf="digitalProduct.isLayoutCompleted"></i> Layout
+                </p>
+              </li>
+
+            </ul>
+          </ng-template>
+        </td>
+        <td class="pt-4 text-center">         
+          <button mat-icon-button [disabled]="!(currentOrderItemId === digitalProduct.Id)" auto-test="removeProduct" (click)="removeProduct(digitalProduct)">
+            <i class="material-icons">delete</i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row" *ngIf="order.IsDraft || (currentOrderItem.Section.Subsections != undefined && currentOrderItem.Section.Subsections.length > 0)">
+  <div class="col-md-12">
+    <button class="bg-transparent border-0 add-btn text-primary pl-3 ml-1 pb-2" auto-test="addNewItem" (click)="addNewItem()">
+      <i class="material-icons">add_circle </i>
+      <span>ADD NEW ITEM</span>
+    </button>
+    <div class="border-bottom w-100"></div>
+  </div>
+</div>
+
+<div class="row my-4 mx-1">
+  <div class="col-md-12 py-3 bg-primary text-white">
+    <p class="mb-0">
+      <b>Build:</b> {{currentOrderItem?.SectionAndPositionName}}
+      <span *ngIf="currentOrderItem?.Subsection?.Name"> - {{currentOrderItem?.Subsection?.Name}}</span>
+    </p>
+  </div>
+</div>

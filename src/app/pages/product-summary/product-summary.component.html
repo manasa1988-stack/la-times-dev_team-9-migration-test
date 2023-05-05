@@ -1,0 +1,666 @@
+﻿<div class="row my-3" *ngIf="showDeadlineMessage && !showAttributes">
+  <div class="col-12 col-md-12">
+    <div class="alert alert-primary">
+      <i class="fa fa-exclamation-triangle"></i>
+      Complete purchase by {{maxDeadline | date:"shortTime"}}({{zone}}) {{maxDeadline | date:"mediumDate"}}
+      <span *ngIf="order.OrderItems[0].FirstRunDate.Date"> to meet {{order.OrderItems[0].FirstRunDate.Date |
+        date:"mediumDate"}} run date</span>.
+    </div>
+  </div>
+</div>
+
+<div class="">
+  <div *ngIf="order === undefined || order === null; else showOrder" class="my-3">
+    <error-alert></error-alert>
+  </div>
+  <ng-template #showOrder>
+
+    <div *ngIf="showAttributes">
+      <div *ngIf="showOrderNumberHeader" class="row">
+        <h4 class="col text-uppercase my-2 py-1 border-bottom">
+          <span *ngIf="orderId && orderId > 0">ORDER NUMBER:
+            <a href="/orders/{{orderId}}" (click)="orderNumber()" class="text-primary font-weight-bold">{{orderId}}</a>
+          </span>
+          <span *ngIf="adssId && adssId > 0 && !orderId && orderId <= 0">ORDER REFERENCE:
+            <a href="/queued/{{adssId}}" class="text-primary font-weight-bold">P-{{adssId}}</a>
+          </span>
+        </h4>
+      </div>
+
+      <div class="row">
+        <div class="col-5 col-sm-2 mb-3" *ngIf="order?.Status.Id != 3">
+          <div class="text-uppercase small text-muted d-block">Purchase date</div>
+          <div class="d-block">{{order?.SubmitDate | date:"MM/dd/yyyy" }}</div>
+        </div>
+        <div class="col-5 col-sm-2 mb-3" *ngIf="order?.Status.Id == 3">
+          <div class="text-uppercase small text-muted d-block">Cancelation date</div>
+          <div class="d-block">{{order?.LastUpdated | date:"MM/dd/yyyy" }}</div>
+        </div>
+        <div class="col-5 col-sm-2 mb-3" *ngIf="order?.IsPackageOrder">
+          <div class="text-uppercase small text-muted d-block">Package name</div>
+          <div class="d-block">{{order?.PackageDescription}}</div>
+        </div>
+        <div class="col-5 col-sm-2 mb-3" *ngIf="showCampaignDescription() || order?.DfpCampaignName">
+          <div class="text-uppercase small text-muted d-block">Project\Campaign name</div>
+          <div class="d-block" *ngIf="showCampaignDescription() && !order?.DfpCampaignName">{{order?.Description}}</div>
+          <div class="d-block" *ngIf="!showCampaignDescription() && order?.DfpCampaignName">{{order?.DfpCampaignName}}</div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="hideOnPrint button-row row justify-content-center">
+        <div class="col-4 text-white my-2" *ngIf="order.ShowCustomerProof" [ngClass]="allButtonsVisible() ? 'col-6 col-sm-4 col-md-3' : 'col-sm-3'">
+          <a mat-raised-button color="primary" auto-test="printOrder" class="w-100 " href="/api/order/printproof/{{order?.AdSSId}}"
+            (click)="$event.stopPropagation()" target="_blank">
+            <mat-icon class="align-middle ">print</mat-icon>
+            <span class="d-none d-sm-inline-block mx-2 text-uppercase">Print proof</span>
+          </a>
+        </div>
+        <div class="col-4 text-white my-2" *ngIf="allowUpdates && order.AllowOrderCancellation" [ngClass]="allButtonsVisible() ? 'col-6 col-sm-4 col-md-2' : 'col-sm-3'">
+          <button mat-raised-button color="primary" auto-test="cancelOrder" class="w-100" (click)="cancelOrder();$event.stopPropagation();">
+            <mat-icon class="align-middle ">close</mat-icon>
+            <span class="d-none d-sm-inline-block mx-2 text-uppercase">Cancel</span>
+          </button>
+        </div>
+
+        <div class="col-4 text-white my-2" *ngIf="allowUpdates && order.AllowOrderRenewal" [ngClass]="allButtonsVisible() ? 'col-6 col-sm-4 col-md-2' : 'col-sm-3'">
+          <button mat-raised-button color="primary" auto-test="renewOrder" class="w-100" (click)="renew()">
+            <mat-icon class="align-middle ">autorenew</mat-icon>
+            <span class="d-none d-sm-inline-block mx-2 text-uppercase">Renew</span>
+          </button>
+        </div>
+
+        <div class="col-4 text-white my-2" [ngClass]="allButtonsVisible() ? 'col-6 col-sm-4 col-md-2' : 'col-sm-3'">
+          <button (click)="printReceipt();" mat-raised-button color="primary" auto-test="printReceipt" class="w-100">
+            <mat-icon class="align-middle ">receipt</mat-icon>
+            <span class="d-none d-sm-inline-block mx-2 text-uppercase">Receipt</span>
+          </button>
+        </div>
+
+        <div class="col-4 text-white my-2" *ngIf="showOrderPOP" [ngClass]="allButtonsVisible() ? 'col-6 col-sm-4 col-md-3' : 'col-sm-3'">
+          <a mat-raised-button color="primary" auto-test="printPOP" class="w-80 " href="/api/configure/DownloadPOPFile/{{order?.AditId}}//{{order?.ApprovedPOPPath}}"
+            (click)="$event.stopPropagation()" download="{{order?.AditId}}.pdf" target="_blank">
+            <mat-icon class="align-middle ">get_app</mat-icon>
+            <span class="d-none d-sm-inline-block mx-2 text-uppercase">Download POP</span> 
+          </a>
+          <span><mat-icon class="font-13 help-icon text-black" placement="bottom" ngbTooltip="POP: Proof of Publication">help</mat-icon></span>
+        </div>
+      </div>
+
+
+      <div class="my-5">
+
+        <!-- Warnings -->
+        <div class="hideOnPrint my-2">
+          <div class="p-2 my-2" *ngIf="order.IsQueued && showDeadlineMessage" [ngClass]="(maxDeadline| date:'yyyyMMdd') >= (dateNow| date:'yyyyMMdd') ? 'bg-warning' : 'bg-danger text-white' ">
+            <mat-icon class="align-bottom mr-1">warning</mat-icon>
+            <span>Your order is currently being processed. If your order is not processed in 24 hrs please contact
+              Customer support.</span>
+          </div>
+
+          <div class="bg-warning p-2 my-2" *ngIf="!order.IsQueued && showDeadlineMessage">
+            <mat-icon class="align-bottom mr-1">warning</mat-icon>
+            <span>The deadline to update this order has passed.</span>
+          </div>
+
+          <div class="bg-warning p-2 my-2" *ngIf="order.IsModifiedBeyondSupport">
+            <mat-icon class="align-bottom mr-1">warning</mat-icon>
+            <span>This order has been modified by a customer service representative. Please contact our Customer
+              support team for
+              more details.</span>
+          </div>
+
+          <div class="bg-warning p-2 my-2" *ngIf="order?.Status?.Id == orderStatuses.Cancelled && isCanceled">
+            <mat-icon class="align-bottom mr-1">warning</mat-icon>
+            <span>You have successfully cancelled your order. A summary of the order you cancelled is below and
+              email confirmation
+              will be sent to the address you provided.
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <!--Headers-->
+    <div class="row bg-primary text-white m-0">
+      <div class="col-md-2 text-center py-2 border border-white">
+        PUBLICATION
+      </div>
+      <div class=" d-none d-md-block col">
+        <div class="row">
+          <div class="col-md-2 text-center py-2 border border-white">
+            PRODUCT
+          </div>
+          <div class="col-md-2 px-md-0 text-center py-2 border border-white">
+            SIZE
+          </div>
+          <div [class]="showOrderLinePrice ? 'col-md-6' : 'col'">
+            <div class="row">
+              <div class="col-md-5 text-center py-2 border border-white">
+                RUN DATES
+              </div>
+              <div class="col-md-7 text-center text-center py-2 border border-white">
+                AD PREVIEW
+              </div>
+            </div>
+          </div>
+          <div class="col text-center py-2 border border-white" *ngIf="showOrderLinePrice"> PRICE</div>
+        </div>
+      </div>
+    </div>
+
+    <!--OrderLines-->
+    <div class="row py-md-3 border m-0" [ngClass]="{'strikethrough': order.Status.Name === 'Cancelled'}" *ngFor="let orderLineItem of order?.OrderItems; let innerIndex = index">
+
+      <!--Publication-->
+      <div class="col-md-2 d-none d-md-block img-alt-txt">
+        <span *ngIf="orderLineItem?.Section">
+          <img class="mw-100 mh-100" [src]="assetsHostUrl + 'assets/images/products/'+ orderLineItem.Section.Product.Id +'/logo.png'"
+            [alt]="orderLineItem?.Section.Product.Name" />
+        </span>
+      </div>
+
+      <!--Publication: Mobile view-->
+      <a href="#" class="col-md-12 d-table d-md-none bg-light py-2 text-dark border anchor-tag-heading" (click)="toggleProduct(orderLineItem.Id);$event.preventDefault();$event.stopPropagation();"
+        style="height:50px;">
+        <div *ngIf="orderLineItem?.Section" class="d-table-cell w-50 5 mh-75 align-middle">
+          <img class="img-200x200" [src]="assetsHostUrl + 'assets/images/products/'+ orderLineItem.Section.Product.Id +'/logo.png'"
+            [alt]="orderLineItem?.Section.Product.Name" />
+        </div>
+        <div class="w-25 mh-75 d-table-cell text-right align-middle">
+          <div class="d-inline-block align-middle" *ngIf="showOrderLinePrice">{{orderLineItem.Price | currency: "USD"}}</div>
+          <mat-icon *ngIf="product[orderLineItem.Id]" class="d-inline-block align-middle text-primary">keyboard_arrow_down</mat-icon>
+          <mat-icon *ngIf="!product[orderLineItem.Id]" class="d-inline-block align-middle text-primary">keyboard_arrow_right</mat-icon>
+        </div>
+
+      </a>
+
+      <div class="col-md-10 productToggle" *ngIf="product[orderLineItem.Id]">
+        <div class="row mb-3 mb-md-2">
+          <!-- Product -->
+          <div class="col-md-2 px-md-1">
+            <strong class="d-block d-md-none my-2 text-uppercase border-bottom">
+              <u>Product</u>
+            </strong>
+            <div class="m-1">
+              <div class="mb-1" *ngIf="orderLineItem?.Section && orderLineItem?.Section?.Name">
+                <strong>Section: </strong>
+                <div class="section-content">{{orderLineItem?.Section.Name}}</div>
+              </div>
+
+              <div *ngIf="orderLineItem?.IsDfpOrderItem; else onlineOrderItemTargets">
+                <!--<div *ngIf="orderLineItem?.Section && orderLineItem?.Section?.Name">Section: {{orderLineItem?.Section?.Name}}</div>-->
+                <div class="mb-1" *ngIf="orderLineItem?.Subsection && orderLineItem?.Subsection?.Name">
+                  <strong>Subsection: </strong>
+                  <div>{{orderLineItem?.Subsection?.Name}}</div>
+                </div>
+                <div class="mb-1" *ngIf="orderLineItem?.DfpGeoTargettingStates">
+                  <strong>State(s): </strong>
+                  <div>{{orderLineItem?.DfpGeoTargettingStates}}</div>
+                </div>
+                <div class="mb-1" *ngIf="orderLineItem?.DfpGeoTargettingCities">
+                  <strong>City(s): </strong>
+                  <div>{{orderLineItem?.DfpGeoTargettingCities}}</div>
+                </div>
+              </div>
+
+              <ng-template #onlineOrderItemTargets>
+
+                <!-- Need to add a condition to check if onlineorderitem-->
+                <div *ngIf="orderLineItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] && orderLineItem?.Section?.HasTargets && orderLineItem?.TargetType?.Id > 0">
+                  <strong>Online target(s): </strong>
+                  <span>
+                    {{ orderLineItem?.TargetType.DisplayName }}
+                    <br /> {{ orderLineItem?.SelectedTargetNames }}
+                  </span>
+
+                </div>
+              </ng-template>
+
+              <div *ngIf="orderLineItem?.Zones && orderLineItem?.Zones?.length > 0">
+                <strong>Zone(s): </strong>
+                <div class="mb-1" *ngFor="let zone of orderLineItem?.Zones">
+                  {{zone.Name}}
+                </div>
+              </div>
+
+              <div class="mb-1" *ngIf="orderLineItem?.TypeId == orderItemTypes['PrintClassifiedsOrderItem']
+                                      && orderLineItem?.showLines
+                                      && orderLineItem?.NumberOfLinesOfCurrentAdMaterial > 0">
+                <strong>Line(s): </strong>
+                <div>{{ orderLineItem?.NumberOfLinesOfCurrentAdMaterial }}</div>
+              </div>
+
+              <div class="mb-1" *ngIf="orderLineItem?.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] || orderLineItem?.TypeId == orderItemTypes['PrintDisplayOrderItem']">
+                <strong>Color: </strong>
+                <div>{{orderLineItem?.IsColor ? 'Yes' : 'No'}}</div>
+              </div>
+
+              <div class="mb-1" *ngIf="(allowUpdates && orderLineItem?.IsOrderItemConfigurable && (order?.IsDocumentUpload || order?.IsDocumentUploadRequired)) || ((order?.IsDocumentUpload || order?.IsDocumentUploadRequired) && orderLineItem?.LstLegalDocs?.length > 0)">
+                <strong>Upload Ad Doc: </strong>
+                <div class="hideOnPrint btn-file cursor-pointer" *ngIf="allowUpdates && orderLineItem?.IsOrderItemConfigurable">
+                  <label class="btn-block" class="custom-file-upload" for="file-upload">
+                    <mat-icon>file_upload</mat-icon>
+                    <span>UPLOAD</span>
+                  </label>
+                  <input title="Upload" type="file" (change)="uploadLegalDoc($event, orderLineItem)" id="file-upload"
+                    class="d-none" />
+                </div>
+                <div class="hideOnPrint" *ngIf="showUploadDocErrorMessage">
+                  <mat-error *ngFor="let err of uploadDocErrorMessage">{{err}}</mat-error>
+                </div>
+                <div *ngIf="orderLineItem?.LstLegalDocs?.length > 0" class="uploaddoclist mt-2">
+                  <div class="documentlist_icon text-wrap" *ngFor="let doc of orderLineItem?.LstLegalDocs">
+                    <a class="v-align-top" [href]="'/api/configure/DownloadLegalFile/' + doc.OrderId +'/' + doc.DocumentName">{{doc.DocumentName}}</a>
+                    <button mat-icon-button auto-test="removeLegalDoc" class="v-align-top hideOnPrint" (click)="removeLegalDoc(doc, orderLineItem)"
+                      *ngIf="allowUpdates && orderLineItem?.IsOrderItemConfigurable">
+                      <i class="material-icons v-align-top">delete</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Ad Size -->
+          <div class="col-md-2 px-md-1">
+            <div *ngIf="orderLineItem?.AdSize?.Name">
+              <strong class="d-block d-md-none my-2 text-uppercase border-bottom">
+                <u>Size</u>
+              </strong>
+              <span *ngIf="orderLineItem?.AdSize" class="m-1">{{orderLineItem?.AdSize?.Name}}</span>
+            </div>
+          </div>
+
+          <!-- Run dates & Ad materials -->
+          <div [class]="showOrderLinePrice ? 'col-md-8' : 'col'">
+            <!-- for Products with single or no material-->
+            <div class="row mb-2" *ngIf="orderLineItem?.AllToBePublishedAdMaterial.length == 0">
+              <!--Run Dates-->
+              <div class="px-md-1" [ngClass]="showOrderLinePrice ? 'col-md-4' : 'col-md-5'">
+                <strong class="d-block d-md-none my-2 border-bottom">
+                  <u>RUN DATES</u>
+                </strong>
+
+                <div *ngIf="orderLineItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem']" class="m-1">
+                  <div class="font-weight-bold">Impressions: </div>
+                  <div *ngIf="orderLineItem?.IsDfpOrderItem">
+                    <span> {{ orderLineItem?.NumImpressions }}</span>
+                  </div>
+                  <div *ngIf="!orderLineItem?.IsDfpOrderItem">
+                    {{ orderLineItem?.ImpressionsName}}
+                  </div>
+                </div>
+                <div class="font-weight-bold">Dates: </div>
+                <div *ngIf="orderLineItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] || orderLineItem?.TypeId == orderItemTypes['OnlineClassifiedsOrderItem']; else printOrderItem"
+                  class="m-1">
+                  <div>
+                    {{ orderLineItem?.RunDateString }}
+                  </div>
+
+                </div>
+                <ng-template #printOrderItem>
+                  <div *ngFor="let runDate of orderLineItem?.RunDates" class="m-1">
+                    <span *ngIf="(orderLineItem?.Section?.Product?.MerlinOneName && (runDate|date:'yyyyMMdd') < (dateNow|date:'yyyyMMdd')), else showNormalDates">
+                      <!-- <a target="_blank" [href]="getETearSheetUrl(orderLineItem, runDate)">
+                        {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                        <i class="fa fa-newspaper-o"></i>
+                      </a> -->
+                      {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                    </span>
+                    <ng-template #showNormalDates>
+                      {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                    </ng-template>
+                  </div>
+                </ng-template>
+
+                <div *ngIf="order?.Status?.Id == orderStatuses.Cancelled">
+                  <div>Status:</div>
+                  <div>{{order?.Status?.Name}}</div>
+                </div>
+              </div>
+              <!--Ad material-->
+              <div [ngClass]="showOrderLinePrice ? 'col-md-5' : 'col-md-7'" *ngIf="orderLineItem?.HasAdMaterial && orderLineItem?.AdMaterialUrl">
+                <strong class="d-block d-md-none my-2 text-uppercase">
+                  <u>Ad preview</u>
+                </strong>
+                <div class="m-1 d-table text-center w-100">
+                  <div *ngIf="orderLineItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                    <a [href]="orderLineItem?.ClickThroughUrl" target="_blank" [title]="orderLineItem?.ClickThroughUrl"
+                      class="small d-inline-block text-center">
+                      Click through url
+                      <i class="fa fa-link"></i>
+                    </a>
+                  </div>
+                  <!--<img [src]="" class="imgWithinParent img-fluid" />-->
+                  <div class="imageWrapper m-2">
+                    <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary"
+                      (click)="adMaterialPreview(orderLineItem?.AdMaterialUrl, orderLineItem?.AdSize)">
+                      <mat-icon>zoom_in</mat-icon>
+                    </button>
+                    <img [src]="orderLineItem?.AdMaterialUrl" class="imgWithinParent img-fluid" (click)="adMaterialPreview(orderLineItem?.AdMaterialUrl, orderLineItem?.AdSize)">
+                  </div>
+                  <!--   [ngClass]="order?.ShowCustomerProof ? 'col-6' : 'col-12'"-->
+                  <div class="d-flex justify-content-center">
+                    <div class="hideOnPrint my-2 mr-2" *ngIf="IsEditAllowed(orderLineItem)">
+                      <a mat-mini-fab color="primary" auto-test="editOrderItem" class="text-white" (click)="goToEdit(orderLineItem);$event.stopPropagation()"
+                        target="_blank">
+                        <mat-icon class="align-middle ">edit</mat-icon>
+                      </a>
+                      <div class="text-center">
+                        <small>EDIT</small>
+                      </div>
+                    </div>
+                    <!--  *ngIf="order.AllowOrderRenewal" -->
+                    <div class="hideOnPrint my-2" *ngIf="allowUpdates && order.AllowOrderRenewal && order.HasMultipleConfigurableItems">
+                      <a mat-mini-fab title="Renew" color="primary" (click)="renew(orderLineItem.Id);$event.stopPropagation()"
+                        auto-test="renew">
+                        <mat-icon>autorenew</mat-icon>
+                      </a>
+                      <div class="text-center">
+                        <small>RENEW</small>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7 text-center" *ngIf="orderLineItem.IsWibbitzProduct">
+                <div
+                  class="wating-video"
+                  *ngIf="
+                    !orderLineItem.WibbitzVideoFileShareLink
+                    && !orderLineItem.YoutubeLink
+                    && !order.IsVideoEditDeadLinePassed
+                    && order.AditId
+                    && !orderLineItem.IsVideoProcessingFailed
+                    ">
+                  Rendering video<br/>
+                  (You will receive an email when your video is ready)
+                </div>
+                <div
+                  class="wating-video"
+                  *ngIf="
+                    !order.IsVideoEditDeadLinePassed
+                    && orderLineItem.IsVideoProcessingFailed
+                    ">
+                    An error occurred while generating your video. <br/>
+                  We have notified support and they will resolve this issue.
+                </div>
+                <a
+                *ngIf="(order.Status == null || (order.Status.Id != 3 && order.Status.Id != 5)) && orderLineItem.WibbitzVideoFileShareLink && orderLineItem.YoutubeLink"
+                  (click)="openShareModal(orderLineItem, order)">
+                  <i class="fa fa-film fa-2x" aria-hidden="true"></i>
+                </a>
+                <a
+                  href="javascript:;"
+                  (click)="playVideo(orderLineItem.WibbitzVideoFileShareLink)"
+                  *ngIf="(order.Status == null || (order.Status.Id != 3 && order.Status.Id != 5)) && orderLineItem.WibbitzVideoFileShareLink && !orderLineItem.YoutubeLink">
+                  <i class="fa fa-film fa-2x" aria-hidden="true"></i>
+                </a>
+
+                <div class="hideOnPrint"
+                  *ngIf="!order.IsVideoEditDeadLinePassed && order.AditId"
+                  [ngClass]="orderLineItem.WibbitzVideoFileShareLink ? 'mt-5' : 'mt-2'">
+                  <a
+                    mat-mini-fab color="primary"
+                    class="text-white"
+                    (click)="navigateToEditVideo();$event.stopPropagation()"
+                    target="_blank">
+                    <mat-icon class="align-middle ">edit</mat-icon>
+                  </a>
+
+                  <div class="text-center">
+                    <small>EDIT VIDEO</small>
+                  </div>
+                  <div class="text-center mt-5" *ngIf="(order.Status == null || (order.Status.Id != 3 && order.Status.Id != 5)) && orderLineItem.WibbitzVideoFileShareLink && orderLineItem.YoutubeLink">
+                    <mat-checkbox type="checkbox" [checked]="!orderLineItem.IsVisibleOnGallery" (change)="toggleVideoOnGallery($event.checked, order)">Make Video Unlisted</mat-checkbox>
+                    <a matTooltip="Unlisted videos can still be downloaded and shared but will not appear on the Los Angeles Times Video Tribute page." href="javascript:;" *ngIf="orderLineItem.VideoBU == 'lat'">
+                      <mat-icon>help</mat-icon>
+                    </a>
+                    <a matTooltip="Unlisted videos can still be downloaded and shared but will not appear on the San Diego Union-Tribune Video Tribute page." href="javascript:;" *ngIf="orderLineItem.VideoBU == 'sdt' && (orderLineItem.VideoGallery == null || orderLineItem.VideoGallery == 'SDT')">
+                      <mat-icon>help</mat-icon>
+                    </a>
+                    <a matTooltip="Unlisted videos can still be downloaded and shared but will not appear on the Union-Tribune Community Press Video Tribute page." href="javascript:;" *ngIf="orderLineItem.VideoGallery == 'SCP'">
+                      <mat-icon>help</mat-icon>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <!--Price-->
+              <div class="col-md-3 px-1 text-right d-none d-md-block" *ngIf="showOrderLinePrice">
+                <p class="m-1 ">{{orderLineItem.Price | currency: "USD"}}</p>
+              </div>
+            </div>
+
+            <!--for Products with multiple ad-material-->
+            <div class="row " *ngFor="let adMaterial of orderLineItem?.AllToBePublishedAdMaterial; let index=index">
+              <div [ngClass]="showOrderLinePrice ? 'col-md-4' : 'col-md-5'">
+                <strong class="d-block d-md-none my-2 text-uppercase border-bottom">
+                  <u>RUN DATES</u>
+                </strong>
+                <div class="font-weight-bold">Dates: </div>
+                <div *ngFor="let runDate of adMaterial.RunDates" class="ml-1">
+                  <span *ngIf="(orderLineItem?.Section?.Product?.MerlinOneName && (runDate|date:'yyyyMMdd') < (dateNow|date:'yyyyMMdd')), else showNormalDates">
+                    <!-- <a target="_blank" [href]="getETearSheetUrl(orderLineItem,runDate)">
+                      {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                      <i class="fa fa-newspaper-o"></i>
+                    </a> -->
+                    {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                  </span>
+                  <ng-template #showNormalDates>
+                    {{ runDate | date:"EEEE, MMMM dd, yyyy" }}
+                  </ng-template>
+
+                </div>
+                <div *ngIf="order?.Status?.Id == orderStatuses.Cancelled">
+                  <div>Status:</div>
+                  <div>{{order?.Status?.Name}}</div>
+                </div>
+              </div>
+              <div class="mb-2" [ngClass]="showOrderLinePrice ? 'col-md-5' : 'col-md-7'">
+                <strong class="d-block d-md-none my-2 text-uppercase  border-bottom">
+                  <u>Ad preview</u>
+                </strong>
+                <div class="m-1 d-table text-center w-100">
+                  <div *ngIf="orderLineItem?.TypeId == orderItemTypes['OnlineDisplayOrderItem']" class="ml-1">
+                    <!-- Needto add check for can show adpreview condition && isShowAdmaterialPreview-->
+                    <a [href]="orderLineItem?.ClickThroughUrl" target="_blank" [title]="orderLineItem?.ClickThroughUrl">Click-Through
+                      URL</a>
+                  </div>
+
+                  <div class="imageWrapper m-2">
+                    <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary"
+                      (click)="adMaterialPreview(adMaterial?.AdMaterialUrl);">
+                      <mat-icon>zoom_in</mat-icon>
+                    </button>
+                    <img [src]="adMaterial?.AdMaterialUrl" class="imgWithinParent img-fluid" (click)="adMaterialPreview(adMaterial?.AdMaterialUrl);">
+                  </div>
+
+                  <div class="d-flex justify-content-center">
+                    <div class="hideOnPrint my-2 mr-2" *ngIf="IsEditAllowed(orderLineItem) && adMaterial?.Id == orderLineItem.AllToBePublishedAdMaterial[0].Id">
+                      <a mat-mini-fab color="primary" auto-test="editOrderItem" class="text-white " (click)="goToEdit(orderLineItem);$event.stopPropagation()"
+                        target="_blank">
+                        <mat-icon class="align-middle ">edit</mat-icon>
+                      </a>
+                      <div class="text-center">
+                        <small>EDIT</small>
+                      </div>
+                    </div>
+                    <!-- <div class="small text-uppercase text-muted">
+                      Edit material
+                    </div> -->
+                    <div class="hideOnPrint my-2" *ngIf="allowUpdates && order.AllowOrderRenewal && order.HasMultipleConfigurableItems && index == 0">
+                      <a mat-mini-fab title="Renew" color="primary" (click)="renew(orderLineItem.Id);$event.stopPropagation()"
+                        auto-test="renew">
+                        <mat-icon>autorenew</mat-icon>
+                      </a>
+                      <div class="text-center">
+                        <small>RENEW</small>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-md-3 px-1 text-right d-none d-md-block" *ngIf="showOrderLinePrice">
+                <p class="m-1" *ngIf="index == 0">{{orderLineItem.Price | currency: "USD"}}</p>
+                <p class="m-1" *ngIf="index > 0">no charge for edits</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- Upgrades -->
+        <div class="row" *ngIf="orderLineItem?.UpsellAttributes.length > 0">
+          <div class="col-md-12">
+            <div *ngIf="showUpsellGrid" class="text-muted my-2">
+              <strong class="d-inline-block align-middle text-uppercase">Upgrade(s):</strong>
+            </div>
+            <ul class="m-1 ml-2">
+              <div *ngFor="let upsellAttribute of orderLineItem?.UpsellAttributes">
+                <li *ngIf="upsellAttribute.IsBooleanType && order?.AttributeValues[upsellAttribute.Name].Value == 'true'">
+                  {{upsellAttribute.DisplayName}}
+                </li>
+                <li *ngIf="upsellAttribute.IsImageListType && order?.AttributeValues[upsellAttribute.Name].Value">
+                  {{upsellAttribute.DisplayName}}
+                  <div class="float-right hideOnPrint text-center" *ngIf="!orderLineItem?.HasAdMaterial && !showDeadlineMessage && allowUpdates">
+                    <a mat-mini-fab color="primary" auto-test="editOrderItem" class="text-white " (click)="goToEdit(orderLineItem, upsellAttribute);$event.stopPropagation()"
+                      target="_blank">
+                      <mat-icon class="align-middle">edit</mat-icon>
+                    </a>
+                    <div class="text-center">
+                      <small>EDIT</small>
+                    </div>
+                  </div>
+                  <ul class="list-inline image-list-scroll upgrades-img-list mt-2" *ngIf="upsellAttribute.IsImageListType">
+                    <li class="list-inline-item col-lg-2 py-3 image-list-item bg-light text-center d-inline-block"
+                      *ngFor="let photoUrl of upsellProcessed[orderLineItem.Id][upsellAttribute.Name]">
+                      <img *ngIf="photoUrl; else defaultPhoto" [src]="photoUrl" class="img-fluid" />
+                      <ng-template #defaultPhoto>
+                        <img [src]="'wwwroot/assets/img/photo.jpg'" class="img-fluid" />
+                      </ng-template>
+                    </li>
+                  </ul>
+
+                </li>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!--Price total summary-->
+    <div *ngIf="showPriceSummary">
+      <div class="row py-2 border bg-light m-0" *ngIf="!showAttributes">
+
+        <div class="col-12 text-left px-2 px-sm-4">
+          <i class="float-left pr-3 pt-2">Have a coupon code?</i>
+
+          <input type="text" class="form-control rounded-0 float-left w-25 mr-2" [formControl]="couponCode">
+
+          <button type="button" class="bg-transparent border-0 pt-2" *ngIf="!order?.CouponCode" (click)="applyCoupon()">
+            <strong>APPLY</strong>
+          </button>
+          <button type="button" class="bg-transparent border-0 pt-2" *ngIf="order?.CouponCode" (click)="clear()">
+            <strong>CLEAR</strong>
+          </button>
+
+        </div>
+        <div *ngIf="couponError" class="col-12 my-2 text-danger">
+          {{couponError}}
+        </div>
+      </div>
+      <div class="py-2 border bg-light m-0" *ngIf="order?.CouponCode">
+        <div class="row pr-3 pb-2">
+          <div class="col text-right">
+            Total
+          </div>
+          <div class="col-3 col-md-2 col-lg-1 pl-0 text-right ">
+            {{order?.OldPrice | currency: "USD"}}
+          </div>
+        </div>
+        <div class="row pr-3 pb-2">
+          <div class="col text-right">
+            Coupon Value
+            <mat-icon class="align-bottom">loyalty</mat-icon>
+          </div>
+          <div class="col-3 col-md-2 col-lg-1 pl-0 text-right ">
+            {{order?.UpdatedDiscountedAmount | currency: "USD"}}
+          </div>
+        </div>
+      </div>
+      <div class="row py-3 border border-dark bg-secondary text-white m-0">
+        <div class="col text-right">
+          <span *ngIf="order?.CouponCode">Discounted </span>Total
+          <span *ngIf="hasContractPrice">
+            <mat-icon class="align-bottom">insert_drive_file</mat-icon>
+          </span>
+        </div>
+        <div class="col-3 col-md-2 col-lg-1 pl-0 text-right ">
+          {{order?.Price | currency: "USD"}}
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Invoice notes -->
+    <div class="row my-3" *ngIf="(order.OrderNotes && showAttributes) || (!order.OrderNotes && !showAttributes)">
+      <div class="col-12">
+        <mat-accordion class="custom-accordion">
+          <mat-expansion-panel [expanded]="true" class="mb-3 custom-panel ">
+            <mat-expansion-panel-header class="bg-primary text-uppercase pl-5">
+              <mat-panel-title class="text-white">Invoice notes</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngIf="!editInvoice; else inputInvoice">
+              <div class="row">
+                <div class="col-md-9">
+                  {{order.OrderNotes}}
+              </div>
+              <div class="col-md-3">
+                <div class="float-right">
+                  <a mat-mini-fab color="primary" class="text-white " (click)="editInvoiceNoteModal()"
+                    target="_blank">
+                    <mat-icon class="align-middle">edit</mat-icon>
+                  </a>
+                  <div class="text-center">
+                    <small>EDIT</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <ng-template #inputInvoice>
+              <form>
+                <div class="row">
+                  <div class="col-12 col-md-8">
+                    <mat-form-field class="w-100">
+                      <textarea matInput #invoiceNotes maxlength="180" placeholder="Invoice notes" [formControl]="invoiceNote"></textarea>
+
+                      <mat-hint align="start">
+                        <strong>Notes display on your invoice</strong>
+                      </mat-hint>
+                      <mat-hint align="end">{{invoiceNotes.value.length}} / 180</mat-hint>
+                    </mat-form-field>
+                  </div>
+
+                </div>
+              </form>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+
+
+    <div class="row my-3" *ngIf="!showDeadlineMessage && maxDeadline && allowUpdates">
+      <div class="col small">
+        The last date on which changes can be made to the ad material is {{maxDeadline | date:"M/dd/yyyy"}}.
+      </div>
+    </div>
+  </ng-template>
+</div>

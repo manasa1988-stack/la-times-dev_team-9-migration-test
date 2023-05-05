@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="text-uppercase">Cache Entries - {{environmentName}}
+            <button mat-button class="float-right" (click)="showHelp = !showHelp">
+                <i class="material-icons" ngbTooltip="Help">help_outline</i>
+            </button>
+        </h1>
+    </div>
+</div>
+
+<div class="row" *ngIf="showHelp" [@hideShowAnimator]="hideShowAnimator" [hidden]>
+    <div class="col-md-12">
+        <ul>
+            <li>
+                <b>Section[section id]</b>: remove when changes to product changes, ad sizes, zones, deadlines, ad template
+                - ad size associations are made</li>
+            <li>
+                <b>AdTemplate_[ad template id]</b>: remove when changes to ad template meta data is made</li>
+            <li>
+                <b>ClassCodeGroup_[class code group id]</b>: remove when changes to class code group are made (attribute/class
+                codes changes)
+            </li>
+            <li>
+                <b>Emblem_[bu code]</b>: remove when a BU's emblems are added/removed</li>
+            <li>
+                <b>PositionAdTemplates_[position id]</b>: remove when position - ad size associations are made (you may need
+                to clear the parent section's cache also)</li>
+            <li>
+                <b>SupplementaryProductConfig</b>: remove when an updated supplementary product config is deployed</li>
+        </ul>
+
+    </div>
+</div>
+
+<div *ngIf="displayError">
+    <error-alert></error-alert>
+</div>
+
+<div class="row mb-3" *ngIf="!displayError">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr class="bg-secondary text-white text-uppercase">
+                        <td>
+                            <div class="pt-2">   Cache Key</div>
+                        </td>
+                        <td>
+                            <div class="pt-2">   Servers</div>
+                        </td>
+                        <td class="text-center">
+                            <button mat-button (click)="clearAllCache()" class="text-uppercase">Clear All</button>
+                        </td>
+                    </tr>
+                </thead>
+                <tr *ngFor="let cacheEntriesList of cacheEntriesListData">
+                    <td>
+                        {{cacheEntriesList.Key}}
+                    </td>
+                    <td>
+                      <div *ngFor="let server of cacheEntriesList.Server">
+                        {{server}}
+                      </div>
+                    </td>
+                    <td class="text-center">
+                        <button class="bg-transparent border-0" (click)="showRemoveDataPopup(cacheEntriesList)">
+                            <i class="material-icons" ngbTooltip="Remove">delete_forever</i>
+                        </button>
+                        <button class="bg-transparent border-0" (click)="showInfoPopup(cacheEntriesList.Key)">
+                            <i class="material-icons" ngbTooltip="Info">info</i>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

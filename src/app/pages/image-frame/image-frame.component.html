@@ -1,0 +1,50 @@
+<div class="border imageframe">
+  <div class="card-body p-1">
+    <div class="d-block text-left small">
+        <mat-checkbox class="m-2" [checked]="photo.Ischecked" [id]="photo.Name" (change)="SelectPhotoOrLogo(photo, $event)">
+          <span [ngClass]="photo.Name.length > 28 ? 'text-truncate' : ''">{{photo.Name}}</span>
+        </mat-checkbox>
+      </div>
+    <div class="imageWrapper m-2" *ngIf="photo.showLoader; else imageShow">
+      <mat-spinner></mat-spinner>
+    </div>
+    <ng-template #imageShow>
+      <div class="imageWrapper m-2">
+        <button mat-mini-fab class="overlayButton position-absolute z-100" color="primary" (click)="imagePreview()" auto-test="zoomInImage">
+          <mat-icon>zoom_in</mat-icon>
+        </button>
+        <img [src]="photo.Url" [alt]="photo.Name" [title]="photo.Name" class="img-flex mh-100 mw-100" (click)="imagePreview()">
+      </div>
+    </ng-template>
+  </div>
+  <div class="card-footer p-1 text-muted border-0">
+    <div class="col-12 p-0">
+      <div class="col-12 p-0">
+        <div class="small-text d-inline">
+          Date: {{photo.UpdateDate | date: 'MM/dd/yyyy'}}
+        </div>
+        <div class="small-text d-inline float-right">
+          {{photo.Size}}
+        </div>
+      </div>
+      <div class="row m-0 p-0">
+        <div [ngClass]="imageType === 'photo' ? 'col-4' : 'col-6'" class="text-center">
+          <a [attr.download]="photo.Name" [attr.href]="getDownloadUrl(photo.Url)" class="bg-transparent p-0" title="Download" (click)="download()" auto-test="downloadImage"
+            mat-icon-button>
+            <mat-icon class="text-black">file_download</mat-icon>
+          </a>
+        </div>
+        <div [ngClass]="imageType === 'photo' ? 'col-4' : 'col-6'" class="text-center">
+          <button mat-icon-button class="bg-transparent btn p-0" title="Delete" (click)="delete()" auto-test="deleteImage">
+            <mat-icon class="text-black">delete</mat-icon>
+          </button>
+        </div>
+        <div [ngClass]="imageType === 'photo' ? 'col-4' : 'col-6'" *ngIf="imageType === 'photo'" class="text-center">
+          <button mat-icon-button class="bg-transparent p-0" title="Rotate 90 Degree" (click)="rotate()" auto-test="rotateImage">
+            <mat-icon class="text-black">refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" (click)="activeModal.close()">
+  <mat-icon aria-label="Close">close</mat-icon>
+</button>
+<div *ngIf="cacheMarketName && !cacheEntryName && !cacheBUCode && !cacheMarketDomain; else showConfirmation">
+  <div class="modal-body px-4 pt-0">
+    <h5 class="text-center mt-5">Cache cleaned for 
+      <strong>"{{cacheMarketName}}"</strong>
+    </h5>
+  </div>
+</div>
+<ng-template #showConfirmation>
+  <div class="modal-body px-4 pt-0">
+    <h5 class="text-center mt-5">Are you sure you want to remove
+      <span *ngIf="cacheMarketName"> cache for
+        <strong>"{{cacheMarketName}}"</strong>
+      </span>
+      <strong *ngIf="!cacheMarketName">"{{cacheEntryName}}"</strong> ? </h5>
+    <div class="row pt-4 pb-2">
+      <div class="col-md-12 text-center">
+        <button class="text-uppercase" mat-raised-button color="primary" (click)="delete()">CONTINUE</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

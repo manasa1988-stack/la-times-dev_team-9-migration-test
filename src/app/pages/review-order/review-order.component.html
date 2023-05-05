@@ -1,0 +1,142 @@
+﻿<div class="row my-3">
+    <div class="col-sm-5 col-md-7 configure-steps">
+        <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block mb-0">Configure</h4>
+        <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+            <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold px-md-0 px-lg-1 mb-0">Review Order</h4>
+            <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                <h4 class=" text-uppercase theme pb-2 px-md-0 px-lg-1 d-none d-md-inline-block mb-0">Confirmation</h4>
+    </div>
+</div>
+
+<div class="row mb-2 justify-content-end">
+    <div   class="col-4 my-2 col-6 col-sm-4 col-md-3">
+        <button class="w-100" mat-raised-button color="primary" auto-test="backToConfigure" (click)="backToConfigure()">EDIT ORDER</button>
+    </div>
+    <div   class="col-4 my-2 col-6 col-sm-4 col-md-3" *ngIf="order ? order.IsPrintProof : false " >
+        <button class="w-100" mat-raised-button color="primary" auto-test="PrintProof" (click)="PrintProof()">PRINT PROOF</button>
+    </div>
+</div>
+
+<div>
+    <div *ngIf="!isOrderLoaded; else showProduct">
+        <mat-spinner class="row my-5"></mat-spinner>
+    </div>
+    <ng-template #showProduct>
+        <product-summary [order]="order" [allowUpdates]="false" [showAttributes]="false" [showPriceSummary]="true" [adssId]="adssId"
+            [editInvoice]="true" [upsellProcessed]="upsellProcessed" (sendData)="readFrom($event)"></product-summary>
+    </ng-template>
+</div>
+
+
+<div class="row my-3">
+    <div class="col">
+        <mat-accordion class="custom-accordion">
+            <mat-expansion-panel [expanded]="true" class="mb-3 custom-panel">
+                <mat-expansion-panel-header class="bg-primary text-uppercase pl-5">
+                    <mat-panel-title class="text-white"> YOUR INFORMATION</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div *ngIf="!isDataReady; else showInfo">
+                    <mat-spinner class="row my-5"></mat-spinner>
+                </div>
+                <ng-template #showInfo>
+                    <div *ngIf="userDetails === undefined || userDetails === null; else showAccount">
+                        <error-alert></error-alert>
+                    </div>
+                    <ng-template #showAccount>
+                        <review-account-information [userAccountDetails]="userDetails" [businessTypes]="businessTypes" [states]="states"></review-account-information>
+                    </ng-template>
+                </ng-template>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+
+<div class="row my-3" *ngIf="orderPrice && orderPrice > 0">
+    <div class="col-12">
+        <div class="payment-options">
+            <div class="bg-primary text-white text-uppercase pl-3 pt-3 pb-1">
+                <p class="text-white">PAYMENT OPTIONS</p>
+            </div>
+            <div *ngIf="!isDataReady; else showPaymentInfo">
+                <mat-spinner class="row my-5"></mat-spinner>
+            </div>
+            <ng-template #showPaymentInfo>
+                <div class="row mx-1 pt-3">
+                    <div *ngIf="userDetails?.CanPurchaseWithLineOfCredit" ngbDropdown class="col-11 col-sm-5">
+                        <button class="form-control text-left rounded-0" auto-test="statusDropDown" id="statusDropDown" ngbDropdownToggle>{{paymentMethod}}</button>
+                        <div ngbDropdownMenu aria-labelledby="statusDropDown">
+                            <button (click)="changeOptionForPayment(1)" auto-test="changeOptionForPayment" class="dropdown-item">
+                                Bill to my account
+                            </button>
+                            <button (click)="changeOptionForPayment(2)" auto-test="changeOptionForPayment" class="dropdown-item">
+                                Credit Card
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 mx-1">
+                    <div *ngIf="optionForPayment.value === 1 else showCards" class="pb-2 mt-10 col-12 col-sm-6">
+                        <p>
+                            <strong>Billing Account Information</strong>
+                        </p>
+                        <p>
+                            <strong>Account Number:</strong> {{userDetails?.CustomerNumber}}</p>
+                        <p>
+                            <strong>Billing Contact Name:</strong> {{userDetails?.FirstName}} {{userDetails?.LastName}}</p>
+                        <p>
+                            <strong>Billing Address:</strong> {{userDetails?.Address?.Address1}} {{userDetails?.Address?.Address2}}
+                            {{userDetails?.Address?.City}} {{userDetails?.Address?.State}} {{userDetails?.Address?.Zip}}
+
+                        </p>
+                        <p>
+                            <strong>Billing Phone:</strong> {{userDetails?.Phone}}</p>
+                    </div>
+                </div>
+                <ng-template #showCards>
+                    <payment-options [cards]="creditCards" [isDataReady]="isDataReady" [isOrderLoaded]="isOrderLoaded" [orderPrice]="orderPrice"
+                    (notify)="reloadCardDetails($event)"></payment-options>
+                </ng-template>
+            </ng-template>
+        </div>
+
+    </div>
+</div>
+
+<hr class="b-t-1-dashed">
+
+<div class="row my-3 accept-checkbox">
+    <div class="col-12">
+        <div class="w-100 bg-light px-3 pt-2">
+            <mat-checkbox [formControl]="continueToSubmit" class="">I have proofread my work and I'm ready to purchase this order.</mat-checkbox>
+        </div>
+    </div>
+</div>
+
+<div class="row m-0 mb-2" *ngFor="let errorMessage of purchaseOrderErrors">
+    <div class="col-12 py-2 bg-danger text-white">
+        <mat-icon class="mx-1 align-bottom">warning</mat-icon> {{errorMessage}}</div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-12 col-sm-4 col-md-4 col-lg-3 submit-btn pr-sm-1">
+        <button [disabled]="isSubmitting || !isOrderLoaded" class="mb-2 w-100" mat-raised-button color="primary" auto-test="purchase" (click)="purchase()">COMPLETE PURCHASE</button>
+    </div>
+    <div class="col-12 col-sm-4 col-md-4 col-lg-3 submit-btn px-sm-2">
+        <button [disabled]="isSubmitting" class="mb-2 w-100" mat-raised-button color="primary" auto-test="saveAndPurchase" (click)="saveAndPurchaseLater()">SAVE & PURCHASE LATER</button>
+    </div>
+    <div class="col-12 col-sm-4 col-md-4 col-lg-3 submit-btn pl-sm-1 pr-sm-3">
+        <button [disabled]="isSubmitting" class="mb-2 w-100" mat-raised-button color="primary" auto-test="backToConfigure" (click)="backToConfigure()">BACK TO CONFIGURE PAGE</button>
+    </div>
+</div>
+
+<div *ngIf="isSubmitting" class="overlay bg-translucant">
+    <div class="overlay-content bg-translucant text-white text-center p-3">
+        <h4 class="my-0">
+            <i class="fa fa-cog fa-spin fa-2x fa-fw" aria-hidden="true"></i>We are processing your order.
+        </h4>
+        <div class="my-2">
+            Please do not refresh the page or click the back button.
+            <br/> You will be redirected to a confirmation page when your order is completed.
+        </div>
+    </div>
+</div>

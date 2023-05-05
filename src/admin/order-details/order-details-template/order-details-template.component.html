@@ -1,0 +1,24 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium" [ngSwitch]="dataType">
+  <h4 class="modal-title text-uppercase" *ngSwitchCase="'template'">Template Data</h4>  
+  <h4 class="modal-title text-uppercase" *ngSwitchCase="'attribute'">Order Attributes</h4>  
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" (click)="activeModal.close()">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <div *ngFor="let data of dataToDisplay">
+    <div class="row">
+      <div class="col-3 font-weight-bold">{{data.Name}}: </div>
+      <div class="col-9" *ngIf="data.isTypeImage && data.Value; else showValue">
+        <div *ngFor="let imageURL of data.Value">
+          <img [src]="imageURL" height="70" width="70">
+        </div>
+      </div>
+      <ng-template #showValue>
+        <div class="col-9">
+          {{(data.Value == null || data.Value == "") ? "N/A" : data.Value}}
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

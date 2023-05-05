@@ -1,0 +1,118 @@
+<div class="row">
+    <div class="col-12 col-lg-9 mb-4">
+        <p class="disclaimer-title" [ngClass]="{'--latimes-disclaimer-title': videoElements.BusinessUnit == 'lat'}">Video Tributes</p>
+        <p class="disclaimer-sub-title">Watch videos created by family, friends and loved ones.</p>
+        <p class="disclaimer-comment" *ngIf="videoElements.BusinessUnit == 'sdt'">San Diego Union-Tribune video obituaries are user created by loved ones.  These video tributes do not involve the editorial staff of the San Diego Union-Tribune.</p>
+        <p class="disclaimer-comment" *ngIf="videoElements.BusinessUnit == 'lat'">Los Angeles Times obituaries are user created by loved ones.  These video tributes do not involve the editorial staff of the Los Angeles Times.</p>
+        <p class="disclaimer-comment" *ngIf="videoElements.BusinessUnit == 'scp'">The Union-Tribune Community Press video obituaries are user created by loved ones. These video tributes do not involve the editorial staff of the Encinitas Advocate, La Jolla Light, Ramona Sentinel, Rancho Santa Fe Review, Pomerado or North Coast Group.</p>
+    </div>
+    <div class="col-12 col-md-6 col-lg-3 mb-4">
+        <a *ngIf="videoElements.BusinessUnit == 'sdt'" href="https://placeanad.sandiegouniontribune.com/obituary">
+            <button
+                class="action-button"
+                title=""
+                mat-raised-button
+                color="primary">
+                Place Notice with Video Tribute
+            </button>
+        </a>
+        <a *ngIf="videoElements.BusinessUnit == 'lat'" href="https://placeanad.latimes.com/obituaries">
+            <button
+                class="action-button"
+                title=""
+                mat-raised-button
+                color="primary">
+                Place Notice with Video Tribute
+            </button>
+        </a>
+        <a *ngIf="videoElements.BusinessUnit == 'scp'" href="https://placeanad.utcommunitypress.com/obituaries">
+            <button
+                class="action-button"
+                title=""
+                mat-raised-button
+                color="primary">
+                Place Notice with Video Tribute
+            </button>
+        </a>
+    </div>
+</div>
+<form #searchForm="ngForm">
+    <div class="paginator-menu">
+        <div class="--flex-one">
+            <mat-form-field class="">
+                <input
+                    matInput
+                    placeholder="Search for..."
+                    maxlength="25"
+                    #searchInput="ngModel"
+                    name="searchInput"
+                    [(ngModel)]="filter.text">
+            </mat-form-field>
+            <select *ngIf="videoElements.Products != null && videoElements.Products.length > 0" [(ngModel)]="filter.productId" [ngModelOptions]="{standalone: true}" class="custom-select-box mt-2 mb-2 rounded-0">
+                <option value="0" selected>All</option>
+                <option *ngFor="let option of videoElements.Products" [value]="option.ProductId">{{option.ProductName}}</option>
+            </select>
+            <button
+            class="action-button --auto-width"
+            title=""
+            (click)="updateSearch(true)"
+            mat-raised-button
+            color="primary">
+                Search
+            </button>
+            
+            
+        </div>
+        <div
+            class=""
+            *ngIf="videoElements.TotalRecords">
+            <mat-paginator
+                [pageIndex]="filter.pageNumber -1"
+                [length]="videoElements.TotalRecords"
+                [pageSize]="filter.pageSize"
+                (page)="updateIndex($event)">
+            </mat-paginator>
+        </div>
+    </div>
+</form>
+<div class="paginator-body">
+    <div
+        class="no-content"
+        *ngIf="!videoElements.Records.length">
+        <p>No results</p>
+    </div>
+    <div class="video-results row  my-4">
+        <ng-container
+            *ngFor="let record of videoElements.Records">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-4 mb-2">
+                <div
+                    class="card rounded-2"
+                    (click)="openModal(record)"
+                    >
+                    <div class="card-body">
+                        <div class="card-body-content"
+                        [style.background-image]="getBackground(youTubeThumbnailBase+record.YoutubeLink+youTubeThumbnailTrail)">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        {{record.Name}}
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<div
+    class="paginator-controls"
+    *ngIf="videoElements.TotalRecords">
+    <mat-paginator
+    (page)="pageEvent = updateIndex($event)"
+    [pageIndex]="filter.pageNumber -1"
+    [length]="videoElements.TotalRecords"
+    [pageSize]="filter.pageSize">
+    </mat-paginator>
+</div>
+<!--div class="video-disclaimer">
+    <p *ngIf="videoElements.BusinessUnit == 'sdt'">San Diego Union-Tribune video obituaries are user created by loved ones.  These video tributes do not involve the editorial staff of the San Diego Union-Tribune.</p>
+    <p *ngIf="videoElements.BusinessUnit == 'lat'">Los Angeles Times obituaries are user created by loved ones.  These video tributes do not involve the editorial staff of the Los Angeles Times.</p>
+</div-->

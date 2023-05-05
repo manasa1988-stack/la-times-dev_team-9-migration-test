@@ -1,0 +1,251 @@
+﻿<div class="m-0">
+  <div class=" row my-2">
+    <h3 class=" col-sm-6">ORDER SUMMARY:</h3>
+    <div class="col text-right" *ngIf="order?.IsDraft">
+      <button mat-raised-button color="primary" auto-test="purgeOrder" class="" (click)="purgeOrder(order?.AdSSId);$event.stopPropagation();">
+        <mat-icon class="align-middle ">close</mat-icon>
+        <span class="mx-2 text-uppercase">Purge Order</span>
+      </button>
+    </div>
+  </div>
+
+      <div class="my-3">
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Order Status: </strong>
+          <div class="col-12 col-sm-9">{{orderStatuses[order?.Status?.Id]}} </div>
+        </div>
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Create Date: </strong>
+          <div class="col-12 col-sm-9">{{(order?.CreateDate | date: "MM/dd/yyyy") || 'N/A'}} </div>
+        </div>
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Update Date: </strong>
+          <div class="col-12 col-sm-9">{{(order?.LastUpdated | date: "MM/dd/yyyy") || 'N/A'}} </div>
+        </div>
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Submit Date: </strong>
+          <div class="col-12 col-sm-9">{{(order?.SubmitDate | date: "MM/dd/yyyy") || 'N/A'}} </div>
+        </div>
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Adit Id: </strong>
+          <div class="col-12 col-sm-9">{{order?.AditId || 0}} </div>
+        </div>
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Coupon Code: </strong>
+          <div class="col-12 col-sm-9">{{order?.CouponCode || 'N/A'}} </div>
+        </div>
+        <div class="row my-1">
+          <strong class="col-12 col-sm-3 text-uppercase">Package Id: </strong>
+          <div class="col-12 col-sm-9">{{order?.PackageCode || 'N/A'}} </div>
+        </div>
+      </div>
+
+    <div class="my-3" *ngIf="order?.User">
+      <strong class="text-uppercase text-underline">Customer Info:</strong>
+      <div class="row m-1">
+        <strong class="col-12 col-sm-3 text-uppercase">Name:</strong>
+        <div class="col-12 col-sm-9">{{order?.User?.CustomerName}} <span *ngIf="order?.User?.IsVendor" class="text-muted small mx-1">(vendor)</span></div>
+      </div>
+      <div class="row m-1">
+        <strong class="col-12 col-sm-3 text-uppercase">Customer Id:</strong>
+        <div class="col-12 col-sm-9">{{order?.User?.CustomerId}} </div>
+      </div>
+      <div class="row m-1">
+        <strong class="col-12 col-sm-3 text-uppercase">Customer number:</strong>
+        <div class="col-12 col-sm-9">{{order?.User?.CustomerNumber}} </div>
+      </div>
+      <div class="row m-1">
+        <strong class="col-12 col-sm-3 text-uppercase">Phone:</strong>
+        <div class="col-12 col-sm-9">{{order?.User?.Phone}} </div>
+      </div>
+    </div>
+    <div *ngIf="order.HasAttributes" class="row m-0 my-3">
+      <button mat-raised-button color="primary" auto-test="displayOrderAttributes" class="" (click)="displayOrderAttributes();$event.stopPropagation();">
+        OrderAttributes
+      </button>
+    </div>
+
+    <div *ngIf="order?.OrderItems.length > 0">
+
+      <div class="row py-2 border bg-light small text-muted m-0">
+        <div class="col-md-2">
+          PUBLICATION
+        </div>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-3">
+              PACKAGE DETAILS
+            </div>
+            <div class="col-md-3">
+              SIZE
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-5">
+                  RUN DATES
+                </div>
+                <div class="col-md-7 text-center">
+                  AD PREVIEW
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 text-center">
+          PRICE
+        </div>
+      </div>
+
+      <div class="row py-3 bg-light border m-0" *ngFor="let innerRow of order?.OrderItems; let innerIndex = index">
+
+        <div class="col-md-2 publication-col">
+          <span *ngIf="innerRow?.Section">
+            <img class="w-75 mh-100" [src]="assetsHostUrl + 'assets/images/products/'+ innerRow.Section.Product?.Id +'/logo.png'"
+                 [alt]="innerRow?.Section.Product.Name" />
+          </span>
+        </div>
+
+        <div class="col-md-8">
+          <div class="row mb-2">
+            <div class="col-md-3">
+              <div *ngIf="innerRow?.IsDfpOrderItem; else onlineOrderItemTargets">
+                <div *ngIf="innerRow?.Section && innerRow?.Section?.Name">Section: {{innerRow?.Section?.Name}}</div>
+                <div *ngIf="innerRow?.Subsection && innerRow?.Subsection?.Name">Subsection: {{innerRow?.Subsection?.Name}}</div>
+                <div *ngIf="innerRow?.DfpGeoTargettingStates">State: {{innerRow?.DfpGeoTargettingStates}}</div>
+                <div *ngIf="innerRow?.DfpGeoTargettingCities">City: {{innerRow?.DfpGeoTargettingCities}}</div>
+              </div>
+              <ng-template #onlineOrderItemTargets>
+                <div *ngIf="innerRow?.Section" class="row">
+                  <div class="col-5 pr-0">
+                    <span class="text-muted pr-2">Section:</span>
+                  </div>
+                  <div class="col-5 pl-0"> {{ innerRow?.Section.Name }}</div>
+                </div>               
+                <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] && innerRow?.Section?.HasTargets && innerRow?.TargetType">
+
+                  - {{ innerRow?.TargetType.DisplayName }}
+                  <div>
+                    {{ innerRow?.SelectedTargetNames }}
+                  </div>       
+                </div>
+              </ng-template>
+              <div *ngIf="innerRow?.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] && isLinesShown(innerRow?.SectionId)" class="row">
+                <div class="col-5 pr-0">
+                  <span class="text-muted pr-2">Lines:</span>
+                </div>
+                <div class="col-5 pl-0">
+                  {{ innerRow?.NumberOfLinesOfCurrentAdMaterial }}
+                </div>
+
+              </div>
+              <div class="row" *ngIf="innerRow?.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] || innerRow?.TypeId == orderItemTypes['PrintDisplayOrderItem']">
+                <div class="col-5 pr-0">
+                  <span class="text-muted pr-2">Color:</span>
+                </div>
+                <div class="col-5 pl-0">{{innerRow?.IsColor ? 'Yes' : 'No'}}</div>
+              </div>
+
+              <div *ngFor="let zone of innerRow?.Zones" class="row">
+                <div class="col-5 pr-0">
+                  <span class="text-muted pr-2">Zone(s):</span>
+                </div>
+                <div class="col-5 pl-0"> {{zone.Name}}</div>
+              </div>
+
+            </div>
+
+            <div class="col-md-3">
+              <span *ngIf="innerRow?.AdSize">{{innerRow?.AdSize?.Name}}</span>
+            </div>
+
+            <div class="col-md-6">
+              <div class="row mb-2" *ngIf="innerRow?.AllToBePublishedAdMaterial.length == 0">
+                <div class="col-md-5">
+                  <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                    <div *ngIf="innerRow?.IsDfpOrderItem">
+                      Impression:
+                      <span> {{ innerRow?.NumImpressions }}</span>
+                    </div>
+                    <div *ngIf="!innerRow?.IsDfpOrderItem">
+                      {{ innerRow?.ImpressionsName}}
+                    </div>
+                  </div>
+
+                  <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] || innerRow?.TypeId == orderItemTypes['OnlineClassifiedsOrderItem']; else printOrderItem">
+                    <div>
+                      {{ innerRow?.RunDateString }}
+                    </div>
+
+                  </div>
+                  <ng-template #printOrderItem>
+                    <div *ngFor="let runDate of innerRow?.RunDates">
+                      {{ runDate | date:"MM/dd/yyyy, EE" }}
+                    </div>
+                  </ng-template>
+
+
+                </div>
+                <div class="col-md-7" *ngIf="innerRow?.AdMaterialUrl">
+                  <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">                  
+                    <a [href]="innerRow?.ClickThroughUrl" target="_blank" [title]="innerRow?.ClickThroughUrl" class="small d-inline-block text-center">
+                      Click through url
+                      <i class="fa fa-link"></i>
+                    </a>
+                  </div>
+                  <div *ngIf="innerRow?.HasAdMaterialDefined; else noMaterialDefined" class="imageWrapper m-2">
+                    <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary" (click)="adMaterialPreview(innerRow?.AdMaterialUrl, innerRow?.Section?.Product?.Name + ' - ' + innerRow?.Section?.Name);">
+                      <mat-icon>zoom_in</mat-icon>
+                    </button>
+                    <img [src]="innerRow?.AdMaterialUrl" class="imgWithinParent img-fluid" (click)="adMaterialPreview(innerRow?.AdMaterialUrl, innerRow?.Section?.Product?.Name + ' - ' + innerRow?.Section?.Name);">
+                  </div>
+                  <ng-template #noMaterialDefined>
+                    <div>
+                        No material designed/ uploaded
+                    </div>
+                  </ng-template>
+                  <div *ngIf="innerRow?.HasDesignedAd" class="text-center">
+                    <a class="linkA" (click)="openTemplate(innerRow)">
+                      <u>Template Values</u>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-2" *ngFor="let adMaterial of innerRow?.AllToBePublishedAdMaterial">
+                <div class="col-md-5">
+                  <div *ngFor="let runDate of adMaterial.RunDates">
+                    {{ runDate | date:"MM/dd/yyyy, EE" }}
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">                  
+                    <a [href]="innerRow?.ClickThroughUrl" target="_blank" [title]="innerRow?.ClickThroughUrl">Click-Through URL</a>
+                  </div>
+                  <div class="imageWrapper m-2">
+                    <button mat-mini-fab class="hideOnPrint overlayButton position-absolute z-100" color="primary" (click)="adMaterialPreview(adMaterial?.AdMaterialUrl);">
+                      <mat-icon>zoom_in</mat-icon>
+                    </button>
+                    <img [src]="adMaterial?.AdMaterialUrl" class="imgWithinParent img-fluid" (click)="adMaterialPreview(adMaterial?.AdMaterialUrl);">
+                  </div>
+                  <div *ngIf="innerRow?.HasDesignedAd" class="text-center">
+                    <a class="linkA" (click)="openTemplate(innerRow)">
+                      <u>Template Values</u>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 text-center">
+          {{innerRow?.Price | currency: "USD"}}
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md-12 text-right">
+        Total Price: {{order?.Price | currency: "USD"}}
+      </div>
+    </div>
+  </div>

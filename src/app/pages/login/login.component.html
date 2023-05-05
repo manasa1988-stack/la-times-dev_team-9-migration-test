@@ -1,0 +1,32 @@
+﻿<div class="d-flex p-v-50 m-auto">
+
+  <div class="bg-light text-center col-12 col-sm-8 col-md-6 col-lg-4 p-5 m-auto" *ngIf="!isUserLoggedIn()">
+    <h2 class="my-0">
+      Log In
+    </h2>
+    <div class="text-muted small mt-4 mb-2">
+      Already an user
+    </div>
+
+    <button mat-button auto-test="signIn" data-reg-handler="signInHandler" class="text-white btn-block theme px-0">
+      SIGN IN
+    </button>
+    <div class="text-muted small  mt-4 mb-2">
+      Don't have an account?
+    </div>
+    <button auto-test="register" class="text-white btn-block px-0" mat-raised-button color="primary" (click)="openRegisterComponent()">
+      REGISTER
+    </button>
+  </div>
+  <div class="bg-light text-center col-12 col-sm-8 col-md-6 col-lg-4 p-5 m-auto" *ngIf="isUserLoggedIn()">
+    <h2 class="my-0">
+      <mat-progress-spinner mode="indeterminate" [diameter]="25" class="mx-2 align-middle d-inline-block"></mat-progress-spinner> 
+      Logging in..
+    </h2>
+
+    <div class="my-2">
+    Please wait while you are being signed in <br/>
+    You will automatically be redirected
+  </div>
+
+</div>

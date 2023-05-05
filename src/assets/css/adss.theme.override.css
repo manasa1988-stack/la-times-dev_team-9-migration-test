@@ -1,0 +1,522 @@
+/* Portal override */
+html,body {
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-size:14px;
+  max-width:100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling:touch;
+}
+
+#desktopViewMenu { 
+  width:100%; 
+}
+
+.navContainer .mobile-nav .navbar-header {
+  display:inline;
+} 
+
+.navContainer .mobile-nav .navbar-header p {
+  display:none;
+} 
+
+.navContainer .mobile-nav .navbar-header input[type=search]
+{
+  box-sizing: inherit;
+}
+
+#adss-wrapper {
+  box-shadow: none;
+  border: 1px solid #f1f1f1;
+  max-width: 1140px;
+}
+
+.adssDefaultLayout
+{
+  margin: 0 auto;
+  min-height:60vh;
+}
+
+#adss-mainWrapper {
+  margin: 0px !important;
+}
+/* Themes */
+
+  button.theme, a.theme {
+    background-color: #006600;
+    color: #FFF;
+  }
+
+    button.theme:hover, a.theme:hover {
+      background-color: #003D18;
+      color: #FFF;
+    }
+
+  .next, .prev {
+    color: #003D18;
+  }
+
+  .b-b-4.theme {
+    border-bottom: 4px solid #006600;
+  }
+
+  .mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar, .submit-btn .mat-raised-button.mat-primary {
+    background-color: #006600;
+  }
+
+  .mat-tab-label {
+    border-top: 5px solid #006600;
+  }
+
+
+/* LATimes Theme */ 
+.theme[bucode="LAT"] button.theme, .theme[bucode="LAT"] a.theme {
+    background-color: #DB3021;
+    color: #FFF;
+  }
+.theme[bucode="LAT"] button.theme:hover, .theme[bucode="LAT"] a.theme:hover {
+      background-color: #C4050D;
+      color: #FFF;
+    }
+.theme[bucode="LAT"] .b-b-4.theme {
+    border-bottom: 4px solid #db3021;
+  }
+.theme[bucode="LAT"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="LAT"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="LAT"] .submit-btn .mat-raised-button.mat-primary {
+    background-color: #db3021;
+  }
+.theme[bucode="LAT"] .next, .theme[bucode="LAT"] .prev {
+    color: #C4050D;
+  }
+.theme[bucode="LAT"] .mat-tab-label {
+    border-top: 5px solid #db3021;
+  }
+
+  /* The Baltimore Sun */ 
+.theme[bucode="TBS"] button.theme, .theme[bucode="TBS"] a.theme {
+  background-color: #145FA6;
+  color: #FFF;
+}
+.theme[bucode="TBS"] button.theme:hover, .theme[bucode="TBS"] a.theme:hover {
+    background-color: #0B447B;
+    color: #FFF;
+  }
+.theme[bucode="TBS"] .b-b-4.theme {
+  border-bottom: 4px solid #145FA6;
+}
+.theme[bucode="TBS"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="TBS"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="TBS"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #145FA6;
+}
+.theme[bucode="TBS"] .next, .theme[bucode="TBS"] .prev {
+  color: #0B447B;
+}
+.theme[bucode="TBS"] .mat-tab-label {
+  border-top: 5px solid #145FA6;
+}
+
+  /* Chicago Tribune */ 
+.theme[bucode="CTC"] button.theme, .theme[bucode="CTC"] a.theme {
+  background-color: #549AC4;
+  color: #FFF;
+}
+.theme[bucode="CTC"] button.theme:hover, .theme[bucode="CTC"] a.theme:hover {
+    background-color: #144A7C;
+    color: #FFF;
+  }
+.theme[bucode="CTC"] .b-b-4.theme {
+  border-bottom: 4px solid #549AC4;
+}
+.theme[bucode="CTC"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="CTC"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="CTC"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #549AC4;
+}
+.theme[bucode="CTC"] .next, .theme[bucode="CTC"] .prev {
+  color: #144A7C;
+}
+.theme[bucode="CTC"] .mat-tab-label {
+  border-top: 5px solid #549AC4;
+}
+
+
+/* Chicago Tribune Suburbs*/
+.theme[bucode="CSD"] button.theme, .theme[bucode="CSD"] a.theme {
+  background-color: #549AC4;
+  color: #FFF;
+}
+
+  .theme[bucode="CSD"] button.theme:hover,
+  .theme[bucode="CSD"] a.theme:hover {
+    background-color: #144A7C;
+    color: #FFF;
+  }
+
+.theme[bucode="CSD"] .b-b-4.theme {
+  border-bottom: 4px solid #549AC4;
+}
+
+.theme[bucode="CSD"] .mat-tab-group.mat-primary .mat-ink-bar,
+.theme[bucode="CSD"] .mat-tab-nav-bar.mat-primary .mat-ink-bar,
+.theme[bucode="CSD"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #549AC4;
+}
+
+.theme[bucode="CSD"] .next, .theme[bucode="CSD"] .prev {
+  color: #144A7C;
+}
+
+.theme[bucode="CSD"] .mat-tab-label {
+  border-top: 5px solid #549AC4;
+}
+
+/* Virginian Pilot */
+.theme[bucode="PILOT"] button.theme, .theme[bucode="PILOT"] a.theme {
+  background-color: #145FA6;
+  color: #FFF;
+}
+.theme[bucode="PILOT"] button.theme:hover, .theme[bucode="PILOT"] a.theme:hover {
+    background-color: #0B447B;
+    color: #FFF;
+  }
+.theme[bucode="PILOT"] .b-b-4.theme {
+  border-bottom: 4px solid #145FA6;
+}
+.theme[bucode="PILOT"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="PILOT"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="PILOT"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #145FA6;
+}
+.theme[bucode="PILOT"] .next, .theme[bucode="PILOT"] .prev {
+  color: #0B447B;
+}
+.theme[bucode="PILOT"] .mat-tab-label {
+  border-top: 5px solid #145FA6;
+}
+
+/* Capital gazette */ 
+.theme[bucode="BCG"] button.theme, .theme[bucode="BCG"] a.theme {
+  background-color: #23408E;
+  color: #FFF;
+}
+.theme[bucode="BCG"] button.theme:hover, .theme[bucode="BCG"] a.theme:hover {
+    background-color: #2B5DE6;
+    color: #FFF;
+  }
+.theme[bucode="BCG"] .b-b-4.theme {
+  border-bottom: 4px solid #23408E;
+}
+.theme[bucode="BCG"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="BCG"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="BCG"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #23408E;
+}
+.theme[bucode="BCG"] .next, .theme[bucode="BCG"] .prev {
+  color: #2B5DE6;
+}
+.theme[bucode="BCG"] .mat-tab-label {
+  border-top: 5px solid #23408E;
+}
+
+/* Morning call	 */ 
+.theme[bucode="ALT"] button.theme, .theme[bucode="ALT"] a.theme {
+  background-color: #519DC6;
+  color: #FFF;
+}
+.theme[bucode="ALT"] button.theme:hover, .theme[bucode="ALT"] a.theme:hover {
+    background-color: #226D8D;
+    color: #FFF;
+  }
+.theme[bucode="ALT"] .b-b-4.theme {
+  border-bottom: 4px solid #519DC6;
+}
+.theme[bucode="ALT"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="ALT"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="ALT"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #519DC6;
+}
+.theme[bucode="ALT"] .next, .theme[bucode="ALT"] .prev {
+  color: #226D8D;
+}
+.theme[bucode="ALT"] .mat-tab-label {
+  border-top: 5px solid #519DC6;
+}
+
+/* Orlando sentinel */ 
+.theme[bucode="OSC"] button.theme, .theme[bucode="OSC"] a.theme {
+  background-color: #00BACC;
+  color: #FFF;
+}
+.theme[bucode="OSC"] button.theme:hover, .theme[bucode="OSC"] a.theme:hover {
+    background-color: #008FA4;
+    color: #FFF;
+  }
+.theme[bucode="OSC"] .b-b-4.theme {
+  border-bottom: 4px solid #00BACC;
+}
+.theme[bucode="OSC"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="OSC"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="OSC"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #00BACC;
+}
+.theme[bucode="OSC"] .next, .theme[bucode="OSC"] .prev {
+  color: #008FA4;
+}
+.theme[bucode="OSC"] .mat-tab-label {
+  border-top: 5px solid #00BACC;
+}
+
+
+/* Courant */ 
+.theme[bucode="HTF"] button.theme, .theme[bucode="HTF"] a.theme {
+  background-color: #C52026;
+  color: #FFF;
+}
+.theme[bucode="HTF"] button.theme:hover, .theme[bucode="HTF"] a.theme:hover {
+    background-color: #B01B21;
+    color: #FFF;
+  }
+.theme[bucode="HTF"] .b-b-4.theme {
+  border-bottom: 4px solid #C52026;
+}
+.theme[bucode="HTF"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="HTF"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="HTF"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #C52026;
+}
+.theme[bucode="HTF"] .next, .theme[bucode="HTF"] .prev {
+  color: #B01B21;
+}
+.theme[bucode="HTF"] .mat-tab-label {
+  border-top: 5px solid #C52026;
+}
+
+/* Sun sentinel */ 
+.theme[bucode="SSC"] button.theme, .theme[bucode="SSC"] a.theme {
+  background-color: #990000;
+  color: #FFF;
+}
+.theme[bucode="SSC"] button.theme:hover, .theme[bucode="SSC"] a.theme:hover {
+    background-color: #690505;
+    color: #FFF;
+  }
+.theme[bucode="SSC"] .b-b-4.theme {
+  border-bottom: 4px solid #990000;
+}
+.theme[bucode="SSC"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="SSC"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="SSC"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #990000;
+}
+.theme[bucode="SSC"] .next, .theme[bucode="SSC"] .prev {
+  color: #690505;
+}
+.theme[bucode="SSC"] .mat-tab-label {
+  border-top: 5px solid #990000;
+}
+
+
+/* San diego Union tribune*/ 
+.theme[bucode="SDUT"] button.theme, .theme[bucode="SDUT"] a.theme,
+.theme[bucode="SDT"] button.theme, .theme[bucode="SDT"] a.theme {
+  background-color: #007DAE;
+  color: #FFF;
+}
+.theme[bucode="SDUT"] button.theme:hover, .theme[bucode="SDUT"] a.theme:hover,
+.theme[bucode="SDT"] button.theme:hover, .theme[bucode="SDT"] a.theme:hover {
+    background-color: #006699;
+    color: #FFF;
+  }
+.theme[bucode="SDUT"] .b-b-4.theme,
+.theme[bucode="SDT"] .b-b-4.theme {
+  border-bottom: 4px solid #007DAE;
+}
+.theme[bucode="SDUT"] .mat-tab-group.mat-primary .mat-ink-bar, 
+.theme[bucode="SDUT"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, 
+.theme[bucode="SDUT"] .submit-btn .mat-raised-button.mat-primary,
+.theme[bucode="SDT"] .mat-tab-group.mat-primary .mat-ink-bar, 
+.theme[bucode="SDT"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, 
+.theme[bucode="SDT"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #007DAE;
+}
+.theme[bucode="SDUT"] .next, .theme[bucode="SDUT"] .prev,
+.theme[bucode="SDT"] .next, .theme[bucode="SDT"] .prev {
+  color: #006699;
+}
+.theme[bucode="SDUT"] .mat-tab-label,
+.theme[bucode="SDT"] .mat-tab-label {
+  border-top: 5px solid #007DAE;
+}
+
+/* Daily press */ 
+.theme[bucode="DPR"] button.theme, .theme[bucode="DPR"] a.theme {
+  background-color: #C52026;
+  color: #FFF;
+}
+.theme[bucode="DPR"] button.theme:hover, .theme[bucode="DPR"] a.theme:hover {
+    background-color: #B01B21;
+    color: #FFF;
+  }
+.theme[bucode="DPR"] .b-b-4.theme {
+  border-bottom: 4px solid #C52026;
+}
+.theme[bucode="DPR"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="DPR"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="DPR"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #C52026;
+}
+.theme[bucode="DPR"] .next, .theme[bucode="DPR"] .prev {
+  color: #B01B21;
+}
+.theme[bucode="DPR"] .mat-tab-label {
+  border-top: 5px solid #C52026;
+}
+
+/* San diego Community press*/ 
+.theme[bucode="SDCP"] button.theme, .theme[bucode="SDCP"] a.theme,
+.theme[bucode="SCP"] button.theme, .theme[bucode="SCP"] a.theme {
+  background-color: #007DAE;
+  color: #FFF;
+}
+.theme[bucode="SDCP"] button.theme:hover, .theme[bucode="SDCP"] a.theme:hover,
+.theme[bucode="SCP"] button.theme:hover, .theme[bucode="SCP"] a.theme:hover {
+    background-color: #006699;
+    color: #FFF;
+  }
+
+.theme[bucode="SDCP"] .b-b-4.theme,
+.theme[bucode="SCP"] .b-b-4.theme {
+  border-bottom: 4px solid #007DAE;
+}
+
+.theme[bucode="SDCP"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="SDCP"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="SDCP"] .submit-btn .mat-raised-button.mat-primary,
+.theme[bucode="SCP"] .mat-tab-group.mat-primary .mat-ink-bar, .theme[bucode="SCP"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, .theme[bucode="SCP"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #007DAE;
+}
+
+.theme[bucode="SDCP"] .next, .theme[bucode="SDCP"] .prev,
+.theme[bucode="SCP"] .next, .theme[bucode="SCP"] .prev {
+  color: #006699;
+}
+
+.theme[bucode="SDCP"] .mat-tab-label,
+.theme[bucode="SCP"] .mat-tab-label {
+  border-top: 5px solid #007DAE;
+}
+
+/* NY Daily news*/ 
+
+.theme[bucode="NYDN"] button.theme, .theme[bucode="NYDN"] a.theme,
+.theme[bucode="NDN"] button.theme, .theme[bucode="NDN"] a.theme {
+  background-color: #EC2127;
+  color: #FFF;
+}
+
+.theme[bucode="NYDN"] button.theme:hover, .theme[bucode="NYDN"] a.theme:hover,
+.theme[bucode="NDN"] button.theme:hover, .theme[bucode="NDN"] a.theme:hover {
+    background-color: #B4191E;
+    color: #FFF;
+  }
+
+  
+.theme[bucode="NYDN"] .b-b-4.theme,
+.theme[bucode="NDN"] .b-b-4.theme {
+  border-bottom: 4px solid #EC2127;
+}
+
+.theme[bucode="NYDN"] .mat-tab-group.mat-primary .mat-ink-bar, 
+.theme[bucode="NYDN"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, 
+.theme[bucode="NYDN"] .submit-btn .mat-raised-button.mat-primary,
+.theme[bucode="NDN"] .mat-tab-group.mat-primary .mat-ink-bar, 
+.theme[bucode="NDN"] .mat-tab-nav-bar.mat-primary .mat-ink-bar, 
+.theme[bucode="NDN"] .submit-btn .mat-raised-button.mat-primary {
+  background-color: #EC2127;
+}
+
+
+.theme[bucode="NYDN"] .next, .theme[bucode="NYDN"] .prev,
+.theme[bucode="NDN"] .next, .theme[bucode="NDN"] .prev {
+  color: #B4191E;
+}
+
+.theme[bucode="NYDN"] .mat-tab-label,
+.theme[bucode="NDN"] .mat-tab-label {
+  border-top: 5px solid #EC2127;
+}
+
+@media (max-width: 1023.98px) {
+  .navContainer:before {
+    content: 'Advertising Self service';
+    background-color: #060;
+    display: table-cell;
+    width: 100%;
+    float: right;
+    line-height: 60px;
+    text-align: center;
+    color: #FFF;
+    text-transform: uppercase;
+  }
+
+  .theme[bucode="PILOT"] .navContainer:before {
+    content: 'The Virginian Pilot';
+    background-color: #145FA6;
+  }
+
+  .theme[bucode="LAT"] .navContainer:before {
+    content: 'Los Angeles Times';
+    background-color: #d12d1f;
+  }
+
+  .theme[bucode="TBS"] .navContainer:before {
+    content: 'The Baltimore Sun';
+    background-color: #145FA6;
+  }
+
+  .theme[bucode="CTC"] .navContainer:before {
+    content: 'Chicago Tribune';
+    background-color: #549AC4;
+  }
+
+  .theme[bucode="CSD"] .navContainer:before {
+    content: 'Chicago Tribune Suburbs';
+    background-color: #549AC4;
+    font-size: 11px;
+  }
+
+  .theme[bucode="CCT"] .navContainer:before {
+    content: 'Carroll county times';
+    font-size: 11px;
+  }
+
+  .bcp .navContainer:before {
+    content: 'City Paper';
+    background-color: #d12d1f;
+  }
+
+  .theme[bucode="BCG"] .navContainer:before {
+    content: 'Capital Gazette';
+    background-color: #23408E;
+  }
+
+  .theme[bucode="ALT"] .navContainer:before {
+    content: 'Morning call';
+    background-color: #519DC6;
+  }
+
+  .theme[bucode="OSC"] .navContainer:before {
+    content: 'Orlando sentinel';
+    background-color: #00BACC;
+  }
+  .theme[bucode="HTF"] .navContainer:before {
+    content: 'Hartford Courant';
+    background-color: #C52026;
+  }
+  .theme[bucode="SSC"] .navContainer:before {
+    content: 'Sun Sentinel';
+    background-color: #990000;
+  }
+
+  .theme[bucode="DPR"] .navContainer:before {
+    content: 'Daily Press';
+    background-color: #C52026;
+  }
+
+  .theme[bucode="SDUT"] .navContainer:before,
+  .theme[bucode="SDT"] .navContainer:before {
+    content: 'Union Tribune';
+    background-color: #007DAE;
+  }
+
+  .theme[bucode="SDCP"] .navContainer:before,
+  .theme[bucode="SCP"] .navContainer:before {
+    content: 'Community Press';
+    background-color: #007DAE;
+  }
+  
+  .theme[bucode="NYDN"] .navContainer:before,
+  .theme[bucode="NDN"] .navContainer:before {
+    content: 'NY Daily News';
+    background-color: #EC2127;
+  }
+}

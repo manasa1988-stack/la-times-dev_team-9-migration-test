@@ -1,0 +1,147 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase">Register</h4>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="cancelRegister" (click)="activeModal.close()"
+    [disabled]="isFormDisabled">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <form [formGroup]="registerForm" (ngSubmit)="registerUser()" novalidate>
+    <fieldset [disabled]="isFormDisabled">
+      <div class="row">
+        <div class="col-12 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Email Address" type="text" formControlName="Email">
+            <mat-error *ngIf="registerForm.controls.Email.hasError('required')">
+              {{emailRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.Email.hasError('invalidEmail') && !registerForm.controls.Email.hasError('required')">
+              {{emailInvalidMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.Email.hasError('serverError') && !registerForm.controls.Email.hasError('required')">
+              {{registerForm.controls.Email.errors['serverError']}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Create Your Password" [type]="showPassword ? 'text' : 'password'"
+              formControlName="Password">
+            <mat-icon class="help-icon" matSuffix (click)="showPassword = !showPassword">{{showPassword ?
+              'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-hint>{{passwordHintMessage}}</mat-hint>
+            <mat-error *ngIf="registerForm.controls.Password.hasError('required')">
+              {{passwordRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.Password.hasError('invalidPassword') && !registerForm.controls.Password.hasError('required')">
+              {{passwordInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+      </div>
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="First Name" type="text" formControlName="FirstName">
+            <mat-error *ngIf="registerForm.controls.FirstName.hasError('required')">
+              {{firstNameRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.FirstName.hasError('maxlength') && !registerForm.controls.FirstName.hasError('required')">
+              {{firstNameMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.FirstName.hasError('invalidCharacterString') && !registerForm.controls.FirstName.hasError('maxlength') && !registerForm.controls.FirstName.hasError('required')">
+              {{invalidFirstNameMessage}}
+            </mat-error>
+
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Last Name" type="text" formControlName="LastName">
+            <mat-error *ngIf="registerForm.controls.LastName.hasError('required')">
+              {{lastNameRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.LastName.hasError('maxlength') && !registerForm.controls.LastName.hasError('required')">
+              {{lastNameMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.LastName.hasError('invalidCharacterString') && !registerForm.controls.LastName.hasError('maxlength') && !registerForm.controls.LastName.hasError('required')">
+              {{invalidLastNameMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput #postalCode placeholder="Zip Code" formControlName="ZipCode">
+            <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+            <mat-error *ngIf="registerForm.controls.ZipCode.hasError('required')">
+              {{zipcodeRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="registerForm.controls.ZipCode.hasError('invalidZipcode') && !registerForm.controls.ZipCode.hasError('required')">
+              {{zipcodeInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+      </div>
+      <div class="row my-2">
+        <div class="col-12">
+          <mat-checkbox type="checkbox" formControlName="IsBusinessUser" (change)="onChangeBusinessValue($event, registerForm)"
+            class="md-primary">I am a business</mat-checkbox>
+        </div>
+        <div class="col-12">
+          <div [hidden] class="bg-light px-3" [@hideShowAnimator]="hideShowAnimator">
+            <mat-form-field class="w-100 required">
+              <input matInput placeholder="Business Name" type="text" formControlName="BusinessName">
+              <mat-error *ngIf="registerForm.controls.BusinessName.hasError('required')">
+                {{businessNameRequiredMessage}}
+              </mat-error>
+            </mat-form-field>
+            <small class="state text-muted">Business Type</small>
+            <small class="state required-color">*</small>
+            <select placeholder="Business Type" formControlName="SelectedBusinessTypeId" class="custom-select-box bg-light rounded-0 form-control required">
+              <option *ngFor="let businessType of businessTypes" [value]="businessType.SubcategoryId">{{ businessType.SubcategoryName }}</option>
+            </select>
+            <div *ngIf="registerForm.controls.SelectedBusinessTypeId.touched && registerForm.controls.SelectedBusinessTypeId.hasError('required')">
+              <small class="required-color">{{businessTypeRequiredMessage}}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row my-2">
+        <div class="col-12">
+          <div class="label-wrap border bg-light p-3 iagree-checkbox">
+            <mat-checkbox formControlName="IsTermsAccepted">I agree to the {{marketSettings.MarketName}}'s
+              <a [attr.href]="marketSettings.PrivacyPolicyUrl" target="_blank">
+                <u>privacy policy</u>
+              </a>,
+              <a [attr.href]="marketSettings.TermsOfServiceUrl" target="_blank">
+                <u>terms of service</u>
+              </a> and
+              <a [attr.href]="marketSettings.TermsAndConditionsUrl" target="_blank">
+                <u>terms & conditions</u>
+              </a>.
+            </mat-checkbox>
+
+            <mat-error *ngIf="isSubmitted && registerForm.controls.IsTermsAccepted.hasError('required') || registerForm.controls.IsTermsAccepted.value == false"
+              class="ml-4 pl-2 mb-2 m-t-n">
+              <small>{{termsAndPolicyMessage}}</small>
+            </mat-error>
+
+            <mat-checkbox formControlName="IsMarketingOptOut">I prefer not to be emailed by advertisers unaffiliated
+              with the {{marketSettings.MarketName}} (optional)</mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <!--      <div class="row" *ngIf="!serverResponse?.IsSuccess">
+        <error-message [serverResponse]="serverResponse"></error-message>
+      </div>-->
+      <div class="modal-footer border-0 d-flex justify-content-start pl-0">
+        <button mat-raised-button color="primary" [disabled]="isFormDisabled" auto-test="submitRegister" class="text-uppercase"
+          type="submit" value="Submit Form">Submit</button>
+        <button mat-raised-button color="accent" class="text-uppercase" auto-test="cancelRegister" (click)="activeModal.close()">Cancel</button>
+      </div>
+    </fieldset>
+  </form>
+</div>

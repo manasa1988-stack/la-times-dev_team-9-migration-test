@@ -1,0 +1,156 @@
+﻿.data-table > div > order-list > div:nth-child(even) > div.row {
+  background: #f0f0f0;
+}
+
+order-list .orderSummar:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+/* Action buttons */
+.fab-buttons {
+  position: absolute;
+  top: 0px;
+  right: 60px;
+  width: 222px;
+}
+/* Filter */
+
+.clear-icon {
+  right: -15px;
+  top: 13px;
+}
+.selectall-checkbox .mat-checkbox-inner-container{
+  margin-bottom: 1px;
+}
+.selectall-checkbox span, .delete-btn, .delete-btn i{
+  bottom: -3px;
+}
+.selectall-checkbox span, .delete-btn, .delete-btn i{
+  position: relative;
+}
+
+.filter-popover .popover {
+  top: 43px !important;
+  right: 0px;
+  margin: 0;
+  left: auto !important;
+  border: 0px;
+  min-width: 250px;
+  min-height: 550px;
+  overflow:visible;
+  overflow-x:hidden;
+  background: transparent;
+
+}
+.filter-popover .popover-body {
+  padding: 0px;
+}
+/*
+.filter-popover .popover .arrow {
+  display: none;
+}*/
+.filter-popover .dropdown-toggle::after {
+  position: absolute;
+  right: 8px;
+  top: 15px;
+}
+.filter-popover .badge {
+  margin-left: -11px;
+  margin-top: 0px;
+  line-height: .5;
+  position: absolute;
+}
+.help-icon {
+  width: 21px !important;
+}
+.help-icon:hover, mat-icon.text-warning:hover, .cursor-pointer, .cursor-pointer:hover, .progresssummary-status-list li i:hover{
+  cursor: pointer!important;
+}
+.popover .dropdown-menu.show {
+  width: auto !important;
+}
+
+@media only screen and (device-width: 768px) {
+  .selectall-checkbox .mat-checkbox-layout {
+      display: block;
+ }
+  .selectall-checkbox{
+      float: none;
+      margin-right: 15px;
+ }
+ .mat-checkbox-layout .mat-checkbox-label{
+  bottom: -1px;
+ }
+}
+
+@media (max-width: 767px) {
+  .selectall-checkbox .mat-checkbox-layout {
+    display: block;
+  }
+
+  .selectall-checkbox {
+    float: left;
+    margin-right: 15px;
+  }
+
+  .delete-btn i {
+    padding-bottom: 11px;
+  }
+}
+
+@media (max-width:667px){
+    .mat-checkbox-layout .mat-checkbox-label{
+      bottom: -1px;
+     }
+     
+}
+
+@media (max-width: 575.98px) {
+    .btn-txt {
+        position: absolute;
+        left: 0;
+        bottom: 30px;
+  }
+    .select-all span {
+        position: absolute;
+        left: auto;
+        bottom: -5px;
+        width: 100%;
+  }
+    .select-all .mat-checkbox-inner-container {
+        left: 17px;
+  }
+    .delete-selected span {
+        position: absolute;
+        width: 100%;
+        left: -26px;
+  }
+ 
+  
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .filter-popover .popover {
+    max-width: 300px;
+    left: auto !important;
+  } 
+  .cartbtn-warpper.sticky-top.sticky-me,
+  .filterbtn-warpper.sticky-top.stickyMe,
+  .materialview-warpper.sticky-top.stickyMe{
+   /* width:80.2%; /*denny's change*/
+    width:80%; /*chinmay's change*/
+    position: fixed!important;
+  } 
+}
+/*----MS Edge Browser CSS Start----*/
+@supports (-ms-ime-align:auto) {
+  .filter-popover .popover {
+      max-width: 300px;
+  }
+  .cartbtn-warpper.sticky-top.sticky-me,
+  .filterbtn-warpper.sticky-top.stickyMe,
+  .materialview-warpper.sticky-top.stickyMe{
+    width:80.2%;
+    position: fixed!important;
+  } 
+}

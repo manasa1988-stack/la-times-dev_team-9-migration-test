@@ -1,0 +1,46 @@
+/* Register */
+.iagree-checkbox .m-t-n {
+  margin-top: -12px;
+}
+
+/* SSOR Login style*/
+#ajax_login_header {
+    position: relative;
+    min-width: 120px;
+    height: 30px !important;
+    line-height: 30px;
+}
+#sslUser {
+    display: inline-block;
+    color: #333;
+    cursor: pointer;
+}
+#sslUser .menu a {
+    color: #333;
+    text-decoration: none;
+}
+#sslUser ul {
+    margin: 0;
+    max-width: 100px;
+    text-align: left;
+    background-color: #e8ebee;
+    position: absolute;
+    z-index: 100;
+    list-style: none;
+    padding: 0;
+    border: 1px solid;
+}
+#sslUser .menu a[data-reg-username]:after {
+    font-family: FontAwesome;
+    content: "\f0d7";
+    padding-left:5px;
+}
+#sslUser ul li {
+    margin: 0;
+    padding: 0;
+}
+#sslUser ul li a {
+    padding: 5px 10px;
+    width:100%;
+    display: inline-block;
+}

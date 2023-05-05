@@ -1,0 +1,53 @@
+<mat-accordion>
+    <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+        <mat-expansion-panel-header class="bg-light pl-5">
+            <mat-panel-title>
+              Inventory Check
+            <mat-icon class="font-13 help-icon" placement="bottom" ngbTooltip="This area shows available inventory based on section/subsections, size, dates. and targeting. Please alter the above areas to see more/less inventory">help</mat-icon>
+            </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-12 col-md-12">
+          <p>
+            New selections for number of requested impressions, targeting or desired run dates will impact inventory. Inventory needs
+            to be updated, select inventory check
+          </p>
+        </div>
+      </div>
+  
+      <form [formGroup]="inventoryCheckForm" auto-test="checkInventory" (ngSubmit)="checkInventory()" novalidate>
+        <div class="row inventoryCheckForm">
+          <div class="col-md-6">
+            <mat-form-field class="required">
+              <input matInput placeholder="Enter Impressions To Book" type="number" formControlName="Impressions" auto-test="changeImpression" (change)="changeImpression($event)">
+             
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field>
+              <input matInput placeholder="Pricing Model" type="text" formControlName="PricingModel" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field>
+              <input matInput placeholder="Impressions Available" type="number" formControlName="ImpressionsAvailable" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field>
+              <input matInput placeholder="Price" type="text" formControlName="Price" readonly>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 submit-btn">
+            <button mat-raised-button color="primary" type="submit">CHECK INVENTORY</button>
+          </div>
+          <div class="col-md-12 mt-3">            
+            <mat-error *ngIf="showMessage">
+               {{errorMessage}}
+            </mat-error>      
+          </div>
+        </div>
+      </form>
+  
+    </mat-expansion-panel>
+  </mat-accordion>

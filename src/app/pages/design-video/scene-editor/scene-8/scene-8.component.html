@@ -1,0 +1,74 @@
+<form #sceneBody="ngForm" *ngIf="sceneHelper">
+    <div class="row pt-4">
+        <div class="col-12 col-md-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <textarea
+                    maxlength="190"
+                    rows="5"
+                    matInput
+                    required
+                    placeholder="Text"
+                    #textInput="ngModel"
+                    name="textInput"
+                    spellcheck
+                    (keydown.enter)="$event.preventDefault()"
+                    (ngModelChange)="sceneHelper.model.text = $event.replace(regexp,'')"
+                    (ngModelChange)="validate($event, 'text')"
+                    [ngModel]="sceneHelper.model.text">
+                </textarea>
+
+                <mat-hint *ngIf="!textInput.valid">
+                    <span class="mat-error">Text is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!textInput.valid">
+                    Text is <strong>required</strong>
+                </mat-error>
+                <mat-hint *ngIf="sceneHelper.currentLines.text > sceneHelper.lineLimits?.text">
+                    <span class="mat-error">Text is too long</span>
+                </mat-hint>
+                <mat-hint
+                [ngClass]="{'mat-error': sceneHelper.currentLines.text > sceneHelper.lineLimits?.text}"
+                align="end">{{sceneHelper.model.text?.length}} / 190 characters, {{sceneHelper.currentLines.text}}/{{sceneHelper.lineLimits?.text}} lines</mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="4"
+                    matInput
+                    placeholder="Year - Only numbers"
+                    #captionInput="ngModel"
+                    name="captionInput"
+                    spellcheck
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.caption">
+                <!--mat-hint *ngIf="!captionInput.valid">
+                    <span class="mat-error">Caption is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!captionInput.valid">
+                    caption is <strong>required</strong>
+                </mat-error-->
+            </mat-form-field>
+        </div>
+
+        <!--div class="col-12">
+            <div class="row">
+                <div class="col-12 --align-right">
+                    <div class="submit-btn">
+                        <button
+                            class="text-uppercase"
+                            title=""
+                            mat-raised-button
+                            (click)="_update()"
+                            color="primary">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div-->
+    </div>
+
+
+</form>

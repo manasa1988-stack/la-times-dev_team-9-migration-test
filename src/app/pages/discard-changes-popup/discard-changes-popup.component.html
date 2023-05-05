@@ -1,0 +1,16 @@
+﻿<div class="modal-header bg-light border-0">
+  <h6 class="modal-title">{{ header }}</h6>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()" *ngIf="!aditSuccessMessage">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <p>{{body}}</p>
+</div>
+<div class="modal-footer border-0" *ngIf="!isError && !aditSuccessMessage">
+  <button mat-button (click)="activeModal.close({data : 'cancel'})" auto-test="cancel" class="btn">CANCEL</button>
+  <button mat-button (click)="activeModal.close({data : 'continue'})" auto-test="continue"  class="text-primary">CONTINUE</button>
+</div>
+<div class="modal-footer border-0" *ngIf="isError && !aditSuccessMessage">
+  <button mat-button (click)="activeModal.close()" class="btn">Ok</button>
+</div>

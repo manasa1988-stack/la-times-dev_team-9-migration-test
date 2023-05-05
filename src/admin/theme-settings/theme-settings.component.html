@@ -1,0 +1,101 @@
+﻿<div class="row">
+        <div class="col-md-12">
+            <h1>ADSS THEME SETTINGS - {{environmentName}}</h1>
+        </div>
+    </div>
+    
+    <div *ngIf="!isDataReady; else dataReady">
+        <mat-spinner></mat-spinner>
+    </div>
+    
+    <ng-template #dataReady>
+    
+        <div *ngIf="displayError">
+            <error-alert></error-alert>
+        </div>
+    
+        <div class="row mb-3" *ngIf="!displayError">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr class="bg-secondary text-white text-uppercase">
+                                <td>
+                                    Market Name
+                                </td>
+                                <td>
+                                    BU Code (Comm. Code)
+                                </td>
+                                <td>
+                                    Theme URL
+                                </td>
+                                <td>
+                                    Host Name
+                                </td>
+                                <td>
+                                    Secured Theme?
+                                </td>
+                                <td>
+                                    Legacy Theme?
+                                </td>
+                                <td>
+                                    Google Analytics code
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let themelist of themeSettingsListData">
+                            <td>
+                                {{themelist.MarketName}}
+                            </td>
+                            <td>
+                                {{themelist.BUCode}} 
+                                <span *ngIf="themelist.CommunityCode">({{themelist.CommunityCode}})</span>                         
+                            </td>
+                            <td>
+                                {{themelist.ThemeUrl}}
+                            </td>
+                            <td>
+                                {{themelist.HostName}}
+                            </td>
+                            <td>
+                                {{themelist.IsSecuredTheme ? 'YES' : ''}}
+                            </td>
+                            <td>
+                                {{themelist.IsLegacyTheme ? 'YES' : ''}}
+                            </td>
+                            <td>
+                               {{themelist.UsageAnalyticsCode}}
+                            </td>
+                            <td>
+                                <ul class="nav navbar-nav list-inline">
+                                    <li class="list-inline-item">
+                                        <button mat-icon-button class="float-left pl-1" (click)="editTheme(themelist)">
+                                            <mat-icon title="Edit">edit</mat-icon>
+                                        </button>                                       
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <button mat-icon-button (click)="deleteTheme(themelist)">
+                                            <mat-icon title="Delete">delete</mat-icon>
+                                        </button>                                       
+                                    </li>
+                                </ul>   
+                            </td>
+                        </tr>
+                    </table>
+                </div>   
+            </div>   
+        </div>
+    
+        <div class="row" *ngIf="!displayError">
+            <div class="col-md-12">
+                <div class="float-left">
+                    <button mat-raised-button color="primary" class="text-uppercase" (click)="generateLayout()">Run Layout Generation</button>
+                 </div>
+                <div class="float-right">
+                    <button mat-raised-button color="accent" class="text-uppercase" (click)="addTheme()">Add Theme Settings</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>

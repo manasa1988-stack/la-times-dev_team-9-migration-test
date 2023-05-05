@@ -1,0 +1,31 @@
+<ngu-carousel #templateCarousel [inputs]="carouselTileTwo" class="slide-ad">
+    <ngu-tile NguCarouselItem *ngFor="let item of itemsList; let i = index;">
+        <div class="wBg" [ngSwitch]="type" [ngClass]="item.Ischecked ? 'active-ad-tile' : ''">
+            <div *ngSwitchCase="'layout'" auto-test="bindTemplates" (click)="selectTile(item, 'bindTemplates')">
+                <div class="slide-img-wrapper">
+                    <img class="tile border cursor-pointer img-fluid" [src]="item.AdSizeImageURL">
+                    <p class="text-center img-dimensions small">{{item.AdSize.Name}}</p>
+                </div>
+            </div>
+            <div *ngSwitchCase="'template'" auto-test="openDesignMaterial" (click)="selectTile(item, 'openDesignMaterial')">
+                <div class="sliderimg-wrapper">
+                    <img class="tile border cursor-pointer img-fluid" [src]="templateUrl + item.Code + templateSample" [style.max-width]="imageWidth + 'px'">
+                    <p *ngIf="item.Name != ''" class="text-center img-dimensions small">{{item.Name}}</p>
+                </div>
+            </div>
+            <div *ngSwitchCase="'addImage'" auto-test="uploadImage" (click)="selectTile(item, 'uploadImage')">
+                <div class="slide-img-wrapper">
+                    <img class="tile border cursor-pointer img-fluid" placement="right" ngbTooltip="{{item.Name}}" [src]="item.Url">
+                    <!-- <p class="text-center img-dimensions">{{item.Name}}</p> -->
+                </div>
+            </div>
+
+        </div>
+    </ngu-tile>
+    <button NguCarouselPrev class="leftRs">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button NguCarouselNext class="rightRs">
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+</ngu-carousel>

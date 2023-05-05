@@ -1,0 +1,122 @@
+﻿<div>
+<div class="row mb-4">
+    <div class="col-md-12">
+      <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold"> My Dashboard</h4>
+    </div>
+    <div class="col-md-12">
+      <h4 class="d-inline-block text-uppercase" *ngIf="userDetails?.CustomerNumber?.length > 0">Account Number:
+        <span>{{userDetails?.CustomerNumber}}</span>
+      </h4>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="userDetails?.IsAdItInReadOnlyMode">
+    <div class="col-md-12">
+      <p class="text-danger">Please note, because of scheduled system updates, your profile and orders are unable to be edited at this time. Also, newly placed orders may have a 24-48 hour delay before appearing back later or contact us at 1-800-528-4637, ext. 73445 or {{customerSupportEmail}} with any requests.</p>
+    </div>
+  </div>
+
+  <div class="b-b-0">
+    <mat-tab-group class="theme" (selectedTabChange)="tabChangeEvent($event)">
+      <mat-tab label="ORDERS" class="bg-light">
+        <!--<div>This is Order tab.</div>-->
+        <div class="col data-table">
+          <order-header [isDraft]="isDraft"></order-header>
+
+          <div *ngIf="!isOrderListReady; else orderListContent" class="my-5">
+            <mat-spinner></mat-spinner>
+          </div>
+
+          <ng-template #orderListContent class="my-5">
+            <div *ngIf="orders === undefined" class="my-5">
+              <error-alert></error-alert>
+            </div>
+
+            <div *ngIf="orders !== undefined">
+              <order-list [data]="orders" [isDraft]="isDraft" (passEvent)="readFrom($event)"></order-list>
+            </div>
+
+            <div class="col-12 pb-5 mt-3">
+              <a class="text-uppercase float-right" routerLink="/my-orders" auto-test="goToOrderHistory">Go To Order History
+                <mat-icon class="float-right">chevron_right</mat-icon>
+              </a>
+            </div>
+          </ng-template>
+        </div>
+
+      </mat-tab>
+      <mat-tab label="DRAFTS">
+        <!--<div>This is Drafts tab.</div>-->
+        <div class="col data-table">
+          <order-header [isDraft]="'true'"></order-header>
+
+          <div *ngIf="!isDraftListReady; else draftListContent" class="my-5">
+            <mat-spinner></mat-spinner>
+          </div>
+
+          <ng-template #draftListContent class="my-5">
+            <div *ngIf="drafts === undefined" class="my-5">
+              <error-alert></error-alert>
+            </div>
+
+            <div *ngIf="drafts !== undefined">
+              <order-list [data]="drafts" [isDraft]="isDraft" (passEvent)="readFrom($event)"></order-list>
+            </div>
+            <div class="col-12 pb-5 mt-3">
+              <a class="text-uppercase float-right" routerLink="/draftorders" auto-test="goToDraftOrders">
+                Go To Drafts
+                <mat-icon class="float-right">chevron_right</mat-icon>
+              </a>
+            </div>
+          </ng-template>
+
+        </div>
+
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <div class="row py-5">
+    <div class="col-12 col-md-6">
+      <mat-accordion class="custom-accordion">
+
+        <mat-expansion-panel [expanded]="true" class="custom-panel mb-3">
+          <mat-expansion-panel-header class="bg-primary text-white text-uppercase pl-5">
+
+              <mat-panel-title class="text-white">
+                  CREDIT CARDS
+              <div class="add-card-btn" *ngIf="!userDetails?.IsAdItInReadOnlyMode">
+                <button class="bg-transparent small border-0 text-white text-uppercase mr-2" auto-test="addNewCard" (click)="addCard();$event.stopPropagation()">
+                  <span class="d-none d-sm-block float-left mr-1 mt-2"> Add new card</span>
+                  <mat-icon class="mt-1">add_circle</mat-icon>
+                </button>
+              </div>
+         </mat-panel-title>
+
+          </mat-expansion-panel-header>
+          <credit-cards-list [cards]="userDetails?.CreditCards" [isDataReady]="isDataReady" [isReadOnly]="userDetails?.IsAdItInReadOnlyMode"
+            (notify)="onNotify($event)"></credit-cards-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </div>
+    <div class="col-12 col-md-6">
+      <mat-accordion class="custom-accordion">
+        <mat-expansion-panel [expanded]="true" class="custom-panel mb-3">
+          <mat-expansion-panel-header class="bg-primary text-white text-uppercase pl-5">
+              <mat-panel-title class="text-white">ACCOUNT INFORMATION</mat-panel-title>
+          </mat-expansion-panel-header>
+          <account-information [userDetails]="userDetails" class="pt-3" [isDataReady]="isDataReady" [isReadOnly]="userDetails?.IsAdItInReadOnlyMode"
+            (notify)="onNotify($event)"></account-information>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion class="custom-accordion">
+        <mat-expansion-panel [expanded]="true" class="custom-panel mb-3">
+          <mat-expansion-panel-header class="bg-primary text-white text-uppercase pl-5">
+              <mat-panel-title class="text-white">CUSTOMER SUPPORT</mat-panel-title>
+          </mat-expansion-panel-header>
+          <customer-support></customer-support>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </div>
+  </div>
+</div>

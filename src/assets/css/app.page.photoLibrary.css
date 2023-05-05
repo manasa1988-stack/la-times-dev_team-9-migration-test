@@ -1,0 +1,59 @@
+﻿
+.imageWrapper {
+  height: 200px;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageWrapper .mat-progress-spinner{
+  top: 0%;
+}
+
+  .overlayButton {
+    opacity: 0.5;
+  }
+.overlayButton:hover {
+  opacity: 1;
+}
+
+.photolibrary .modal-dialog {
+  max-width: 100%;
+  margin: 0 15px;
+  height: auto;
+} 
+    
+.photolibrary .modal-dialog .modal-content {    
+    width: auto;    
+    text-align: center;    
+    margin: 0 auto;    
+}
+    
+.photolibrary .modal-dialog .modal-content .close{    
+    position: absolute;    
+    z-index: 9999;    
+    right: 0;    
+    background: #fff;    
+}
+
+.imageWrapper-slide {
+  height: 125px;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}  
+
+/* IE 11 */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  image-frame .imageWrapper {
+    display:block!important;
+    height:175px!important;
+    padding-top:7px!important;
+ }
+ .overlayButton {
+  left:40%;
+  top:40%;
+}
+}

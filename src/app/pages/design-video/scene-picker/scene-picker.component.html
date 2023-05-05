@@ -1,0 +1,63 @@
+
+<div class="modal-body">
+    <div class="py-3">
+        <h3 class="text">Select Layout</h3>
+    </div>
+    <!--div class="scene-container mb-4"-->
+    <form #picker="ngForm">
+        <mat-radio-group>
+            <div class="row">
+                <ng-container *ngFor="let layout of set; let i = index">
+                    <div class="col-6 col-md-4">
+                        <div
+                            class="card rounded-2 --scene-card"
+                            [ngClass]="{'scene-selected': true}"
+                            >
+                            <div class="card-body">
+                                <div class="card-body-content">
+                                    <img src="{{layout.thumbnailImageUrl}}"/>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <mat-radio-button *ngIf="type === 'single'" (change)="pickLayout(i)" value="{{layout.name}}"><div class="footer-content">{{layout.freeName}}</div></mat-radio-button>
+                                <mat-checkbox *ngIf="type === 'multiple'" (change)="toggleLayout($event,i)" ><div class="footer-content">{{layout.freeName}}</div></mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </mat-radio-group>
+    </form>
+
+    <div class="row py-3">
+        <div class="col-12 --align-right">
+            <button
+                class="mat-stroked-button text-uppercase"
+                title=""
+                mat-raised-button
+                (click)="close()"
+                color="Base">
+                Cancel
+            </button>
+
+            <div class="submit-btn">
+                <button
+                    class="text-uppercase"
+                    [ngClass]="{'mat-primary': selectedLayouts.length}"
+                    title=""
+                    mat-raised-button
+                    [disabled]="!selectedLayouts.length"
+                    (click)="addLayouts()"
+                    >
+                    Select
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="video-container">
+
+
+    </div>
+
+</div>

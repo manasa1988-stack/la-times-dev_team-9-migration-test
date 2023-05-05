@@ -1,0 +1,68 @@
+<div _ngcontent-c4="" class="col-12 mb-2">
+  <h4 _ngcontent-c4=""><strong _ngcontent-c4="">Your scenes:</strong></h4>
+</div>
+
+<div class="position-relative">
+  <button
+    type="button"
+    mat-buttons
+    mat-raised-button
+    class="text-uppercase button-reorder position-absolute"
+    (click)="reorder()">Reorder</button>
+  <ngx-slick-carousel class="carousel scroll-frame d-flex" #slickModal="slick-carousel" [config]="slideConfig">
+    <div
+        ngxSlickItem
+        *ngIf="!!first"
+        class="card rounded-2 --scene-card"
+        [ngClass]="{'scene-selected': selectedScene === 0}"
+        (click)="select(0)"
+        >
+        <div class="card-body">
+            <div class="card-body-content">
+                <img src="{{first?.thumbnailImageUrl}}">
+            </div>
+        </div>
+        <div class="card-footer">
+            {{first.freeName}}
+            <div class="card-icon">
+                <i class="material-icons red" *ngIf="!isValidScene(0)">error_outline</i>
+                <i class="material-icons green" *ngIf="isValidScene(0)">done</i>
+            </div>
+        </div>
+    </div>
+    <div ngxSlickItem *ngFor="let layout of sortable; let i = index"
+        class="card rounded-2 --scene-card"
+        [ngClass]="{'scene-selected': layout?.addItem ? false : selectedScene === i+1}"
+        (click)="layout?.addItem ? add() : select(i+1)"
+        >
+        <ng-container *ngIf="layout?.addItem">
+          <div class="card-body">
+            <div class="card-body-content new-card">
+                <div class="new-card-frame">
+                    <div class="new-card-icon">
+                        <i class="material-icons" ngbTooltip="Help">add</i>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <div class="card-footer">
+              Add new scene
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!layout?.addItem">
+          <div class="card-body">
+              <div class="card-body-content">
+                  <img src="{{layout?.thumbnailImageUrl}}">
+              </div>
+          </div>
+          <div class="card-footer">
+              {{layout?.freeName}}
+              <div class="card-icon">
+                  <i class="material-icons red" *ngIf="!isValidScene(i+1)">error_outline</i>
+                  <i class="material-icons green" *ngIf="isValidScene(i+1)">done</i>
+              </div>
+          </div>
+        </ng-container>
+    </div>
+  </ngx-slick-carousel>
+</div>

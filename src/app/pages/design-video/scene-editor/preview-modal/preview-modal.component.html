@@ -1,0 +1,20 @@
+<div class="modalBody">
+
+    <div class="title mb-4">
+        <h4>{{preview[0]?.name}}</h4>
+    </div>
+    <div class="body mb-4">
+        <img [src]="preview[0]?.url" >
+    </div>
+    <div class="footer">
+        <button
+            class="mr-2 mat-stroked-button text-uppercase"
+            (click)="_close()"
+            mat-raised-button
+            color="base"
+            >
+            Close
+        </button>
+    </div>
+
+</div>

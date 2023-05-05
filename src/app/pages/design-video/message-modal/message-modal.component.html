@@ -1,0 +1,39 @@
+<ng-template #dialogTemplate>
+    <div class="title">
+        <h4>{{message?.title}}</h4>
+    </div>
+    <div class="body mb-4">
+        <p>{{message?.message}}</p>
+    </div>
+    <div class="footer">
+        <ng-container *ngIf="message?.secondaryActionLabel; else close">
+            <button
+                class="ml-2 mat-stroked-button"
+                (click)="_secondaryAction()"
+                mat-raised-button
+                color="base"
+                >
+                {{message?.secondaryActionLabel}}
+            </button>
+        </ng-container>
+        <ng-template #close>
+            <button
+                class="mat-stroked-button"
+                (click)="_close()"
+                mat-raised-button
+                color="base"
+                >
+                Close
+            </button>
+        </ng-template>
+        <button
+            class="mat-stroked-button"
+            *ngIf="message?.primaryActionLabel"
+            (click)="_primaryAction()"
+            mat-raised-button
+            color="warn"
+            >
+            {{message?.primaryActionLabel}}
+        </button>
+    </div>
+</ng-template>

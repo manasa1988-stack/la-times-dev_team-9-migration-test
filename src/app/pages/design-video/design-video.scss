@@ -1,0 +1,177 @@
+
+.sb-button {
+    .fa-facebook {
+        color: white;
+        background: #355998;
+        padding: 8px 12px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+    }
+
+    .fa-twitter {
+        color: white;
+        background: #55acee;
+        padding: 10px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+    }
+
+    .fa-linkedin {
+        color: white;
+        background: #007ab9;
+        padding: 10px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+    }
+
+    .fa-envelope {
+        color: white;
+        background: #007ab9;
+        padding: 12px;
+        border-radius: 50%;
+        font-size: 1.1rem;
+    }
+}
+
+.share-button-raw {
+    .fa-download,
+    .fa-link {
+        color: rgba(0,0,0,0.54);
+        background: #e8e8e8;
+        padding: 12px;
+        border-radius: 50%;
+        font-size: 1.1rem;
+        margin-right: .4rem;
+        margin-left: .30rem;
+    }
+}
+
+.share-button-raw {
+    height: 3.5rem;
+    border: none;
+    background: transparent;
+}
+
+.mat-snack-bar-container {
+    max-width: initial;
+    background: #f44336;
+    text-align: left;
+}
+
+.cdk-global-overlay-wrapper > .cdk-overlay-pane {
+    width: 100%;
+    text-align: center;
+}
+
+.latimes-snackbar {
+    background: #f44336 !important;
+    max-width: initial !important;
+}
+
+.latimes-snackbar p {
+    margin: 0;
+}
+
+.mat-dialog-container {
+    min-width: 250px;
+    text-align: left;
+    display: inline-block !important;
+    width: auto !important;
+    max-height: 95vh !important;
+}
+
+.cropper-editor-action {
+    min-width: 0 !important;
+}
+
+.configure-ad-tabs {
+    .mat-tab-label {
+        display:flex;
+        flex-grow: 1;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .configure-ad-tabs {
+        .mat-tab-label {
+            display:flex;
+            flex-grow: 0;
+        }
+    }
+}
+
+.scene-editor-tabs {
+    .mat-tab-label {
+        height: auto;
+        min-width: 0 !important;
+        padding: 0;
+        width: 60px;
+    }
+}
+
+.material-button {
+    background-color: #db3021;
+}
+
+@font-face  {
+    font-family: 'jubilatbold';
+    src: url(../../../assets/fonts/jubilatbold-roman-webfont.ttf) format("truetype");
+}
+
+@font-face  {
+    font-family: 'FiraSans-Regular';
+    src: url(../../../assets/fonts/FiraSans-Regular.ttf) format("truetype");
+}
+
+@font-face  {
+    font-family: 'FiraSans-Medium';
+    src: url(../../../assets/fonts/FiraSans-Medium.ttf) format("truetype");
+}
+
+@font-face  {
+    font-family: 'FrankRuhlLibre-Black';
+    src: url(../../../assets/fonts/FrankRuhlLibre-Black.ttf) format("truetype");
+}
+
+@font-face  {
+    font-family: 'FrankRuhlLibre-Bold';
+    src: url(../../../assets/fonts/FrankRuhlLibre-Bold.ttf) format("truetype");
+}
+
+@font-face  {
+    font-family: 'FrankRuhlLibre-Medium';
+    src: url(../../../assets/fonts/FrankRuhlLibre-Medium.ttf) format("truetype");
+}
+
+
+.enlarge-button {
+    display: block;
+    color: #fff;
+    position: absolute;
+    font-size:2.5rem;
+    bottom: 1.2rem;
+    right: 1.2rem;
+    display: block;
+    z-index: 1;
+}
+
+.preview {
+  &-container {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 56.25%;
+  }
+
+  &-frame {
+    top: 0;
+    left: 0;
+    width: 1228px;
+    height: 691px;
+    display: block;
+    overflow: hidden;
+    position: absolute;
+    transform: scale(0.421);
+    transform-origin: top left;
+    background: black;
+  }
+}

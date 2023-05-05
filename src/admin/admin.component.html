@@ -1,0 +1,33 @@
+﻿<div class="modal-body px-4 pt-0 fixed-top z-1100 mx-0" *ngIf="submitting">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<div >
+    <div class="col-md-12 p-2 bg-light" id='adminMenu' style="display:none">
+        <ul class="list-inline m-0">
+            <li class="list-inline-item px-3 pt-1 pl-2 pl-2">
+                <a [href]="adminUrl + '/admin/adminsettings'" class="text-primary">Settings</a>
+            </li>
+            <li class="list-inline-item px-3 pt-1">
+                <a [href]="adminUrl + '/admin/orderqueue'" class="text-primary">Orders Queue</a>
+            </li>
+            <li class="list-inline-item px-3 pt-1">
+                <a [href]="adminUrl + '/admin/themesettings'" class="text-primary">Theme Settings</a>
+            </li>
+            <li class="list-inline-item px-3 pt-1">
+                <a [href]="adminUrl + '/admin/marketsettings'" class="text-primary">Market Setting</a>
+            </li>     
+            <li class="list-inline-item px-3 pt-1">
+                <a [href]="adminUrl + '/admin/cache'" class="text-primary">Cache Manager</a>
+            </li>
+            <li class="list-inline-item px-3 pt-1">
+                <a [href]="adminUrl + '/admin/orderdetails'" class="text-primary">Order details</a>
+            </li>   
+            <li class="list-inline-item px-3 pt-1">
+                <a [href]="adminUrl + '/admin/digitalsettings'" class="text-primary">Digital Settings</a>
+            </li>           
+        </ul>
+    </div>
+</div>
+<div class="my-3">
+  <router-outlet></router-outlet>
+</div>

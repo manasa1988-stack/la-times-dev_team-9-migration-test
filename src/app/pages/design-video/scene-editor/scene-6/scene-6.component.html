@@ -1,0 +1,150 @@
+<form #sceneBody="ngForm" *ngIf="sceneHelper">
+    <div class="row pt-4">
+        <div class="col-12 col-md-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <textarea
+                    maxlength="280"
+                    rows="5"
+                    matInput
+                    required
+                    placeholder="Text"
+                    #descriptionInput1="ngModel"
+                    name="descriptionInput1"
+                    spellcheck
+                    (keydown.enter)="$event.preventDefault()"
+                    (ngModelChange)="sceneHelper.model.description_1 = $event.replace(regexp,'')"
+                    (ngModelChange)="validate($event, 'description_1')"
+                    [ngModel]="sceneHelper.model.description_1">
+                </textarea>
+                <mat-hint *ngIf="!descriptionInput1.valid">
+                    <span class="mat-error">Text is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!descriptionInput1.valid">
+                    Text is <strong>required</strong>
+                </mat-error>
+                <mat-hint *ngIf="sceneHelper.currentLines.description_1 > sceneHelper.lineLimits?.description_1">
+                    <span class="mat-error">Text is too long</span>
+                </mat-hint>
+                <mat-hint
+                    [ngClass]="{'mat-error': sceneHelper.currentLines.description_1 > sceneHelper.lineLimits?.description_1}"
+                    align="end">{{sceneHelper.model.description_1?.length}} / 280 characters, {{sceneHelper.currentLines.description_1}}/{{sceneHelper.lineLimits?.description_1}} lines</mat-hint>
+
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="20"
+                    matInput
+                    placeholder="Caption 1"
+                    #nameInput1="ngModel"
+                    required
+                    name="nameInput1"
+                    spellcheck
+                    (ngModelChange)="validate($event, 'name_1')"
+                    [(ngModel)]="sceneHelper.model.name_1">
+                <mat-hint *ngIf="!nameInput1.valid">
+                    <span class="mat-error">Caption 1 is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!nameInput1.valid">
+                    Caption 1 is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="20"
+                    matInput
+                    placeholder="Caption 2"
+                    #nameInput2="ngModel"
+                    required
+                    name="nameInput2"
+                    spellcheck
+                    (ngModelChange)="validate($event, 'name_2')"
+                    [(ngModel)]="sceneHelper.model.name_2">
+                <mat-hint *ngIf="!nameInput2.valid">
+                    <span class="mat-error">Caption 2 is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!nameInput2.valid">
+                    Caption 2 is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="20"
+                    matInput
+                    placeholder="Caption 3"
+                    #nameInput3="ngModel"
+                    name="nameInput3"
+                    spellcheck
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.name_3">
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="20"
+                    matInput
+                    placeholder="Caption 4"
+                    #nameInput4="ngModel"
+                    name="nameInput4"
+                    spellcheck
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.name_4">
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="20"
+                    matInput
+                    placeholder="Caption 5"
+                    #nameInput5="ngModel"
+                    name="nameInput5"
+                    spellcheck
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.name_5">
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    maxlength="20"
+                    matInput
+                    placeholder="Caption 6"
+                    #nameInput6="ngModel"
+                    name="nameInput6"
+                    spellcheck
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.name_6">
+            </mat-form-field>
+        </div>
+
+        <!--div class="col-12">
+            <div class="col-12 --align-right">
+                <div class="submit-btn">
+                    <button
+                        class="text-uppercase"
+                        title=""
+                        mat-raised-button
+                        (click)="_update()"
+                        color="primary">
+                        Apply
+                    </button>
+                </div>
+            </div>
+        </div-->
+    </div>
+
+
+</form>

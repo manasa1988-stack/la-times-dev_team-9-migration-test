@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build:qa",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build:qa",
+			"detail": "ng build -ec --prod --env=qa"
+		}
+	]
+}

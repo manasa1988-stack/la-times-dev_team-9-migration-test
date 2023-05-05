@@ -1,0 +1,163 @@
+<mat-tab-group disableRipple>
+    <mat-tab label="EDIT YOUR VIDEO"></mat-tab>
+</mat-tab-group>
+
+<!--scene-picker
+    *ngIf="wibbitzBase"
+    #picker
+    (_addLayouts)="addScenes($event)"
+    [set]="wibbitzBase.layouts">
+</scene-picker-->
+
+<div
+    class="py-3"
+    *ngIf="!isFromAdit && !loading && orderInfo.IsVideoEditDeadLinePassed">
+    <div class="card rounded-0">
+        <div class="card-body loading">
+            <div>
+                <p>Oops, You missed the deadline for editing video!</p>
+                <p>
+                    <button mat-stroked-button
+                        (click)="redirectToOrder()">
+                        Go to order
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="py-3"
+    *ngIf="isCustomerSession && !loading && isVideoEditSessionExpired">
+    <div class="card rounded-0">
+        <div class="card-body loading">
+            <div>
+                <p>Oops, Your video session is expired, you can reload to initiate session again!</p>
+                <p>
+                    <button mat-stroked-button
+                        (click)="redirectToOrder()">
+                        Reload
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="py-3"
+    *ngIf="isCustomerSession && !loading && !isValidSingleVideoEditSession">
+    <div class="card rounded-0">
+        <div class="card-body loading">
+            <div>
+                <p>This video is being edited from other place!</p>
+                <p>
+                    <button mat-stroked-button
+                        (click)="redirectToOrder()">
+                        Back
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="py-3"
+    *ngIf="loading">
+    <div class="card rounded-0">
+        <div class="card-body loading">
+            <div>
+                <i class="fa fa-circle-o-notch fa-spin"></i>
+            </div>
+            <div> Loading...</div>
+        </div>
+    </div>
+</div>
+
+<div
+    class="py-3"
+    [ngClass]="{'saving': saving}"
+    *ngIf="((!loading && isFromAdit) || (!loading && !orderInfo.IsVideoEditDeadLinePassed)) && (!loading && (!isCustomerSession || (isValidSingleVideoEditSession && !isVideoEditSessionExpired)))">
+    <div class="card rounded-0">
+        <div class="card-body">
+            <track-picker
+                [audioTracks]="wibbitzBase?.audioTracks"
+                [selectedTrack]="payload.selectedAudio"
+                (update)="saveVideoTrack($event)">
+            </track-picker>
+
+            <scene-selector
+                [scenes]="payload.layouts"
+                [uiHelpers]="payload.uiHelper"
+                [selectedScene]="selectedScene"
+                (selectScene)="selectScene($event)"
+                (reorder)="reorder($event)"
+                (addScene)="addScene($event)"
+                (reorderScene)="reorderScene($event)"
+                #sceneSelector>
+            </scene-selector>
+
+            <scene-editor
+                (setCoverSrc)="coverSrc=$event"
+                *ngIf="payload.layouts"
+                [wibbitzOrderId]="wibbitzOrderId"
+                [aditId]="aditId"
+                [package]="orderInfo.BUCode === 'SDT' || aditBusinessUnit === 'sdt'? 'SDT' : 'LAT'"
+                [payload]="payload"
+                [draftId]="this.wibbitzVideoDraftId"
+                (refresh)="refresh()"
+                [scene]="payload.layouts[selectedScene]"
+                (update)="submitVideo()"
+                (updateInfo)="refreshInfo()"
+                [images]="wibbitzBase?.defaultImages"
+                [printAdImage]="getAdPrintImage()"
+                [sceneHelper]="payload.uiHelper[selectedScene]"
+                (duplicateScene)="duplicateScene($event)"
+                (deleteScene)="deleteScene($event)">
+            </scene-editor>
+
+            <div class="row pt-4">
+                <div class="col-12 --align-right">
+                    <div class="submit-btn">
+                        <button
+                            class="text-uppercase"
+                            title=""
+                            mat-raised-button
+                            [disabled]="saving"
+                            (click)="backRedirect()"
+                            color="primary" *ngIf="!isFromAdit">
+                            <ng-container *ngIf="orderInfo.AditId; else checkout">
+                                Save Draft
+                            </ng-container>
+                            <ng-template #checkout>
+                                Continue
+                            </ng-template>
+                        </button>
+                    </div>
+
+                    <ng-container *ngIf="orderInfo.AditId">
+                        <div class="submit-btn">
+                            <button
+                                class="text-uppercase"
+                                title=""
+                                [disabled]="saving"
+                                mat-raised-button
+                                (click)="saveAndSubmit()"
+                                color="primary">
+                                Submit Video
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<message-modal
+    (primaryAction)="redirectToOrder()"
+    #showSubmitSuccess
+    >
+</message-modal>

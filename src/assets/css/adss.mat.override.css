@@ -1,0 +1,70 @@
+/* Material overrides */
+/* Accordions */
+.mat-expansion-indicator {
+  position: absolute;
+  left: 28px;
+  float: left;
+  transform : rotate(270deg) !important;
+}
+
+  .mat-expansion-indicator::after {
+    border-width: 0 !important;
+    content: "\f0d8" !important;
+    transform: rotate(178deg) !important;
+    font-family: FontAwesome !important;
+  }
+
+  .mat-expanded .mat-expansion-indicator {
+    transform : rotate(0deg) !important;
+  }
+
+
+/* Tabs */
+.mat-ink-bar {
+  top: 0px;
+  height: 3px!important;
+}
+
+.mat-tab-label{  
+  margin-right: 2px;
+}
+
+
+.mat-tab-body-content {
+  overflow: hidden !important;
+}
+
+.mat-tab-label-active {
+  background-color: rgba(197,202,233,.3);
+}
+
+/* Form fields */
+.required .mat-form-field-label:after, .required .mat-checkbox-layout:after, h4.required:after  {
+  content: "*";
+  color: red;
+  padding-left: 3px;
+}
+
+.mat-checkbox-inner-container {
+  height: 17px!important;
+  width: 17px!important;
+}
+
+.mat-accent .mat-slider-thumb, .mat-accent .mat-slider-thumb-label, .mat-accent .mat-slider-track-fill {
+  background-color: #212529!important;
+}
+.mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled) {
+  opacity: 1;
+} 
+
+.mat-form-field-subscript-wrapper{
+  white-space: initial!important;
+}
+
+@media (max-width: 320px)  {
+  .custom-wrap label.mat-form-field-label.mat-input-placeholder.mat-form-field-placeholder.mat-empty.mat-form-field-empty {
+      white-space: pre-line;
+      word-break: break-word;
+      top: 5px;
+  }
+}

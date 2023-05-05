@@ -1,0 +1,42 @@
+<div class="loading-container" *ngIf="loading">
+    <div class="loading">
+        <mat-progress-spinner mode="indeterminate" [diameter]="30" class="align-middle d-inline-block"></mat-progress-spinner>
+        <p>Creating preview</p>
+    </div>
+</div>
+<div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer>
+    <div class="preview-frame" [style.transform]="previewTransform" #source>
+        <div class="red-block"></div>
+
+        <div class="image-block"
+            [ngStyle]="{'background-image': 'url(' + media + ')'}">
+        </div>
+
+        <div class="age" *ngIf="age">{{age}}</div>
+
+        <div class="text-block">
+            <div class="name-block" #nameBlock>
+                <div #nameBlockContent >{{name}}</div>
+            </div>
+
+            <div class="dates-block" *ngIf="year.length">
+                <ng-container *ngIf="year.length > 1; else nobreak">
+                    {{year[0]}}<br/>
+                    {{year[1]}}
+                </ng-container>
+
+                <ng-template #nobreak>
+                    {{year[0]}}
+                </ng-template>
+            </div>
+            <div class="desc-block" [ngStyle]="{ 'display' : description ? 'block' : 'none'}">
+                <div class="text" #descriptionBlock>
+                    <div #descriptionBlockContent>
+                        {{description}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p *ngIf="warning">{{warning}}</p>

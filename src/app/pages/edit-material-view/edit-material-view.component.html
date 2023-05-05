@@ -1,0 +1,32 @@
+<div *ngIf="isOrderReady; else showLoading">
+    <div class="row border-bottom border-dark mx-4">
+        <div class="col-3 p-0">
+            <h3 class="font-weight-bold mb-0">Material for {{order?.IsCreatedInAdSS ? 'adss' : 'adit'}} Order ID:
+                {{order?.IsCreatedInAdSS ? order?.AdSSId : order?.AditId}}</h3>
+        </div>
+        <div class="col my-1 ml-4">
+            <span>
+                <button class="button-link mx-1" [ngClass]="availableAdMaterials && !availableAdMaterials[currentAdMaterial?.ExternalId - 1]  ? 'text-muted' : 'text-primary'" [disabled]="!currentAdMaterial || currentAdMaterial?.ExternalId <= 1" (click)="showPrevMaterial()">«
+                    Previous</button>
+                <button class="button-link mx-1" [ngClass]="availableAdMaterials && !availableAdMaterials[currentAdMaterial?.ExternalId + 1] ? 'text-muted' : 'text-primary'" [disabled]="!currentAdMaterial || currentAdMaterial?.ExternalId >= availableAdMaterials?.length - 1" (click)="showNextMaterial()">Next
+                    »</button>
+            </span>
+        </div>
+    </div>
+    <div class="preview d-inline-block ml-4">
+        <div class="d-block my-2">
+            Material #{{currentAdMaterial?.ExternalId ? currentAdMaterial?.ExternalId : externalAdMaterialId}}
+        
+            <a *ngIf="order?.IsCreatedInAdSS" class="float-right" [routerLink]="'/orders/' + orderId + '/edit/material/' + (currentAdMaterial?.ExternalId ? currentAdMaterial?.ExternalId : externalAdMaterialId)">
+                <u>Edit</u>
+            </a>
+        </div>
+        <img class="border-lightgrey" *ngIf="currentAdMaterial?.AdMaterialUrl" [src]="currentAdMaterial?.AdMaterialUrl + '&adPreviewSizeId=0'" />
+        <img class="border-lightgrey" *ngIf="!currentAdMaterial?.AdMaterialUrl && currentOrderItem?.AdMaterialUrl" [src]="currentOrderItem?.AdMaterialUrl + '&adPreviewSizeId=0'" />
+        <img class="border-lightgrey" *ngIf="!currentAdMaterial?.AdMaterialUrl && !currentOrderItem?.AdMaterialUrl" [src]="'/api/ad-material/preview/' + systemName + '/' + orderId + '/' + currentAdMaterial.Id + '/' + currentAdMaterial.ExternalId + '?isColor=' + currentOrderItem.IsColor + '&adPreviewSizeId=0'" />
+    </div>
+</div>
+
+<ng-template #showLoading>
+    <mat-spinner class="row my-5"></mat-spinner>
+</ng-template>

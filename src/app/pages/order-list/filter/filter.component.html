@@ -1,0 +1,89 @@
+﻿<button mat-button class="float-right px-3 text-right" placement="bottom" [ngbPopover]="filterContent" #pReference="ngbPopover">
+  <div class="d-inline-block">
+    <span class="d-inline-block text-uppercase">Filters </span>
+    <i class="align-middle material-icons">filter_list</i>
+    <span class="badge badge-danger rounded-circle p-2 font-weight-normal">{{filterCount}}</span>
+  </div>
+</button>
+
+<ng-template #filterContent class="mr-1">
+  <div class="bg-dark p-2 text-white pr-5">
+    <form [formGroup]="filterForm">
+      <div class="col-md-12 form-group dropdown-field" *ngIf="allStatus">
+        <h5 class="mb-1">FILTER BY STATUS</h5>
+        <div ngbDropdown>
+          <button class="form-control text-left rounded-0" id="statusDropDown" ngbDropdownToggle>{{filterForm.controls['status'].value.value | uppercase}}</button>
+          <div ngbDropdownMenu aria-labelledby="statusDropDown">
+            <button *ngFor="let oStatus of orderStatus" auto-test="changeStatusFilter" (click)="changeStatusFilter(oStatus)" class="dropdown-item">
+              {{ oStatus.value }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="ml-2 border-white" *ngIf="allStatus" />
+
+      <div class="col-md-12 form-group dropdown-field">
+        <h5 class="mb-1">FILTER BY DATE</h5>
+        <div ngbDropdown>
+          <button class="form-control text-left rounded-0" id="dateDropDown" ngbDropdownToggle>{{filterForm.controls['dateFilter'].value.keyword}}</button>
+          <div ngbDropdownMenu aria-labelledby="dateDropDown">
+            <button *ngFor="let filter of filterByDate" auto-test="changeDateFilter" (click)="changeDateFilter(filter)" class="dropdown-item">{{ filter.keyword }}</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-12">
+        <h5 class="mb-1">FROM</h5>
+      </div>
+      <div class="col-md-12 form-group">
+        <div class="input-group">
+          <input class="form-control rounded-0" placeholder="YYYY-MM-DD" formControlName="from" [maxDate]="fromMinDate" ngbDatepicker
+            #from="ngbDatepicker" readonly>
+          <div class="input-group-append">
+            <button class="btn border-left-0 bg-white rounded-0" (click)="from.toggle()" type="button">
+              <mat-icon>date_range</mat-icon>
+            </button>
+          </div>
+        </div>
+        <button class="clear-icon bg-transparent text-white border-0 position-absolute" auto-test="clearFilter" (click)="clear(filterForm.controls['from'])">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+
+      <div class="col-md-12">
+        <h5 class="mb-1">TO</h5>
+      </div>
+      <div class="col-md-12 form-group">
+        <div class="input-group">
+          <input class="form-control rounded-0" placeholder="YYYY-MM-DD" formControlName="to" [minDate]="toMinDate" ngbDatepicker #to="ngbDatepicker"
+            [placement]="allStatus ? 'top-left' : 'bottom-left'" readonly>
+          <div class="input-group-append">
+            <button class="btn border-left-0 bg-white rounded-0" (click)="to.toggle()" type="button">
+              <mat-icon>date_range</mat-icon>
+            </button>
+          </div>
+        </div>
+        <button class="clear-icon bg-transparent text-white border-0 position-absolute" auto-test="clearFilter" (click)="clear(filterForm.controls['to'])">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+
+      <hr class="ml-2 border-white" *ngIf="allStatus" />
+
+      <div class="col-md-12 form-group" *ngIf="allStatus">
+        <h5 class="mb-1">FILTER BY ORDER ID</h5>
+        <input type="number" formControlName="orderId" class="form-control rounded-0" maxlength="7">
+        <button class="clear-icon bg-transparent text-white border-0 position-absolute pt-3" (click)="clear(filterForm.controls['orderId'])">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+
+    </form>
+    <div class="col-md-12 form-group">
+      <button mat-raised-button color="primary" auto-test="applyFilter" (click)="apply(); pReference.close()">APPLY</button>
+      <button mat-raised-button color="accent" class="text-uppercase ml-3" auto-test="closeFilter" (click)="pReference.close()">CLOSE</button>
+    </div>
+  </div>
+</ng-template>

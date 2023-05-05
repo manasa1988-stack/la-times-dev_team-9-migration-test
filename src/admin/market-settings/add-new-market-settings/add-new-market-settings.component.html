@@ -1,0 +1,493 @@
+﻿<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase">Market Settings</h4>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" (click)="activeModal.close()" [disabled]="isFormDisabled">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <form [formGroup]="addMarketSettingForm" (ngSubmit)="addMarketSetting()" novalidate>
+    <fieldset [disabled]="isFormDisabled">
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Market Id" type="number" formControlName="Id">
+            <mat-error *ngIf="addMarketSettingForm.controls.Id.hasError('required')">
+              {{getRequiredMessage('Market Id')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Site Name" type="text" formControlName="SiteName" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.SiteName.hasError('required')">
+              {{getRequiredMessage('Site Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.SiteName.hasError('maxlength') && !addMarketSettingForm.controls.SiteName.hasError('required')">
+              {{ maxLengthMessage('Site Name', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Market Name" type="text" formControlName="MarketName" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.MarketName.hasError('required')">
+              {{getRequiredMessage('Market Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.MarketName.hasError('maxlength') && !addMarketSettingForm.controls.MarketName.hasError('required')">
+              {{ maxLengthMessage('Market Name', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Domain" type="text" formControlName="Domain">
+            <mat-error *ngIf="addMarketSettingForm.controls.Domain.hasError('required')">
+              {{getRequiredMessage('Domain')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="BU Code" type="text" formControlName="Code" maxlength="5">
+            <mat-error *ngIf="addMarketSettingForm.controls.Code.hasError('required')">
+              {{getRequiredMessage('BU Code')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.Code.hasError('maxlength') && !addMarketSettingForm.controls.Code.hasError('required')">
+              {{ maxLengthMessage('BU Code', 5) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Parent BU Code" type="text" formControlName="ParentCode" maxlength="5">
+            <mat-error *ngIf="addMarketSettingForm.controls.ParentCode.hasError('maxlength')">
+              {{ maxLengthMessage('Parent BU Code', 5) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Community Code" type="text" formControlName="CommunityCode" maxlength="5">
+            <mat-error *ngIf="addMarketSettingForm.controls.CommunityCode.hasError('maxlength')">
+              {{ maxLengthMessage('Community Code', 5) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Community Section Ids" type="text" formControlName="CommunitySectionId" maxlength="250">
+            <mat-error *ngIf="addMarketSettingForm.controls.CommunitySectionId.hasError('maxlength')">
+              {{ maxLengthMessage('Community Section Ids', 250) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Legal Name" type="text" formControlName="LegalName" maxlength="250">
+            <mat-error *ngIf="addMarketSettingForm.controls.LegalName.hasError('required')">
+              {{getRequiredMessage('Legal Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.LegalName.hasError('maxlength') && !addMarketSettingForm.controls.LegalName.hasError('required')">
+              {{ maxLengthMessage('Legal Name', 250) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Department Name" type="text" formControlName="DepartmentName" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.DepartmentName.hasError('required')">
+              {{getRequiredMessage('Department Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.DepartmentName.hasError('maxlength') && !addMarketSettingForm.controls.DepartmentName.hasError('required')">
+              {{ maxLengthMessage('Department Name', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Host Name" type="text" formControlName="HostName">
+            <mat-error *ngIf="addMarketSettingForm.controls.HostName.hasError('required')">
+              {{getRequiredMessage('Host Name')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Phone Number" type="text" formControlName="Phone" maxlength="50">
+            <mat-error *ngIf="addMarketSettingForm.controls.Phone.hasError('required')">
+              {{getRequiredMessage('Phone Number')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.Phone.hasError('maxlength') && !addMarketSettingForm.controls.Phone.hasError('required')">
+              {{ maxLengthMessage('Phone Number', 50) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Customer Support Email" type="email" formControlName="CustomerSupportEmail" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.CustomerSupportEmail.hasError('required')">
+              {{getRequiredMessage('Customer Support Email')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.CustomerSupportEmail.hasError('maxlength') && !addMarketSettingForm.controls.CustomerSupportEmail.hasError('required')">
+              {{ maxLengthMessage('Customer Support Email', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Hours Of Operation" type="email" formControlName="HoursOfOperation" maxlength="250">
+            <mat-error *ngIf="addMarketSettingForm.controls.HoursOfOperation.hasError('required')">
+              {{getRequiredMessage('Hours Of Operation')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.HoursOfOperation.hasError('maxlength') && !addMarketSettingForm.controls.HoursOfOperation.hasError('required')">
+              {{ maxLengthMessage('Hours Of Operation', 250) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Time Zone" type="text" formControlName="TimeZone" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.TimeZone.hasError('required')">
+              {{getRequiredMessage('Time Zone')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.TimeZone.hasError('maxlength') && !addMarketSettingForm.controls.TimeZone.hasError('required')">
+              {{ maxLengthMessage('Time Zone', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Terms Of Service Url" type="text" formControlName="TermsOfServiceUrl">
+            <mat-error *ngIf="addMarketSettingForm.controls.TermsOfServiceUrl.hasError('required')">
+              {{getRequiredMessage('Terms Of Service Url')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Privacy Policy Url" type="text" formControlName="PrivacyPolicyUrl">
+            <mat-error *ngIf="addMarketSettingForm.controls.PrivacyPolicyUrl.hasError('required')">
+              {{getRequiredMessage('Privacy Policy Url')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Terms & Conditions" type="text" formControlName="TermsAndConditionsUrl">
+            <mat-error *ngIf="addMarketSettingForm.controls.TermsAndConditionsUrl.hasError('required')">
+              {{getRequiredMessage('Terms & Conditions')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="AX Salesperson Code" type="text" formControlName="AxsalespersonCode" maxlength="50">
+            <mat-error *ngIf="addMarketSettingForm.controls.AxsalespersonCode.hasError('required')">
+              {{getRequiredMessage('AX Salesperson Code')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.AxsalespersonCode.hasError('maxlength') && !addMarketSettingForm.controls.AxsalespersonCode.hasError('required')">
+              {{ maxLengthMessage('AX Salesperson Code', 50) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="AX Salesperson Last Name" type="text" formControlName="AxsalespersonLastName" maxlength="50">
+            <mat-error *ngIf="addMarketSettingForm.controls.AxsalespersonLastName.hasError('required')">
+              {{getRequiredMessage('AX Salesperson Last Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.AxsalespersonLastName.hasError('maxlength') && !addMarketSettingForm.controls.AxsalespersonLastName.hasError('required')">
+              {{ maxLengthMessage('AX Salesperson Last Name', 50) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Employee Id" type="text" formControlName="EmployeeId" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.EmployeeId.hasError('maxlength')">
+              {{ maxLengthMessage('Employee Id', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Empl Id" type="text" formControlName="EmplId" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.EmplId.hasError('maxlength')">
+              {{ maxLengthMessage('Empl Id', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Ssor Hostname" type="text" formControlName="SsorHostname">
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorHostname.hasError('required')">
+              {{getRequiredMessage('Ssor Hostname')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Ssor Product Code" type="text" formControlName="SsorProductCode" maxlength="50">
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorProductCode.hasError('required')">
+              {{getRequiredMessage('Ssor Product Code')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorProductCode.hasError('maxlength') && !addMarketSettingForm.controls.SsorProductCode.hasError('required')">
+              {{ maxLengthMessage('Ssor Product Code', 50) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Ssor Signon Server" type="text" formControlName="SsorSignonserver">
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorSignonserver.hasError('required')">
+              {{getRequiredMessage('Ssor Signon Server')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Ssor Market Name" type="text" formControlName="SsorMarketName" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorMarketName.hasError('required')">
+              {{getRequiredMessage('Ssor Market Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorMarketName.hasError('maxlength') && !addMarketSettingForm.controls.SsorMarketName.hasError('required')">
+              {{ maxLengthMessage('Ssor Market Name', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Ssor Branding Site Name" type="text" formControlName="SsorBrandingSiteName" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorBrandingSiteName.hasError('required')">
+              {{getRequiredMessage('Ssor Branding Site Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.SsorBrandingSiteName.hasError('maxlength') && !addMarketSettingForm.controls.SsorBrandingSiteName.hasError('required')">
+              {{ maxLengthMessage('Ssor Branding Site Name', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Email-reply Address" type="text" formControlName="EmailReplyAddress" maxlength="100">
+            <mat-error *ngIf="addMarketSettingForm.controls.EmailReplyAddress.hasError('required')">
+              {{getRequiredMessage('Email-reply Address')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.EmailReplyAddress.hasError('maxlength') && !addMarketSettingForm.controls.EmailReplyAddress.hasError('required')">
+              {{ maxLengthMessage('Email-reply Address', 100) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Email-Bcc Address" type="text" formControlName="EmailBccaddress">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Open Office Document exts" type="text" formControlName="OpenOfficeDocumentExtension">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Analytics - Omniture Site Name" type="text" formControlName="OmnitureSiteName" maxlength="50">
+            <mat-error *ngIf="addMarketSettingForm.controls.OmnitureSiteName.hasError('required')">
+              {{getRequiredMessage('Analytics - Omniture Site Name')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.OmnitureSiteName.hasError('maxlength') && !addMarketSettingForm.controls.OmnitureSiteName.hasError('required')">
+              {{ maxLengthMessage('Analytics - Omniture Site Name', 50) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Analytics Google Account" type="text" formControlName="GoogleAnalyticsAccountName" maxlength="50">
+            <mat-error *ngIf="addMarketSettingForm.controls.GoogleAnalyticsAccountName.hasError('required')">
+              {{getRequiredMessage('Analytics Google Account')}}
+            </mat-error>
+            <mat-error *ngIf="addMarketSettingForm.controls.GoogleAnalyticsAccountName.hasError('maxlength') && !addMarketSettingForm.controls.GoogleAnalyticsAccountName.hasError('required')">
+              {{ maxLengthMessage('Analytics Google Account', 50) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Hide Lines For Section Ids" type="text" formControlName="HideLinesForSectionIds">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-12 mt-2">
+          <mat-checkbox type="checkbox" formControlName="AllowAttributeTextUpdates" class="md-primary">Allow Attribute Text Updates</mat-checkbox>
+        </div>
+
+        <div class="col-12 col-md-6 mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - AID" type="number" formControlName="CheetahMailAid">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailAid.hasError('required')">
+              {{getRequiredMessage('Epsilon - AID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - SaveDraftExpiration EID" type="number" formControlName="CheetahMailEidSaveDraftExpiration">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidSaveDraftExpiration.hasError('required')">
+              {{getRequiredMessage('Epsilon - SaveDraftExpiration EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - SaveDraftConfirmation EID" type="number" formControlName="CheetahMailEidSaveDraftConfirmation">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidSaveDraftConfirmation.hasError('required')">
+              {{getRequiredMessage('Epsilon - SaveDraftConfirmation EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - BillingInformationUpdatedConfirmation EID" type="number" formControlName="CheetahMailEidBillingInformationUpdatedConfirmation">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidBillingInformationUpdatedConfirmation.hasError('required')">
+              {{getRequiredMessage('Epsilon - BillingInformationUpdatedConfirmation EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - PurchaseConfirmation EID" type="number" formControlName="CheetahMailEidPurchaseConfirmation">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidPurchaseConfirmation.hasError('required')">
+              {{getRequiredMessage('Epsilon - PurchaseConfirmation EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - AccountUpdatedConfirmation EID" type="number" formControlName="CheetahMailEidAccountUpdatedConfirmation">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidAccountUpdatedConfirmation.hasError('required')">
+              {{getRequiredMessage('Epsilon - AccountUpdatedConfirmation EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - OrderChangeConfirmation EID" type="number" formControlName="CheetahMailEidOrderChangeConfirmation">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidOrderChangeConfirmation.hasError('required')">
+              {{getRequiredMessage('Epsilon - OrderChangeConfirmation EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - SavedDraftReminderMarketing EID" type="number" formControlName="CheetahMailEidSavedDraftReminderMarketing">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidSavedDraftReminderMarketing.hasError('required')">
+              {{getRequiredMessage('Epsilon - SavedDraftReminderMarketing EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - EndOfCampaignMarketing EID" type="number" formControlName="CheetahMailEidEndOfCampaignMarketing">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidEndOfCampaignMarketing.hasError('required')">
+              {{getRequiredMessage('Epsilon - EndOfCampaignMarketing EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="required w-100">
+            <input matInput placeholder="Epsilon - LapsedCustomerMarketing EID" type="number" formControlName="CheetahMailEidLapsedCustomerMarketing">
+            <mat-error *ngIf="addMarketSettingForm.controls.CheetahMailEidLapsedCustomerMarketing.hasError('required')">
+              {{getRequiredMessage('Epsilon - LapsedCustomerMarketing EID')}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Epsilon Email - Account Update Confirmation" type="text" formControlName="EpsilonEmailAccountUpdateConfirmation">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Epsilon Email - Billing Information Update Confirmation" type="text" formControlName="EpsilonEmailBillingInformationUpdateConfirmation">
+         </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Epsilon Email - Order Change Confirmation" type="text" formControlName="EpsilonEmailOrderChangeConfirmation">
+         </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Epsilon Email - Purchase Confirmation" type="text" formControlName="EpsilonEmailPurchaseConfirmation">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Epsilon Email - Save Draft Confirmation" type="text" formControlName="EpsilonEmailSaveDraftConfirmation">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6  mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Epsilon Email - Save Draft Expiration" type="text" formControlName="EpsilonEmailSaveDraftExpiration">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" *ngIf="!serverResponse?.IsSuccess">
+        <div class="col-12">
+          <error-message [serverResponse]="serverResponse"></error-message>
+        </div>
+      </div>
+      <div class="modal-footer border-0 d-flex justify-content-start pl-0">
+        <button mat-raised-button color="primary" class="text-uppercase" type="submit" value="Submit Form">Save</button>
+        <button mat-raised-button color="accent" class="text-uppercase" auto-test="cancelAddMarketSettings" (click)="activeModal.close()">Cancel</button>
+      </div>
+    </fieldset>
+  </form>
+</div>

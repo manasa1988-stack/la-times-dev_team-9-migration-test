@@ -1,0 +1,11 @@
+<div *ngIf="serverResponse?.ErrorMessage">
+    <mat-error class="col-12" *ngFor="let error of serverResponse?.ErrorMessage">
+        {{error.Value}}
+    </mat-error>
+</div>
+
+<div *ngIf="serverResponse?.ValidationMessage">
+    <mat-error class="col-12" *ngFor="let validationMessage of serverResponse?.ValidationMessage">
+        {{validationMessage.Value}}
+    </mat-error>
+</div>

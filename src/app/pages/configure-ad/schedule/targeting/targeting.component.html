@@ -1,0 +1,93 @@
+<mat-accordion>
+    <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+        <mat-expansion-panel-header class="bg-light pl-5">
+            <mat-panel-title>
+                Targeting
+                <mat-icon class="font-13 help-icon" placement="bottom" ngbTooltip="Targeting your campaign to particular regions will reduce the number of available impressions. If you are not seeing a sufficient number of impressions, add more regions to your targeting or remove targeting, altogether.">help</mat-icon>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 mb-2 pr-md-5 border-right search-location-area">
+                <div class="row">
+                    <div class="col-md-12 search-field">
+                        <mat-form-field *ngIf="showData">                           
+                            <input matInput placeholder="Search US State" type="text" (keyup)="searchState($event)">
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="!showData">                           
+                            <input matInput placeholder="Type City of {{selectedState?.Name}}" type="text" (keyup)="searchCity($event)">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-12 targeting-nav">
+                        <ul class="list-inline text-left mb-0">
+                            <li class="list-inline-item mr-0">
+                                <button class="home" mat-icon-button auto-test="showState" (click)="showState()">
+                                    <i class="material-icons text-primary">home</i>
+                                </button>
+                            </li>
+                            <li *ngIf="!showData" class="list-inline-item">
+                                <i class="fa fa-caret-right"  aria-hidden="true"></i>
+                                    <i class="material-icons text-primary flag">flag</i>
+                                    <span class="font-weight-bold font-italic"> State: {{selectedState?.Name}}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-9 state-list" *ngIf="showData">
+                        <mat-list class="border px-0 px-sm-2 pre-scrollable ">
+                            <mat-list-item *ngFor="let state of selectedStates">
+                                <p matLine>
+                                    <button mat-button auto-test="showCity" (click)="showCity(state)">
+                                        <i class="material-icons text-primary">flag</i>
+                                        <span class="d-inline-block">
+                                            <span class="font-weight-bold font-italic mr-2">State</span>{{state.Name}}</span>
+                                    </button>
+                                </p>
+                                <button class="d-none d-md-block" mat-button (click)="!state.IsIncluded ? addTargetItem(state) : removeItem(state)">{{!state.IsIncluded ? 'add' : 'remove'}}</button>
+                                <button mat-icon-button class="d-md-none" (click)="!state.IsIncluded ? addTargetItem(state) : removeItem(state)"><i class="material-icons">{{!state.IsIncluded ? 'add_circle_outline' : 'remove_circle_outline'}}</i></button>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-9 city-list" *ngIf="!showData">
+                        <mat-list class="border px-0 px-sm-2 pre-scrollable ">
+                            <mat-list-item *ngFor="let city of displayCities">
+                                <p matLine>
+                                    <button mat-button>
+                                        <i class="material-icons text-primary">place</i>
+                                        <span class="d-inline-block">
+                                            <span class="font-weight-bold font-italic mr-2">City</span>{{city.Name}}</span>
+                                    </button>
+                                </p>
+                                <button class="d-none d-md-block" mat-button (click)="!city.IsIncluded ? addCityItem(city) : removeItem(city)">{{!city.IsIncluded ? 'add' : 'remove'}}</button>
+                                <button mat-icon-button class="d-md-none" (click)="!city.IsIncluded ? addCityItem(city) : removeItem(city)"><i class="material-icons">{{!city.IsIncluded ? 'add_circle_outline' : 'remove_circle_outline'}}</i></button>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>             
+                </div>             
+            </div>       
+
+            <div class="col-12 col-sm-6 col-md-6 col-lg-6 px-md-5 mb-2 target-section">
+                <div class="row">
+                    <div class="col-md-8 pt-4 pl-sm-5 text-muted text-uppercase pb-4">
+                        Selected Target(s)
+                    </div>
+                    <div class="col-12 col-sm-11 col-md-12 col-lg-8 pl-sm-5" *ngIf="targetList.length > 0">
+                        <div class="pr-2" [ngClass]="targetList.length > 8 ? 'pre-scrollable' : ''">
+                            <mat-chip-list #stateList class="mat-chip-list-stacked" aria-orientation="vertical">
+                                <mat-chip *ngFor="let targetItem of targetList" [removable]="removable" (removed)="removeItem(targetItem)">
+                                    <span class="font-weight-bold"> {{targetItem.Type }}: </span>
+                                    <span> {{targetItem.Name}} </span> <span *ngIf="targetItem.Type == 'City'">({{targetItem.ParentLocation}})</span>
+                                    <i class="material-icons font-13 float-right text-dark pr-1" matChipRemove *ngIf="removable">close</i>
+                                   
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </mat-expansion-panel>
+</mat-accordion>

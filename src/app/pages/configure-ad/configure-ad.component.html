@@ -1,0 +1,564 @@
+<scene-1-light-preview
+    #cover
+    (renderReady)="$event">
+</scene-1-light-preview>
+<div>
+    <div class="row d-md-none" *ngIf="order !== undefined">
+        <div class="col-sm-5 col-md-7 z-10 mb-2">
+            <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold px-md-0 px-lg-1 mb-0">Configure</h4>
+            <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block mb-0">Review Order</h4>
+                <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                    <h4 class=" text-uppercase theme pb-2 px-md-0 px-lg-1 d-none d-md-inline-block mb-0">Confirmation</h4>
+        </div>
+    </div>
+
+    <div ng-sticky [offSet]="0" [addClass]="'stickyMe border-0'" class="m-0 clearfix cartbtn-warpper sticky-top pb-2 mt-3 mt-md-0 ">
+        <div data-spy="affix" data-offset-top="197">
+            <div class="row  m-0 p-0">
+                <div class="col-md-5 col-lg-4  offset-md-7 offset-lg-8 p-0 ">
+                    <div class="cart-popover summary-popover m-0 p-0 w-100" *ngIf="order !== undefined && currentOrderItem != undefined">
+                        <button mat-raised-button color="accent" class="font-weight-bold w-100" placement="bottom" [ngbPopover]="orderSummaryContent"
+                            #pReference="ngbPopover" (click)="isCartOpen = !isCartOpen" auto-test="isCartOpen">
+                            <i class="fa fa-caret-right fa-lg pr-3" aria-hidden="true" *ngIf="!isCartOpen"></i>
+                            <i class="fa fa-caret-down fa-lg pr-3" aria-hidden="true" *ngIf="isCartOpen"></i>
+                            <!-- <i class="material-icons pr-3">{{ !isCartOpen ? 'keyboard_arrow_right' : 'arrow_drop_down'}}</i>  -->
+                            CURRENT TOTAL:
+                            <span class="refresh-icon" *ngIf="showRefreshLoader; else showPrice">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </span>
+                            <ng-template #showPrice>
+                                <span [hidden]="showRefreshLoader" class="current-total">{{ order.Price | currency: "USD"}}</span>
+                            </ng-template>
+                        </button>
+                        <ng-template #orderSummaryContent>
+                            <div class="text-right border-bottom p-2 bg-primary text-white font-14 text-uppercase">
+                                <span class="d-inline-block ">Total</span> {{order.Price | currency: "USD"}}
+                            </div>
+                            <mat-accordion [multi]="false">
+                                <mat-expansion-panel class="custom-panel m-0 pt-2" (opened)=" panelOpenState = true" (closed)="panelOpenState = false" *ngFor="let item of order?.OrderItems">
+                                    <mat-expansion-panel-header class="pb-2 border-bottom">
+                                        <div class="float-left col-md-8 col-7 px-2">
+                                            <p class="mb-0">
+                                                <b>{{item.TypeDescription}}</b>
+                                                <i [ngClass]="item.IsOrderItemComplete  ? 'fa fa-check-circle text-success' : 'fa fa-times-circle-o text-danger'" *ngIf="item.IsOrderItemConfigurable"
+                                                    aria-hidden="true"></i>
+                                            </p>
+                                            <p class="my-1 font-14">
+                                                {{item.Section?.Product?.Name}}
+                                            </p>
+                                            <p class="my-1 font-14">
+                                                {{item.SectionAndPositionName}}
+                                            </p>
+                                            <div *ngIf="item.IsDfpOrderItem">{{item.Subsection?.Name}}</div>
+                                        </div>
+
+                                        <div class="float-right col-md-4 col-5 pt-1 pr-2 pl-0 text-right" *ngIf="!item.IsHidePriceOrderRule && item.IsOrderItemConfigurable">
+                                            {{item.Price | currency: "USD"}}
+                                        </div>
+                                    </mat-expansion-panel-header>
+
+                                    <div class="bg-light py-2 border-bottom mb-1 mt-1" *ngIf="item.IsDfpOrderItem; else nonDfpOrder">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-10 col-10">
+                                                    <i class="fa fa-calendar" *ngIf="currentOrderItem?.Id == item.Id" [ngClass]="currentOrderItem.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                                                        aria-hidden="true"></i>
+                                                    <i class="fa fa-calendar" *ngIf="currentOrderItem?.Id != item.Id" [ngClass]="item.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                                                        aria-hidden="true"></i>
+                                                    SCHEDULE
+                                                </div>
+                                                <div class="col-md-2 col-2" *ngIf="item.IsOrderItemConfigurable">
+                                                    <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id == item.Id" (click)="switchTab(0)">mode_edit</mat-icon>
+                                                    <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id != item.Id" routerLink="/drafts/{{order.AdSSId}}/{{item.Id}}/configure"
+                                                        [queryParams]="{selectedTab: 0}">mode_edit</mat-icon>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="item.TypeId == orderItemTypes['OnlineDisplayOrderItem'] || item.TypeId == orderItemTypes['OnlineClassifiedsOrderItem']">
+                                                <div class="row font-13" *ngIf="item.AdSize != undefined">
+                                                    <div class="col-md-4 col-4 ml-4 text-muted">SIZE</div>
+                                                    <div class="col-md-6 col-6">{{item?.AdSize?.Name}}</div>
+                                                </div>
+                                                <div class="row font-13">
+                                                    <div class="col-md-4 col-4 ml-4 text-muted">RUN DATES</div>
+                                                    <div class="col-md-6 col-6">{{item?.RunDateString}}</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-12">INVENTORY</div>
+                                                </div>
+                                                <div class="row font-13">
+                                                    <div class="col-md-4 col-4 ml-4 text-muted pr-0">IMPRESSIONS</div>
+                                                    <div class="col-md-6 col-6">{{item?.NumImpressions}}</div>
+                                                </div>
+                                                <div class="row font-13">
+                                                    <div class="col-md-4 col-4 ml-4 text-muted">PRICE</div>
+                                                    <div class="col-md-6 col-6">{{item?.Price | currency: "USD" }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12" *ngIf="item?.AdSize?.AdTypeId !=0 || item?.AdSize?.AdTemplates || item?.AdSize?.AdItName">
+                                            <hr class="border-dashed" />
+                                            <div class="row">
+                                                <div class="col-md-10 col-10">
+                                                    <i class="fa fa-laptop" *ngIf="currentOrderItem?.Id == item.Id" [ngClass]="currentOrderItem?.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                                                        aria-hidden="true"></i>
+                                                    <i class="fa fa-laptop" *ngIf="currentOrderItem?.Id != item.Id" [ngClass]="item.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                                                        aria-hidden="true"></i>
+                                                    LAYOUT
+                                                </div>
+                                                <div class="col-md-2 col-2" *ngIf="item.IsOrderItemConfigurable">
+
+                                                    <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id == item.Id" (click)="switchTab(1)">mode_edit</mat-icon>
+                                                    <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id != item.Id" routerLink="/drafts/{{order.AdSSId}}/{{item.Id}}/configure"
+                                                        [queryParams]="{selectedTab: 1}">mode_edit</mat-icon>
+                                                </div>
+                                            </div>
+                                            <div class="row font-13" *ngIf="currentOrderItem.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                                                <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Url</div>
+                                                <div class="col-md-6 col-6">{{item?.ClickThroughUrl | slice:0:45}}
+                                                    <span *ngIf="item?.ClickThroughUrl?.length > 45">...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <ng-template #nonDfpOrder>
+                                        <div class="bg-light py-2 border-bottom mb-1">
+                                            <div class="col-md-12" *ngIf="item.IsOrderItemConfigurable || (item.showLines && item.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] && item.HasAdMaterial)">
+
+                                                <div class="row">
+                                                    <div class="col-md-10 col-10">
+                                                        <i class="fa fa-calendar" *ngIf="currentOrderItem?.Id == item.Id" [ngClass]="currentOrderItem?.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                                                            aria-hidden="true"></i>
+                                                        <i class="fa fa-calendar" *ngIf="currentOrderItem?.Id != item.Id" [ngClass]="item.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                                                            aria-hidden="true"></i>
+                                                        SCHEDULE
+                                                    </div>
+                                                    <div class="col-md-2 col-2" *ngIf="item.IsOrderItemConfigurable">
+                                                        <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id == item.Id" (click)="switchTab(0)">mode_edit</mat-icon>
+                                                        <a (click)="navigateProduct({nextOrderItemId: item.Id, selectedTab: 0})" *ngIf="currentOrderItem?.Id != item.Id">
+                                                            <mat-icon class="text-right help-icon">mode_edit</mat-icon>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <!-- <div *ngIf="item.TypeId == orderItemTypes['PrintDisplayOrderItem'] ">
+                                                    <div class="row font-13" *ngIf="item?.NumTargetOptions > 0 || (item.Zones && !item.IsHideZoneSection)">
+                                                        <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Reach</div>
+                                                        <div class="col-md-6 col-6">
+                                                            <div *ngFor="let zone of item?.Zones">
+                                                                {{zone.Name}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                                <div class="row font-13" *ngIf="item.showLines && item.HasAdMaterial && item.TypeId == orderItemTypes['PrintClassifiedsOrderItem']">
+                                                    <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Lines </div>
+                                                    <div class="col-md-6 col-6">{{item?.NumberOfLinesOfCurrentAdMaterial}}</div>
+                                                </div>
+                                                <div *ngIf="item.TypeId == orderItemTypes['PrintDisplayOrderItem'] || item.TypeId == orderItemTypes['PrintClassifiedsOrderItem']">
+                                                    <div class="row font-13" *ngIf="(item?.NumTargetOptions > 0 || !item.IsHideZoneSection)">
+                                                        <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Distribution</div>
+                                                        <div class="col-md-6 col-6">
+                                                            <div *ngFor="let zone of item?.Zones">
+                                                                {{zone.Name}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="item?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                                                    <div class="row font-13">
+                                                        <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Impressions</div>
+                                                        <div class="col-md-6 col-6">{{item.ImpressionsName}}</div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="item.TypeId == orderItemTypes['OnlineDisplayOrderItem'] && item.Section?.HasTargets && item.NumTargetOptions > 0">
+                                                    <div class="row font-13">
+                                                        <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Target</div>
+                                                        <div class="col-md-6 col-6">
+                                                            <div *ngFor="let target of item?.Targets">
+                                                                {{target.Name}}
+                                                            </div>
+                                                            <div>
+                                                                {{item.ImpressionsName}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="item.IsOrderItemConfigurable">
+                                                    <div class="row font-13">
+                                                        <div class="col-md-4 col-4 pr-0 ml-4 text-muted">{{item.DatesLabel}}</div>
+                                                        <div class="col-md-6 col-6" *ngIf="item.TypeId == orderItemTypes['PrintDisplayOrderItem'] || item.TypeId == orderItemTypes['PrintClassifiedsOrderItem']">
+                                                            <div *ngFor="let date of item.RunDates; let i = index">
+                                                                <div *ngIf="i < 3">
+                                                                    {{date | date:"MM/dd/yyyy"}}
+                                                                </div>
+                                                                <div *ngIf="i > 2" [hidden] [@hideShowAnimator]="hideShowAnimator">
+
+                                                                    {{date | date:"MM/dd/yyyy"}}
+                                                                </div>
+                                                            </div>
+                                                            <a class="text-primary help-icon" (click)="showMore()" *ngIf="item.RunDates?.length > 3">{{hideShowAnimator ? 'less...' : 'more...' }}</a>
+                                                        </div>
+                                                        <div class="col-md-6 col-6" *ngIf="item.TypeId == orderItemTypes['OnlineDisplayOrderItem'] || item.TypeId == orderItemTypes['OnlineClassifiedsOrderItem']">
+                                                            {{ item.RunDateString }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="item.IsKilledOrRejected">
+                                                        <div class="row font-13">
+                                                            <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Status: </div>
+                                                            <div class="col-md-6 col-6" *ngIf="item.RunDates?.length > 0">Cancelled</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-12" *ngIf="item?.AdSize && (item?.AdSize?.AdTypeId !=0 || item?.AdSize?.AdTemplates || item?.AdSize?.AdItName)">
+                                                <hr class="border-dashed" />
+                                                <div class="row">
+                                                    <div class="col-md-10 col-10">
+                                                        <i class="fa fa-laptop" *ngIf="currentOrderItem?.Id == item.Id" [ngClass]="currentOrderItem?.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                                                            aria-hidden="true"></i>
+                                                        <i class="fa fa-laptop" *ngIf="currentOrderItem?.Id != item.Id" [ngClass]="item.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                                                            aria-hidden="true"></i>
+                                                        LAYOUT
+                                                    </div>
+                                                    <div class="col-md-2 col-2" *ngIf="item.IsOrderItemConfigurable">
+
+                                                        <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id == item.Id" (click)="switchTab(1)">mode_edit</mat-icon>
+                                                        <a (click)="navigateProduct({nextOrderItemId: item.Id, selectedTab: 1})" *ngIf="currentOrderItem?.Id != item.Id">
+                                                            <mat-icon class="text-right help-icon">mode_edit</mat-icon>
+                                                        </a>
+
+                                                    </div>
+                                                </div>
+                                                <div class="row font-13">
+                                                    <div class="col-md-4 col-4 ml-4 text-muted">Size</div>
+                                                    <div class="col-md-6 col-6">{{item?.AdSize?.Name}}</div>
+                                                </div>
+                                                <div class="row font-13" *ngIf="item.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] || item.TypeId == orderItemTypes['PrintDisplayOrderItem']">
+                                                    <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Color </div>
+                                                    <div class="col-md-6 col-6">{{item?.IsColor ? 'Color' : 'No'}}</div>
+                                                </div>
+                                                <div class="row font-13" *ngIf="currentOrderItem.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                                                    <div class="col-md-4 col-4 pr-0 ml-4 text-muted">Url</div>
+                                                    <div class="col-md-6 col-6">{{item?.ClickThroughUrl | slice:0:45}}
+                                                        <span *ngIf="item?.ClickThroughUrl?.length > 45">...</span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12" *ngIf="(order?.isOtherInfoVisible && item.IsOrderItemConfigurable) || item?.UpsellAttributes?.length > 0">
+
+                                                <hr class="border-dashed" />
+                                                <div class="row">
+                                                    <div class="col-md-10 col-10 other-info">
+                                                        <i class="material-icons" *ngIf="currentOrderItem?.Id == item.Id" [ngClass]="currentOrderItem?.isOtherInfoCompleted ? 'text-success' : 'text-danger'">note_add</i>
+                                                        <i class="material-icons align-middle font-21" *ngIf="currentOrderItem?.Id != item.Id" [ngClass]="item.isOtherInfoCompleted ? 'text-success' : 'text-danger'">note_add</i> OTHER INFORMATION
+                                                    </div>
+                                                    <div class="col-md-2 col-2" *ngIf="item.IsOrderItemConfigurable">
+                                                        <mat-icon class="text-right help-icon" *ngIf="currentOrderItem?.Id == item.Id" (click)="switchTab(2)">mode_edit</mat-icon>
+                                                        <a (click)="navigateProduct({nextOrderItemId: item.Id, selectedTab: 2})" *ngIf="currentOrderItem?.Id != item.Id">
+                                                            <mat-icon class="text-right help-icon">mode_edit</mat-icon>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row font-13" *ngFor="let upsellAttribute of item?.UpsellAttributes">
+                                                    <div class="col-md-12 col-12 ml-4 text-muted" *ngIf="upsellAttribute.IsBooleanType && order?.AttributeValues[upsellAttribute.Name].Value == 'true' || order?.AttributeValues[upsellAttribute.Name].Value == true">{{upsellAttribute.DisplayName}}</div>
+                                                    <div class="col-md-12 col-12 ml-4 text-muted" *ngIf="upsellAttribute.IsImageListType && order?.AttributeValues[upsellAttribute.Name].Value">{{upsellAttribute.DisplayName}}</div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </ng-template>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                            <div *ngIf="currentOrderItem?.IsDfpOrderItem" class="text-center border-bottom py-2 pr-2 mb-2 font-14">
+                                <a [attr.href]="'https://ecommcmsstg.blob.core.windows.net/media/LA_Times_Portal/PDFs/QA/8408.pdf'" target="blank">How do I POST an AD ?</a>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row configuread-steps configure-steps d-none d-md-block" *ngIf="order !== undefined">
+        <div class="col-sm-5 col-md-7 z-10 mb-2">
+            <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold px-md-0 px-lg-1 mb-0">Configure</h4>
+            <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block mb-0">Review Order</h4>
+                <i class="fa fa-caret-right mx-md-1 mx-lg-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                    <h4 class=" text-uppercase theme pb-2 px-md-0 px-lg-1 d-none d-md-inline-block mb-0">Confirmation</h4>
+        </div>
+    </div>
+
+    <div class="row" #campaign>
+        <div class="col-md-12">
+            <product-toggle *ngIf="(order?.HasMultipleConfigurableItems && order?.OrderItems?.length > 1) && !currentOrderItem?.IsDfpOrderItem"
+                [order]="order" [currentOrderItem]="currentOrderItem" [isOnConfigure]="true" (passEvent)="navigateProduct($event)"></product-toggle>
+        </div>
+
+        <div class="col-md-12 p-1">
+            <div class="text-center" *ngIf="currentOrderItem">
+                <img class="img-200x200 m-1" [src]="productsUrl + currentOrderItem?.Section?.Product.Id + logoUrl" [alt]="currentOrderItem?.Section?.Product.Name"
+                />
+                <br/>
+                <b>{{currentOrderItem?.TypeDescription}}</b>
+                <br/> {{currentOrderItem?.Section?.Product?.Name}}
+                <br/> {{currentOrderItem?.SectionAndPositionName}}
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="currentOrderItem?.IsProjectNameVisible">
+        <div class="mt-2 col-12 col-md-6" [formGroup]="projectNameForm">
+            <mat-form-field class="w-100">
+                <input matInput placeholder="Project Name" formControlName="projectName" maxlength="40" (focusout)="saveProjectName({fromChild: 'NonDfpProduct'})">
+                <mat-error *ngIf="projectNameForm.controls.projectName.hasError('maxlength')">
+                    {{projectName}}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="currentOrderItem?.IsDfpOrderItem">
+        <div class="mt-2 col-12 col-md-6">
+            <form [formGroup]="campaignNameForm" novalidate>
+                <mat-form-field class="required w-100">
+                    <input matInput placeholder="Campaign Name" formControlName="campaignName" (change)="saveCampaignName({fromChild: 'dfpDigitalProduct'})">
+                    <mat-error *ngIf="campaignNameForm.controls.campaignName.hasError('required')">
+                        Campaign Name is {{campaignNameMessage}}
+                    </mat-error>
+                </mat-form-field>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="overlay loader" *ngIf="!isOrderReady">
+        <div class="overlay-content bg-translucant text-white text-center p-3">
+            <h4 class="my-0">
+                <mat-spinner [diameter]="25" class="float-left mr-2"></mat-spinner>Loading...
+            </h4>
+        </div>
+    </div>
+
+    <div class="row py-3">
+        <div *ngIf="isOrderReady && order === undefined" class="my-3">
+            <error-alert></error-alert>
+        </div>
+        <div class="col-12 col-md-12" *ngIf="currentOrderItem?.IsDfpOrderItem">
+            <digital-products [order]="order" [currentOrderItem]="currentOrderItem" [configureDFPData]="configureDFPData" [currentOrderItemId]="currentOrderItemId"
+                (passEvent)="onNotify($event)"></digital-products>
+        </div>
+
+        <div class="col-12 col-md-12">
+            <div class="configure" *ngIf="order !== undefined && availableDates !== undefined && layoutData !== undefined">
+                <div class="w-100" #configure>
+                    <div *ngIf="currentOrderItem?.IsDfpOrderItem" class="dfp-delete-btn">
+                        <button mat-button (click)="removeProduct(currentOrderItem.Id)" auto-test="removeProduct">
+                            <span class="d-none d-sm-inline-block text-uppercase btn-txt">Delete Product</span>
+                            <i class="material-icons d-none d-sm-inline-block">delete</i>
+                            <i placement="top" ngbTooltip="Delete Product" class="material-icons d-sm-none">delete</i>
+                        </button>
+                    </div>
+                    <mat-tab-group
+                        class="configure-ad"
+                        [ngClass]="{'configure-ad-tabs': isWibbitz()}"
+                        [selectedIndex]="selectedIndex"
+                        (selectedTabChange)="switchTab($event.index)">
+                        <mat-tab label="Schedule">
+                            <ng-template mat-tab-label>
+                                <div class="my-3">
+                                    <i class="fa fa-calendar fa-2x pending" [ngClass]="{'text-success' : currentOrderItem?.isScheduleCompleted }" aria-hidden="true"></i>
+                                    <p class="mb-0">
+                                        <i class="fa fa-check-circle text-success" *ngIf="currentOrderItem?.isScheduleCompleted" aria-hidden="true"></i> Schedule
+                                    </p>
+
+                                </div>
+                            </ng-template>
+
+                            <div>
+                                    <schedule-ad [order]="order" [currentOrderItem]="currentOrderItem" [availableDates]="availableDates" [volumeDiscounts]="volumeDiscounts"
+                                    [impressions]="impressions" [volumeDiscountID]="volumeDiscountID" [configureDFPData]="configureDFPData"
+                                    [currentorderItemPrice]="currentorderItemPrice" [layoutData]="layoutData" (passEvent)="onNotify($event)">
+                                    </schedule-ad>
+                                    <additional-products *ngIf="order.HasRemovableLine" [order]="order" [currentOrderItem]="currentOrderItem"
+                                    (passEvent)="onNotify($event)"></additional-products>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Layout">
+                            <ng-template mat-tab-label>
+                                <i class="fa fa-laptop fa-2x pending" [ngClass]="{'text-success' : currentOrderItem?.isLayoutCompleted }" aria-hidden="true"></i>
+                                <p class="mb-0">
+                                    <i class="fa fa-check-circle text-success" *ngIf="currentOrderItem?.isLayoutCompleted" aria-hidden="true"></i> Layout
+                                </p>
+
+                            </ng-template>
+
+                            <div>
+                                <size [order]="order" [currentOrderItem]="currentOrderItem" [layoutData] ="layoutData" [selectedAdSize] ="selectedAdSize" (passEvent)="onNotify($event)"></size>
+                            </div>
+
+                        </mat-tab>
+
+                        <mat-tab label="Other Info" *ngIf="order?.isOtherInfoVisible">
+                            <ng-template mat-tab-label>
+                                <i class="material-icons fa-2x pending" [ngClass]="{'text-success' : currentOrderItem?.isOtherInfoCompleted }">note_add</i>
+                                <p class="mb-0">
+                                    <i class="fa fa-check-circle text-success"  *ngIf="currentOrderItem?.isOtherInfoCompleted"  aria-hidden="true"></i> Other Info</p>
+                            </ng-template>
+
+                            <div>
+                                <other-info [order]="order" [currentOrderItem]="currentOrderItem" (passEvent)="onNotify($event)" (passREquiredFieldEvent)="onNotifyOtherInfoChanges($event)"></other-info>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Video" *ngIf="isWibbitz()">
+                            <ng-template mat-tab-label>
+                                <i class="fa fa-film fa-2x pending" [ngClass]="{'text-success' : currentOrderItem?.isLayoutCompleted }" aria-hidden="true"></i>
+
+                                <p class="mb-0">
+                                    <i class="fa fa-play-circle text-success" *ngIf="false" aria-hidden="true"></i> Video
+                                </p>
+                            </ng-template>
+
+                            <compose-video [order]="order" [currentOrderItem]="currentOrderItem" [layoutData] ="layoutData" ></compose-video>
+
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>               
+                <progress-summary [order]="order" [currentOrderItem]="currentOrderItem" [currentOrderItemId]="currentOrderItemId" [completed]="currentOrderItem.IsOrderItemComplete" (passEvent)="navigateProduct($event)">
+                </progress-summary>
+                <product-toggle *ngIf="order?.HasMultipleConfigurableItems && order?.OrderItems.length > 1 && !currentOrderItem?.IsDfpOrderItem"
+                    [order]="order" [currentOrderItem]="currentOrderItem" [isOnConfigure]="true" (passEvent)="navigateProduct($event)"></product-toggle>
+                <div *ngFor="let orderItem of order.OrderItems">
+                    <div *ngIf="orderItem.IsOrderItemConfigurable" class="row">
+                        <div class="col-md-12" *ngIf="currentOrderItem?.Id == orderItem.Id">
+                            <div [class]="currentOrderItem.isScheduleCompleted && currentOrderItem.isLayoutCompleted && currentOrderItem.isOtherInfoCompleted && campaingnNameValid ?  'alert bg-success text-white' : warningMessageCss"
+                                *ngIf="currentOrderItem?.Subsection != undefined">
+                                <i [class]="currentOrderItem.isScheduleCompleted && currentOrderItem.isLayoutCompleted && currentOrderItem.isOtherInfoCompleted && campaingnNameValid ? 'fa fa-check-circle' :  warningIcon "></i>
+                                {{currentOrderItem.isScheduleCompleted && currentOrderItem.isLayoutCompleted && currentOrderItem.isOtherInfoCompleted && campaingnNameValid ? "'"+currentOrderItem?.Section?.Product?.Name
+                                + '-' + currentOrderItem?.SectionAndPositionName +'-'+ orderItem?.Subsection.Name +"'" +
+                                ' is fully configured' : 'Please note that the following ' + "'"+currentOrderItem?.Section?.Product?.Name
+                                + '-'+currentOrderItem?.SectionAndPositionName +'-'+ orderItem?.Subsection.Name +"'"+ ' sections
+                                are not configured or have invalid data:'}}
+                                <span *ngIf="!currentOrderItem.IsOrderItemComplete">
+                                    <!-- innerHtml="{{orderItem.inCompleteTabNames}}" -->
+                                    <a (click)="switchTab(0)" *ngIf="!currentOrderItem.isScheduleCompleted"><strong><i class="fa fa-calendar font-16"></i> Schedule
+                                        <span *ngIf="!currentOrderItem.isLayoutCompleted || !currentOrderItem.isOtherInfoCompleted">,</span>
+                                    </strong>
+                                    </a>
+                                    <a (click)="switchTab(1)" *ngIf="!currentOrderItem.isLayoutCompleted"><strong><i class="fa fa-laptop font-16"></i> Layout
+                                        <span *ngIf="!currentOrderItem.isOtherInfoCompleted">,</span>
+                                    </strong>
+                                    </a>
+
+                                    <a (click)="switchTab(2)" *ngIf="!currentOrderItem.isOtherInfoCompleted">
+                                            <strong><i class='material-icons align-top font-16'>note_add</i> Other-Info
+                                            </strong>
+                                            </a>
+                                    </span>
+                            </div>
+                            <div [class]="currentOrderItem.isScheduleCompleted && currentOrderItem.isLayoutCompleted && currentOrderItem.isOtherInfoCompleted && campaingnNameValid ?  'alert bg-success text-white' : warningMessageCss"
+                                *ngIf="currentOrderItem?.Subsection == undefined">
+                                <i [class]="currentOrderItem.isScheduleCompleted && currentOrderItem.isLayoutCompleted && currentOrderItem.isOtherInfoCompleted && campaingnNameValid ? 'fa fa-check-circle' :  warningIcon "></i>
+                                {{currentOrderItem.isScheduleCompleted && currentOrderItem.isLayoutCompleted && currentOrderItem.isOtherInfoCompleted && campaingnNameValid ? "'"+
+                                currentOrderItem?.Section?.Product?.Name + '-' + currentOrderItem?.SectionAndPositionName+"'"
+                                + ' is fully configured' : 'Please note that the following '+ "'"+ currentOrderItem?.Section?.Product?.Name
+                                + '-' +currentOrderItem?.SectionAndPositionName +"'"+ ' sections are not configured or have
+                                invalid data:'}}
+                                <span *ngIf="!currentOrderItem.IsOrderItemComplete">
+                                    <!-- innerHtml="{{orderItem.inCompleteTabNames}}" -->
+                                    <a (click)="switchTab(0)" *ngIf="!currentOrderItem.isScheduleCompleted"><strong><i class="fa fa-calendar font-16"></i> Schedule<span *ngIf="!currentOrderItem.isLayoutCompleted || !currentOrderItem.isOtherInfoCompleted">,</span></strong></a>
+                                    <a (click)="switchTab(1)" *ngIf="!currentOrderItem.isLayoutCompleted"><strong><i class="fa fa-laptop font-16"></i> Layout<span *ngIf="!currentOrderItem.isOtherInfoCompleted">,</span></strong></a>
+                                    <a (click)="switchTab(2)" *ngIf="!currentOrderItem.isOtherInfoCompleted">
+                                            <strong><i class='material-icons align-top font-16'>note_add</i> Other-Info</strong></a>
+                                </span>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-12" *ngIf="currentOrderItem?.Id != orderItem.Id">
+                            <div [class]="orderItem.isScheduleCompleted && orderItem.isLayoutCompleted && orderItem.isOtherInfoCompleted ?  'alert bg-success text-white' : warningMessageCss"
+                                *ngIf="orderItem?.Subsection != undefined">
+                                <i [class]="orderItem.isScheduleCompleted && orderItem.isLayoutCompleted && orderItem.isOtherInfoCompleted ? 'fa fa-check-circle' :  warningIcon "></i>
+                                {{orderItem.isScheduleCompleted && orderItem.isLayoutCompleted && orderItem.isOtherInfoCompleted ? "'"+ orderItem?.Section?.Product?.Name
+                                +'-'+ orderItem?.SectionAndPositionName +'-'+ orderItem?.Subsection.Name +"'"+' is fully
+                                configured' : 'Please note that the following ' + "'"+ orderItem?.Section?.Product?.Name
+                                +'-'+ orderItem?.SectionAndPositionName +'-'+ orderItem?.Subsection.Name +"'"+ ' sections
+                                are not configured or have invalid data:'}}
+                                <span *ngIf="!orderItem.IsOrderItemComplete">
+                                    <!-- innerHtml="{{orderItem.inCompleteTabNames}}" -->
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 0 })" *ngIf="!orderItem.isScheduleCompleted">
+                                            <strong><i class="fa fa-calendar font-16"></i> Schedule<span *ngIf="!orderItem.isLayoutCompleted || !orderItem.isOtherInfoCompleted">,</span></strong></a>
+
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 1 })" *ngIf="!orderItem.isLayoutCompleted">
+                                            <strong><i class="fa fa-laptop font-16"></i> Layout<span *ngIf="!orderItem.isOtherInfoCompleted">,</span></strong></a>
+
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 2 })" *ngIf="!orderItem.isOtherInfoCompleted">
+                                            <strong> <i class='material-icons align-top font-16'>note_add</i> Other-Info</strong></a>
+                                    </span>
+                            </div>
+                            <div [class]="orderItem.isScheduleCompleted && orderItem.isLayoutCompleted && orderItem.isOtherInfoCompleted ?  'alert bg-success text-white' : warningMessageCss"
+                                *ngIf="orderItem?.Subsection == undefined">
+                                <i [class]="orderItem.isScheduleCompleted && orderItem.isLayoutCompleted && orderItem.isOtherInfoCompleted ? 'fa fa-check-circle' :  warningIcon "></i>
+                                {{orderItem.isScheduleCompleted && orderItem.isLayoutCompleted && orderItem.isOtherInfoCompleted ? "'"+ orderItem?.Section?.Product?.Name
+                                +'-'+orderItem?.SectionAndPositionName +"'"+ ' is fully configured' : 'Please note that the
+                                following ' + "'"+orderItem?.Section?.Product?.Name +'-'+orderItem?.SectionAndPositionName
+                                +"'"+" sections are not configured or have invalid data:"}}
+                                <span *ngIf="!orderItem.IsOrderItemComplete">
+                                    <!-- innerHtml="{{orderItem.inCompleteTabNames}}" -->
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 0 })" *ngIf="!orderItem.isScheduleCompleted">
+                                            <strong><i class="fa fa-calendar font-16"></i> Schedule<span *ngIf="!orderItem.isLayoutCompleted || !orderItem.isOtherInfoCompleted">,</span></strong></a>
+
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 1 })" *ngIf="!orderItem.isLayoutCompleted">
+                                            <strong><i class="fa fa-laptop font-16"></i> Layout<span *ngIf="!orderItem.isOtherInfoCompleted">,</span></strong></a>
+
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 2 })" *ngIf="!orderItem.isOtherInfoCompleted">
+                                            <strong> <i class='material-icons font-16 align-top'>note_add</i> Other-Info</strong></a>
+                                    <a (click)="navigateProduct({ nextOrderItemId: orderItem.Id, selectedTab: 3 })" *ngIf="!orderItem.isLayoutCompleted">
+                                            <strong> <i class='material-icons font-16 align-top'>note_add</i> Other-Info</strong></a>
+                                    </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngFor="let errorMessage of errorMessagesFromResponse" class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            {{errorMessage.Value}}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="currentOrderItem.IsDfpOrderItem">
+                    <div class="col-md-12">
+                        <div [class]="campaingnNameValid ? 'alert bg-success text-white' : warningMessageCss">
+                            <a (click)="moveToCampaignName()">
+                                <i [class]="campaingnNameValid ? 'fa fa-check-circle' : warningIcon"></i>
+                                <strong>Campaign Name</strong> is {{campaignNameMessage}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-4 col-md-3 col-lg-3 submit-btn pr-sm-0">
+                        <button class="mb-2 w-100" mat-raised-button color="primary" auto-test="reviewAndSubmit" (click)="reviewAndSubmit(true)">REVIEW & SUBMIT</button>
+                    </div>
+                    <div class="col-12 col-sm-3 col-md-3 col-lg-2 submit-btn">
+                        <button class="mb-2 w-100" mat-raised-button color="primary" auto-test="saveDraft" (click)="saveDraft(false)">SAVE AS DRAFT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

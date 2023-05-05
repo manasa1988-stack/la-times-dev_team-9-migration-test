@@ -1,0 +1,66 @@
+﻿<div class="m-0 p-0">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold">ORDER HISTORY</h4>
+      </div>
+      <div class="col-md-12" *ngIf="customerNumber?.length > 0">
+        <h4 class="d-inline-block text-uppercase">Account Number: {{customerNumber}}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-1" *ngIf="isAdItInReadOnlyMode">
+    <div class="col-md-12">
+      <p class="text-danger">Please note, because of scheduled system updates, your profile and orders are unable to be edited at this time. Also, newly placed orders may have a 24-48 hour delay before appearing back later or contact us at 1-800-528-4637, ext. 73445 or {{customerSupportEmail}} with any requests.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <a href="javascript:;" class="mb-2 w-100 mat-raised-button mat-primary" *ngIf="orders !== undefined && orders.Results.length > 0" (click)="exportOrders()"><i [ngClass]="isExportOrderInProgress ? 'fa fa-spinner fa-spin mr-2' : 'fa fa-download fa-lg mr-2'"></i>Export to Excel</a>
+    </div>
+    <div ng-sticky [offSet]="0" [addClass]="'stickyMe'" class="filterbtn-warpper col-md-10 bg-white z-1 p-0 py-2 m-0 clearfix border-bottom sticky-top">
+      <!--<div ng-sticky [offSet]="0" [addClass]="'stickyMe'" class="col-md-12 bg-white z-1 z-200 py-2 m-0 clearfix border-bottom clearfix filterbtn-warpper">-->
+        <div class="col m-0 p-0" data-spy="affix" data-offset-top="197">
+          <div class="d-inline-block">
+          </div>
+          <div class="d-inline float-right filter-popover myorder m-0 p-0">
+            <orderlist-filter (passFilter)="applyFilter($event)"></orderlist-filter>
+          </div>
+        </div>
+  
+      </div>
+  </div>
+
+    <div class="data-table mx-4">
+      <order-header [isDraft]="isDraft"></order-header>
+
+      <div *ngIf="!isOrderListReady; else orderListContent" class="my-5">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <ng-template #orderListContent class="my-5">
+        <div *ngIf="orders === undefined" class="my-5">
+          <error-alert></error-alert>
+        </div>
+
+        <div *ngIf="orders !== undefined">
+          <order-list [data]="orders" [isDraft]="isDraft" [filterApplied]="filterApplied" (passEvent)="readFrom($event)"></order-list>
+        </div>
+
+        <div class="col-md-12">
+          <div *ngIf="!loadingMore; else showSpinner">
+            <div *ngIf="orders !== undefined && orders.Results.length > 0 && (orders.PageNumber < orders.NumberOfPages); else showEndMessage"
+                 class="d-block text-center border-secondary text-primary pt-3">
+              <a (click)="loadMore()" mat-button class="d-block" auto-test="loadMore15Orders">LOAD NEXT {{pageSize}} ORDERS</a>
+            </div>
+            <ng-template #showEndMessage>
+              <div *ngIf="orders !== undefined && orders.Results.length > 0" class="text-muted small text-uppercase d-block text-center my-3">End of result</div>
+            </ng-template>
+          </div>
+          <ng-template #showSpinner>
+            <mat-spinner [diameter]="60" class="my-2"></mat-spinner>
+          </ng-template>
+        </div>
+      </ng-template>
+    </div>
+  </div>

@@ -1,0 +1,143 @@
+﻿<div class="container-fluid1">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold">Photo Library</h4>
+
+    </div>
+    <div class="col-md-12" *ngIf="isProspectUser">
+      <div class="p-3 my-3 bg-info text-white">
+        <i class="material-icons align-bottom">info</i> The feature will be available only after you place an order.</div>
+    </div>
+
+    <div class="col-md-12" *ngIf="!isProspectUser">
+      <h4 class="d-inline-block text-uppercase">Account Number:
+        <span>{{customerNumber}}</span>
+      </h4>
+    </div>
+  </div>
+  <div class="row" *ngIf="!isProspectUser">
+    <div class="col-md-12">
+      <mat-tab-group (selectedTabChange)="tabChangeEvent($event)">
+        <mat-tab label="PHOTOS ({{photosCount}})">
+          <div class="mt-4 row ml-0 mr-0" ngClass="{{dragAreaClass}}">
+            <div class="col-md-3 pb-1 col-12 pl-0 pr-0 btn-file">
+              <input multiple [formControl]="photoInput" title="Upload Image" type="file" (change)="fileUpload($event)" />
+              <button title="Upload Image" mat-raised-button color="primary" class="btn-block" auto-test="uploadImage" [disabled]="isMaxLimitReached() || disableUpload">
+                <mat-icon>file_upload</mat-icon>
+                UPLOAD IMAGE
+              </button>
+            </div>
+            <div class="col-md-5 small pb-1 ">
+              <div class="float-left">
+                <p class="mb-0 text-muted">
+                  <b>File types:</b> jpg, jpeg, png</p>
+                <p class="mb-0 text-muted">
+                  <b>Max. file size:</b> 10 MB</p>
+              </div>
+              <h4 *ngIf="dragAreaClass == 'droparea'" class="text-uppercase text-center font-weight-bold">Drop Files Here</h4>
+            </div>
+            <div class="col-md-4 pb-1 text-right">
+              <div class="d-inline-block selectall-checkbox">
+                <mat-checkbox class="m-2 d-block d-lg-inline text-center" type="checkbox" [checked]="selectAllPhotos" (change)="selectAllPhotosOrLogos(false, $event)">
+                  <span class="position-relative bottom-4 d-block d-sm-inline-block">Select All</span>
+                </mat-checkbox>
+              </div>
+              <div class="d-inline-block m-0 mx-md-2">
+                <button (click)="deleteSelected(false)" class="bg-transparent border-0 delete-btn" auto-test="deleteMuliplePhotos">
+                  <i class="material-icons position-relative bottom-4 d-block d-sm-inline-block">delete</i>
+                  Delete Selected
+                </button>
+              </div>
+
+            </div>
+            <div class="col-md-12 p-0 " *ngIf="uploadErrors.length > 0">
+              <p class="small m-0 text-muted pt-1" *ngFor="let error of uploadErrors">
+                <mat-error>{{error}} </mat-error>
+              </p>
+            </div>
+            <div class="col-md-12 p-0 " *ngIf="isMaxLimitReached()">
+              <p class="small m-0 text-muted pt-1">
+                <mat-error>You have reached max limit of 25 photos.</mat-error>
+              </p>
+            </div>
+            <div class="col-md-12 p-0 ">
+              <p class="small m-0 pt-1 ">
+                Photos are presented in the order they were uploaded or updated.
+              </p>
+              <hr class="mt-1 mb-1 ">
+            </div>
+          </div>
+
+          <div *ngIf="!isPhotoDataReady; else showImages">
+            <mat-spinner></mat-spinner>
+          </div>
+          <ng-template #showImages>
+            <div *ngIf="photoLibrary === null || photoLibrary === undefined; else showPhotoData">
+              <error-alert></error-alert>
+            </div>
+            <ng-template #showPhotoData>
+              <div>
+
+                <!-- <div class="col pl-2" *ngIf="photoLibrary.length > 0">
+                  <div class="d-inline-block selectall-checkbox">
+                    <mat-checkbox class="m-2 d-block d-lg-inline text-center" type="checkbox" [checked]="selectAllPhotos" (change)="selectAllPhotosOrLogos(false, $event)">
+                      <span class="position-relative bottom-4 d-block d-sm-inline-block">Select All</span>
+                    </mat-checkbox>
+
+                  </div>
+                  <div class="d-inline-block m-0 mx-md-2">
+                    <button (click)="deleteSelected(false)" class="bg-transparent border-0 delete-btn" auto-test="deleteMuliplePhotos">
+                      <i class="material-icons position-relative bottom-4 d-block d-sm-inline-block">delete</i>
+                      Delete Selected
+                    </button>
+                  </div>
+                </div> -->
+                <div class="mt-3 row ml-0 mr-0 " *ngIf="photoLibrary.length > 0">
+
+                  <div class="card col-md-4 col-sm-12 col-12 col-lg-3 p-3 border-0 " *ngFor="let data of photoLibrary; let index = index">
+
+                    <image-frame class="photos" [photo]="data " [imageType]="'photo'" (deletePhoto)="deletePhoto($event) " (selectPhotosOrLogos)="selectPhotosOrLogos($event)"></image-frame>
+                  </div>
+                </div>
+                <input multiple type="file" class="d-none" accept=".png, .jpg, .jpeg" [disabled]="isMaxLimitReached() || disableUpload" />
+                <h3 class="pt-10" *ngIf="photoLibrary.length == 0">No photos found.</h3>
+              </div>
+            </ng-template>
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="LOGOS ({{logosCount}})">
+          <div *ngIf="!isLogoDataReady; else showLogos">
+            <mat-spinner></mat-spinner>
+          </div>
+          <ng-template #showLogos>
+            <div *ngIf="logoLibrary === null || logoLibrary === undefined; else showLogoData">
+              <error-alert></error-alert>
+            </div>
+            <ng-template #showLogoData>
+              <div class="col pl-2 mt-3 text-right" *ngIf="logoLibrary.length > 0">
+                <div class="d-inline-block selectall-checkbox">
+                  <mat-checkbox class="m-2 d-block d-lg-inline text-center" type="checkbox" [checked]="selectAllLogos" (change)="selectAllPhotosOrLogos(true, $event)">
+                    <span class="position-relative bottom-4 d-block d-sm-inline-block">Select All</span>
+                  </mat-checkbox>
+
+                </div>
+                <div class="d-inline-block m-0 mx-md-2">
+                  <button (click)="deleteSelected(true)" class="bg-transparent border-0 delete-btn" auto-test="deleteMulipleLogos">
+                    <i class="material-icons position-relative bottom-4 d-block d-sm-inline-block">delete</i>
+                    Delete Selected
+                  </button>
+                </div>
+              </div>
+              <div class="mt-3 row ml-0 mr-0 " *ngIf="logoLibrary.length > 0">
+                <div class="card col-md-3 col-12 col-xl-3 p-3 border-0" *ngFor="let data of logoLibrary ">
+                  <image-frame class="logos" [photo]="data " [imageType]="'logo'" (deletePhoto)="deletePhoto($event) " (selectPhotosOrLogos)="selectPhotosOrLogos($event)"></image-frame>
+                </div>
+              </div>
+              <h3 class="pt-10" *ngIf="logoLibrary.length == 0">No logo found.</h3>
+            </ng-template>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+
+<div class="row py-4" *ngIf="_layoutImage">
+    <div class="col-12 mb-4">
+        <h3><strong>Current Image:</strong></h3>
+        <div class="mb-3">
+            <ng-container *ngFor="let image of _layoutImage">
+                <div
+                    class="card --card">
+                    <div
+                        class="card rounded-2 --scene-card preview"
+                        >
+                        <div class="card-body">
+                            <div class="card-body-content">
+                                <img [src]="image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <button
+            class="text-uppercase"
+            title=""
+            mat-raised-button
+            (click)="showCropper()"
+            color="primary">
+            <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">file_upload</mat-icon>
+            <ng-container *ngIf="!noImage; else noimage">
+                CHANGE IMAGE
+            </ng-container>
+            <ng-template #noimage>
+                SELECT AN IMAGE
+            </ng-template>
+
+        </button>
+
+        <cropper-modal
+            [payload]="payload"
+            [wibbitzOrderId]="wibbitzOrderId"
+            [aditId]="aditId"
+            [currentImage]="_layoutImage"
+            [attributeId]="attributeId"
+            (refresh)="_refreshPayload()"
+            [draftId]="draftId"
+            [layoutId]="layoutId"
+            [target]="target"
+            #cropper>
+        </cropper-modal>
+    </div>
+
+    <div class="col-12">
+        <h3><strong>Or choose one:</strong></h3>
+        <ng-container *ngFor="let image of _images">
+            <div
+                class="card --card"
+                (click)="_setImage(image.actual)">
+                <div
+                    class="card rounded-2 --scene-card"
+                    [ngClass]="{'--highlighted': image.actual === (_layoutImage && _layoutImage[0] && _layoutImage[0].split('?time')[0])}"
+                    >
+                    <div class="card-body">
+                        <div class="card-body-content">
+                            <img [src]="image.thumb"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <div
+            class="card --card"
+            *ngIf="printAdImage">
+            <div class="card rounded-2 --scene-card">
+                <div class="card-body">
+                    <div class="card-body-content">
+                        <img width="auto" [src]="printAdImage"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

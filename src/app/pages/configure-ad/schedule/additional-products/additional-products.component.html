@@ -1,0 +1,156 @@
+<div class="row py-3" *ngIf="order?.RemovableLines.length > 0 && hasSubscriptionProducts">
+  <div class="col-12 col-md-12">
+    <mat-accordion>
+        <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+          <mat-expansion-panel-header class="bg-light pl-5">
+                <mat-panel-title>
+                   Subscription Products
+                    <mat-icon class="font-13 help-icon" placement="bottom" ngbTooltip="Subscription Product(s) offered with the package. Please opt out/opt in as per requirement">help</mat-icon>                 
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+  <div class="table-responsive">
+  
+    <table class="table digi-products">
+      <thead>
+        <tr>
+          <th scope="col" class="border-top-0 border-bottom-0"><b>Product</b></th>
+          <th scope="col" class="border-top-0 border-bottom-0"><b>Product Info</b></th>
+          <th scope="col" class="text-center border-top-0 border-bottom-0"><b>Opt In</b></th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let additionalProduct of order?.RemovableLines; let i = index" [attr.data-index]="i">        
+          <ng-container *ngIf="additionalProduct.Section.IsSubscriptionSection">
+          <td>
+            <p class="my-1 font-14">
+              {{additionalProduct.Section.Name}}
+          </p>          
+          </td>
+  
+          <td>
+            <div [innerHTML]="additionalProduct.AdditionalProductInfo"></div>          
+          </td>
+          <td class="pt-0 text-center">
+            <mat-radio-group class="radio-group" name="radiogroup">
+              <mat-radio-button [checked]="checkAdditionalProductStatus(additionalProduct.SectionId)" auto-test="orderChanged"
+              [value]="additionalProduct.SectionId" class="mt-3"
+              (change)="subscriptionRadioSelected($event, additionalProduct)">
+              </mat-radio-button>
+            </mat-radio-group>
+          </td>
+          
+        </ng-container>       
+        </tr>
+        <tr>
+          <td>
+            <p class="my-1 font-14">
+              No Subscription
+          </p>  
+                
+          </td>
+          <td>
+            <p>No Subscription</p>
+            
+          </td>
+          <td class="pt-0 text-center">
+            <mat-radio-group class="radio-group" name="radiogroup">
+              <mat-radio-button [checked]="checkAdditionalProductStatusNoSubscription()" 
+              [value]="0" class="mt-3"
+              (change)="subscriptionRadioSelected($event, null)">
+              </mat-radio-button>
+            </mat-radio-group>
+        
+          </td>
+         
+        </tr>
+<tr *ngIf="showOptOutReasonList">
+  <td colspan="3" id="tdnonsub" *ngIf="showOptOutReasonList">
+
+  <div id="block_container" class="form-group">
+      <div class="col-md-4 col-lg-4 pb-2">
+        <h4 class="my-1 font-14 text-left" id="lbloptoutReason" [ngClass]="{'required' : optOutReasonRequired == true }">Select Opt-Out Reason:</h4>
+      </div>
+    <div class="row">
+      <div class="col-md-4 col-lg-4 pb-2 ml-3">
+        <select class ="custom-select-box font-14" *ngIf="showOptOutReasonList" [(ngModel)]="selectedOptOutReasonId" [ngClass]="{'required' : optOutReasonRequired == true }" name="optoutreasonlist" id="optoutreasonlist" (change)="onReasonSelectingOption($event.target.value)" style="width:100%">
+          <option *ngFor="let option of optOutReasonList" [value]="option.Id">{{option.Name}}</option>
+          <option value="0">Other</option>
+        </select>
+        <small class="required-color" *ngIf="(selectedOptOutReasonId == undefined) && optOutReasonRequired">
+          This field is required.
+        </small>
+      </div>
+      
+        <div class="col-md-4 col-lg-4 pb-2">
+          <div *ngIf="selectedOptOutReasonId == '0'">
+            <input matInput  id="OtherOptOutReason" name="OtherOptOutReason" (focusout)="notify()" placeholder="Enter Opt-Out Reason " type="text" [(ngModel)]="OtherOptOutReason">
+            <small class="required-color" *ngIf="(OtherOptOutReason == '' || OtherOptOutReason == undefined) && optOutReasonRequired">
+              This field is required.
+            </small>
+          </div>
+          
+        </div>
+        
+      </div>
+  
+    </div>
+  </td>
+</tr>
+       
+      </tbody>
+    </table>
+  </div>
+  </mat-expansion-panel>
+  </mat-accordion>
+  </div>
+  </div>
+  
+
+<div class="row py-3" *ngIf="order?.RemovableLines.length > 0 && hasAdditionalProducts">
+<div class="col-12 col-md-12">
+  <mat-accordion>
+      <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+        <mat-expansion-panel-header class="bg-light pl-5">
+              <mat-panel-title>
+                 Additional Products
+                  <mat-icon class="font-13 help-icon" placement="bottom" ngbTooltip="Additional Product(s) offered with the package. Please opt out/opt in as per requirement">help</mat-icon>                 
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+<div class="table-responsive">
+
+  <table class="table digi-products">
+    <thead>
+      <tr>
+        <th scope="col" class="border-top-0 border-bottom-0"><b>Product</b></th>
+        <th scope="col" class="border-top-0 border-bottom-0"><b>Product Info</b></th>
+        <th scope="col" class="text-center border-top-0 border-bottom-0"><b>Opt In</b></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let additionalProduct of order?.RemovableLines; let i = index" [attr.data-index]="i">        
+        <ng-container *ngIf="!additionalProduct.Section.IsSubscriptionSection">
+        <td>
+          <p class="my-1 font-14">
+            {{additionalProduct.Section.Name}}
+        </p>          
+        </td>
+
+        <td>
+          <div [innerHTML]="additionalProduct.AdditionalProductInfo"></div>          
+        </td>
+        <td class="pt-4 text-center">    
+            <mat-checkbox type="checkbox" class="pr-2 col-12" [checked]="checkAdditionalProductStatus(additionalProduct.SectionId)"
+                                    (change)="checkBoxOptClicked($event.checked, additionalProduct)" ></mat-checkbox>
+        </td> 
+      </ng-container>       
+      </tr>
+    </tbody>
+  </table>
+</div>
+</mat-expansion-panel>
+</mat-accordion>
+</div>
+</div>
+
+

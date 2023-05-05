@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-12 col-sm-6">
+        <select class="custom-select-box border border-secondary mw-100 rounded-0 form-control" (change)="getSelectedStatesForBU($event.target.value)">
+            <option value="">-- Select Business Unit --</option>
+            <option *ngFor="let option of marketSettingsListData" [value]="option.Id">{{option.MarketName}} ({{option.Code}})</option>
+        </select>
+    </div>
+    <div class="col-12 col-sm-6">
+        <a class="mr-2 text-primary" (click)="updateCheckValue(true)"><u>Select All</u></a>
+        <a class="text-primary" (click)="updateCheckValue(false)"><u>Deselect All</u></a>
+    </div>
+</div>
+
+<div class="row my-4 mx-1 border-dotted">
+    <div class="col-12 font-weight-bold my-3">
+        <u>Select States:</u>
+    </div>
+    <div *ngFor="let geoTargetState of geoTargetStates" class="col-6 col-sm-4">
+        <mat-checkbox type="checkbox" [checked]="geoTargetState.IsChecked" (change)="updateCheckValue($event.checked, geoTargetState)">{{geoTargetState.Name}}</mat-checkbox>
+        <button class="bg-transparent border-0" *ngIf="geoTargetState.IsChecked" (click)="openCityPopUp(geoTargetState)">
+            <i class="fa fa-building text-info" placement="bottom" ngbTooltip="Select City"></i>
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <button mat-raised-button color="accent" class="float-right mx-2" (click)="reset()">Cancel</button>
+        <button mat-raised-button color="primary" class="float-right mx-2" (click)="saveSelectedStates()">Save</button>
+    </div>
+</div>

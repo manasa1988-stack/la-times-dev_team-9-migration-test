@@ -1,0 +1,45 @@
+#block_container
+{
+    text-align:center;
+}
+#bloc0
+{
+    padding-left: 12px;
+    display:inline;
+    float: left;
+}
+
+.mw-100 {
+    max-width: 100%!important;
+}
+
+#tdnonsub
+{
+    border-top: 0;
+    padding:0;
+}
+
+
+.table-responsive {
+    overflow-x: hidden;
+}
+
+#OtherOptOutReason
+{
+    border-top: solid transparent; border-bottom: 1px solid rgba(0,0,0,.45)!important;
+    padding: 0.1rem;
+    font-size: 14px !important; 
+    text-align: left;
+}
+
+#optoutreasonlist
+{ 
+    border:1px;
+    font-size:  14px !important;
+    border-radius: 0!important;
+}
+
+#lbloptoutReason
+{
+    font-size:  14px !important;
+}

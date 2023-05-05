@@ -1,0 +1,83 @@
+.--scene-card {
+    width: 8rem;
+    display: inline-flex;
+    margin: 0;
+}
+
+.card-body {
+    position: relative;
+}
+
+.--highlighted {
+    border: solid 0.21rem #f00;
+}
+
+.scene-container {
+    display: flex;
+}
+
+.--upper {
+    transform: translateY(-1rem) !important;
+}
+
+.hidden {
+    display: none;
+}
+
+.--hidden {
+    display: none;
+}
+
+.panel-index {
+    display: inline-flex;
+    min-width: 10rem;
+    justify-content: center;
+    margin-right: 2rem;
+    border-bottom: none;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.panel-index-active {
+    border-bottom: solid 0.2rem #f00;
+}
+
+.card-body::after {
+    content: '';
+    float: left;
+    padding-top: 100%;
+}
+
+.card-body-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.preview {
+    .card-body-content {
+        position: static;
+    }
+
+    .card-body::after {
+        content: none;
+        float: left;
+        padding-top: 100%;
+    }
+}
+
+
+
+.--card {
+    display: inline-flex;
+}
+
+::ng-depp .card {
+    border-width: 0.125rem;
+}
+
+img {
+    width: 100%;
+}

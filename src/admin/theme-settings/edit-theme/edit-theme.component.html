@@ -1,0 +1,57 @@
+﻿<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase">THEME SETTINGS</h4>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" (click)="activeModal.close({data : false})">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+
+<div class="modal-body px-4 pt-0">
+  <form [formGroup]="themeSetting">
+    <mat-form-field class="w-100 required">
+      <input matInput placeholder="Market name"  maxlength="100" type="text" formControlName="MarketName">
+      <mat-error *ngIf="themeSetting.controls.MarketName.hasError('required')">
+        {{pleaseEnterMessage("Market Name")}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-100 required">
+      <input matInput placeholder="BU code" maxlength="5" type="text" formControlName="BUCode">
+      <mat-error *ngIf="themeSetting.controls.BUCode.hasError('required')">
+        {{pleaseEnterMessage("BU code")}}
+      </mat-error>
+      <mat-error *ngIf="themeSetting.controls.BUCode.hasError('serverError') && !themeSetting.controls.BUCode.hasError('required')">
+          {{themeSetting.controls.BUCode.errors['serverError']}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-100">
+      <input matInput placeholder="Community code" type="text" formControlName="CommunityCode">
+    </mat-form-field>
+    <mat-form-field class="w-100 required">
+      <input matInput placeholder="Theme Url" type="text" formControlName="ThemeUrl">
+      <mat-error *ngIf="themeSetting.controls.ThemeUrl.hasError('required')">
+        {{pleaseEnterMessage("Theme Url")}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-100 required">
+      <input matInput placeholder="Hostname" type="text" formControlName="HostName">
+      <mat-error *ngIf="themeSetting.controls.HostName.hasError('required')">
+        {{pleaseEnterMessage("Hostname")}}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="w-100">     
+      <input matInput placeholder="Usage Analytics Code"  maxlength="25" type="text" formControlName="UsageAnalyticsCode">
+    </mat-form-field>    
+    <div class="row ml-2">
+      <mat-checkbox formControlName="IsSecuredTheme">Use theme for secured pages</mat-checkbox>
+    </div>
+ 
+    <div class="row ml-2">
+      <mat-checkbox formControlName="IsLegacyTheme">Is legacy (p2p) theme?</mat-checkbox>
+    </div>  
+
+    <div class="modal-footer border-0 d-flex justify-content-start pl-0">
+      <button mat-raised-button color="primary" (click)="saveTheme()">SAVE</button>
+      <button mat-raised-button color="accent" (click)="activeModal.close({data : false})">CANCEL</button>
+    </div>
+
+  </form>
+</div>

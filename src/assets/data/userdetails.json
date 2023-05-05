@@ -1,0 +1,55 @@
+{
+  "CustomerId": 707022,
+  "CustomerName": "purushottam Patil",
+  "CustomerNumber": "CU0036589",
+  "CustomerTypeId": 3,
+  "FirstName": "purushottam",
+  "LastName": "Patil",
+  "Phone": "Tribune.AdSS.Entities.Phone",
+  "Address": {
+    "Address1": "125 nimes rd",
+    "Address2": null,
+    "City": "los angles",
+    "State": "LA",
+    "Zip": "98555"
+  },
+  "BusinessName": "Stella Travel USA",
+  "CreditCards": [
+    {
+      "Address1": "TestP",
+      "Address2": null,
+      "City": "Pune",
+      "ExpirationMonth": 2,
+      "ExpirationYear": 2025,
+      "FirstName": "TestPQ",
+      "Id": 481849,
+      "IsPrimary": true,
+      "LastName": "TestP",
+      "Number": "XXXXXXXXXXXX1111",
+      "SecurityCode": null,
+      "State": "IL",
+      "Type": 1,
+      "Zip": "12345",
+      "TypeName": "Visa"
+    },
+    {
+      "Address1": "Dhayari",
+      "Address2": null,
+      "City": "Pune",
+      "ExpirationMonth": 12,
+      "ExpirationYear": 2022,
+      "FirstName": "Purushottam1",
+      "Id": 481914,
+      "IsPrimary": false,
+      "LastName": "Patil1",
+      "Number": "XXXXXXXXXXXX4242",
+      "SecurityCode": null,
+      "State": "IL",
+      "Type": 2,
+      "Zip": "12345",
+      "TypeName": "Master Card"
+    }
+  ],
+  "IsBusinessUser": true,
+  "SelectedBusinessTypeValue": null
+}

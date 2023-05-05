@@ -1,0 +1,148 @@
+<div class="row">
+    <div class="col-md-7 configure-steps">
+        <div *ngIf="!confirmedOrder && !(confirmedOrder?.MaskedCreditCard) && !(confirmedOrder?.BillingData); else showReviewOrder">
+            <h4 class="text-uppercase d-none d-md-inline-block theme pb-2 mb-0">Order Details</h4>
+            <i class="fa fa-caret-right mx-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block mb-0">Edit Order</h4>
+                <i class="fa fa-caret-right mx-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                    <h4 class="d-inline-block text-uppercase theme b-b-4 pb-1 font-weight-bold d-md-inline-block mb-0">Confirmation</h4>
+        </div>
+        <ng-template #showReviewOrder>
+            <h4 class="text-uppercase d-none d-md-inline-block theme pb-2 mb-0">Configure</h4>
+            <i class="fa fa-caret-right mx-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block mb-0">Review Order</h4>
+                <i class="fa fa-caret-right mx-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+                    <h4 class="d-inline-block text-uppercase theme b-b-4 pb-1 font-weight-bold d-md-inline-block mb-0">Confirmation</h4>
+        </ng-template>
+    </div>
+</div>
+
+<div class="row mb-2 mt-3">
+    <div class="col">
+        <p class="font-21">
+            <strong>Thank you for your order with The {{marketSettings.MarketName}} Media Group</strong>
+        </p>
+        <div class="text-muted">
+          <p>
+            A summary of your order information is below and an email confirmation will be sent to the address you provided.
+            You can review your purchase<span *ngIf="order?.AditId && order?.AditId > 0"> or make changes to your order up until {{maxDeadline | date: "MM/dd/yyyy"}}</span> by going
+            to your
+            <a routerLink="/my-orders" class="text-dark">
+              <u>orders</u>
+            </a> page.
+          </p>
+          <p>
+            Need assistance? Contact our Customer Support Team at {{marketSettings.Phone}} {{marketSettings.HoursOfOperation}} or e-mail
+            us at
+            <a href="mailto:{{marketSettings.CustomerSupportEmail}}" class="text-dark">
+              <u>{{marketSettings.CustomerSupportEmail}}</u>
+            </a>.
+          </p>
+        </div>
+    </div>
+</div>
+
+<div id="print-section">
+    <div *ngIf="errorMessage && errorMessage != ''; else showOrder" class="my-3">
+        <error-alert [errorMessage]="errorMessage"></error-alert>
+    </div>
+
+    <ng-template #showOrder>
+        <product-summary *ngIf="isOrderLoaded; else showLoading" 
+        [orderId]="order?.AditId" 
+        [order]="order" 
+        [allowUpdates]="false" 
+        [showAttributes]="true"
+        [showOrderNumberHeader]="true" 
+        [showPriceSummary]="true" 
+        [adssId]="orderId"
+        [upsellProcessed]="upsellProcessed"
+        (sendData)="readFrom($event)"></product-summary>
+        <ng-template #showLoading>
+            <mat-spinner class="row my-5"></mat-spinner>
+        </ng-template>
+    </ng-template>
+
+    <div class="row my-3" *ngIf="confirmedOrder && (confirmedOrder?.MaskedCreditCard || confirmedOrder?.BillingData) && order?.Price > 0">
+        <div class="col">
+            <div class="billing-info mb-2">
+                <div class="bg-primary text-white text-uppercase pl-3 pt-3 pb-1">
+                    <p class="text-white">BILLING INFORMATION</p>
+                </div>
+                <div *ngIf="isOrderLoaded; else showLoading" class="p-3 card border-0 rounded-0">
+                    <div *ngIf="confirmedOrder?.MaskedCreditCard" class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-5 col-md-3 text-muted pr-0">Name:</div>
+                            <div class="col-7 col-md-9 pl-0">
+                                {{confirmedOrder?.MaskedCreditCard.FirstName}} {{confirmedOrder?.MaskedCreditCard.LastName}}
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-5 col-md-3 text-muted pr-0">Card Type:</div>
+                            <div class="col-7 col-md-9 pl-0">{{confirmedOrder?.MaskedCreditCard.TypeName}}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-5 col-md-3 text-muted pr-0">Card Number:</div>
+                            <div class="col-7 col-md-9 pl-0">{{confirmedOrder?.MaskedCreditCard.Number | slice:-8 | creditcardnumber}}</div>
+                        </div>
+                        <div class="row text-muted">
+                            <div class="col-5 col-md-3 pr-0"></div>
+                            <div class="col-7 col-md-9 pl-0">Your credit card will be billed as The {{marketSettings.MarketName}} Media Group</div>
+                        </div>
+                    </div>
+                    <div *ngIf="confirmedOrder.BillingData">
+
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <strong>Account Number:</strong> {{confirmedOrder?.BillingData.BillingAccountNumber}}
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <strong>Billing Contact Name:</strong> {{confirmedOrder?.BillingData.BillingContactName}}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <ng-template #showLoading>
+                <mat-spinner [diameter]="60" class="row"></mat-spinner>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col">
+        <div class="thankyou-info p-3">
+            <p class="font-21">
+                <strong>
+                    Thank You,
+                    <br/> The {{marketSettings.MarketName}} Media Group
+                </strong>
+            </p>
+            <div class="text-muted">
+                <p>The {{marketSettings.MarketName}} Media Group reserves the right to refuse to publish any advertisement,
+                    to correctly classify any advertisement and to delete objectionable words or phrases. Submission of advertisement
+                    does not constitute a commitment by The {{marketSettings.MarketName}} Media Group to publish the advertisement.
+                    Publication of an advertisement does not constitute an agreement for continued publication.
+                </p>
+                <p>
+                    The {{marketSettings.MarketName}} Media Group will not be liable for failure to publish an ad as requested or for more than
+                    one incorrect insertion of an advertisement so please check your ad on the first publishing day. In the
+                    event of an error, or omission in printing or publication of an advertisement, The {{marketSettings.MarketName}}
+                    Media Group's liability shall be limited to an adjustment for the cost of the space occupied by the error,
+                    with maximum liability being cancellation of the cost of the first incorrect advertisement or republication
+                    of the correct advertisement.
+                </p>
+                <p>
+                    Under no circumstances shall The {{marketSettings.MarketName}} Media Group be liable for consequential damages of any kind.
+                    Additional policies and standards of accepatability may apply to your print ad.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

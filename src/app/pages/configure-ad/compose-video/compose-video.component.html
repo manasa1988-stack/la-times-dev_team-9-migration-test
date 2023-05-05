@@ -1,0 +1,67 @@
+<div class="py-3">
+    <div class="col-12 col-md-12 --no-padding">
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>
+                        <div class="panel-title">Edit your video</div>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="card rounded-0 --no-border">
+                    <div class="card-body --no-padding">
+                        <div class="row py-3 video-card">
+                            <div class="col-12 col-md-6">
+                                <img class="video-tab-image" src="wwwroot/assets/img/video-tab-image.jpg">
+                            </div>
+
+                            <div class="col-12 col-md-6 info">
+                                <strong>Video Obituary</strong>
+
+                                <p class="text-muted font-weight-bold">
+                                    Included
+                                </p>
+
+                                <p>Create a video with your own pictures and text. Your video will appear on our Obituary YouTube Channel, where it may be shared with friends, family, and other loved ones.</p>
+                                <p>Building a video is easy and you have 2 weeks to revise your video as many times you want. You can start now or save it for later.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row flex-row-reverse">
+                                    <div class="col-12 --align-right">
+                                        <p class="text-danger" *ngIf="!currentOrderItem?.isLayoutCompleted">Complete your print notice to start.</p>
+                                        <div class="submit-btn">
+                                            <button
+                                                class="text-uppercase"
+                                                title=""
+                                                [ngClass]="{'mat-primary': currentOrderItem?.isLayoutCompleted}"
+                                                [disabled]="!currentOrderItem?.isLayoutCompleted"
+                                                mat-raised-button
+                                                (click)="moveToEditVideo()"
+                                                >
+                                                <ng-container *ngIf="currentOrderItem?.isLayoutCompleted ; else noDraft">
+                                                    EDIT YOUR VIDEO
+                                                </ng-container>
+
+                                                <ng-template #noDraft>
+                                                    CREATE YOUR VIDEO
+                                                </ng-template>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+
+<message-modal
+    #loginPrompMessageModal
+    (primaryAction)="loginRedirect()"
+    (secondaryAction)="gotoVideo()">
+</message-modal>

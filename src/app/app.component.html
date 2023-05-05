@@ -1,0 +1,23 @@
+﻿<div #top>
+  <div class="modal-body px-4 pt-0 fixed-top z-1100 mx-0" *ngIf="submitting">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div id="sslUser" style="color:black;display:none;">
+    <div class="menu" data-reg-role="base"></div>
+  </div>
+  <div class='mat-typography'>
+    <div class='body-content'>
+      <div *ngIf="isDataReady && isUserReady; else showLoading">
+        <router-outlet (activate)="onActivate($event)"></router-outlet>
+      </div>
+      <ng-template #showLoading>
+        <div class="pageLoading">
+          <div>
+            <i class="fa fa-circle-o-notch fa-spin"></i>
+          </div>
+       <div> Loading...</div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

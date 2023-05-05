@@ -1,0 +1,255 @@
+<div class="row py-3">
+    <div class="col-12 col-md-12">
+        <mat-accordion *ngIf="order?.IsDocumentUpload || order?.IsDocumentUploadRequired">
+            <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>
+                        {{ UploadDocumentHeading }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="row">
+                    <div class="mb-2 col-12 col-sm-2 col-md-2 col-lg-2">
+                        <label class="btn-block" class="custom-file-upload" for="file-upload">
+                            <mat-icon>file_upload</mat-icon>
+                            <span>UPLOAD</span>
+                        </label>
+                        <input title="Upload" type="file" (change)="uploadLegalDoc($event)" id="file-upload" class="d-none" />
+                        <!--   <button title="Upload" mat-raised-button color="primary" class="btn-block" auto-test="uploaddoc">
+                            <mat-icon>file_upload</mat-icon>
+                            UPLOAD
+                        </button> -->
+                    </div>
+                    <div class="col-md-12">
+                        You can upload a .JPG,.JPEG,.PDF,.DOC,.DOCX file.Maximum permitted file size is 10.0 MB.
+                    </div>
+                    <div class="col-md-12" *ngIf="showUploadDocErrorMessage">
+                        <mat-error *ngFor="let err of uploadDocErrorMessage">{{err}}</mat-error>
+                    </div>
+                    <div class="col-md-12" *ngIf="currentOrderItem?.LstLegalDocs?.length > 0">
+                        <hr>
+                    </div>
+                    <div class="row uploaddoclist mx-2 w-100">
+                        <div class="col-12 col-md-4 document_list_icon text-wrap" *ngFor="let doc of currentOrderItem?.LstLegalDocs">
+                            <a class="v-align-top" [href]="'/api/configure/DownloadLegalFile/' + doc.OrderId +'/' + doc.DocumentName">{{doc.DocumentName}}</a>
+                            <button mat-icon-button auto-test="removeLegalDoc" class="v-align-top" (click)="removeLegalDoc(doc)">
+                                <i class="material-icons v-align-top">delete</i>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <mat-accordion *ngFor="let formGrp of otherInfoFormArray">
+            <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>
+                        {{formGrp?.name}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form novalidate [formGroup]="formGrp?.formgrp">
+                    <div class="row">
+                        <div class="col-12 col-md-6" *ngFor="let attribute of formGrp?.attributes">
+                            <label class="custom-label-select mb-0" [ngClass]="{'required' : attribute.IsRequired == true }" *ngIf="attribute.Type['Id'] == fieldType['Select'] && formGrp.formgrp.controls[attribute.Name].value && formGrp.formgrp.controls[attribute.Name].value.length > 0">
+                                Select {{attribute.DisplayName}}
+                            </label>
+                            <select *ngIf="attribute.Type['Id'] == fieldType['Select'] " [ngClass]="{'required' : attribute.IsRequired == true }" class="custom-select-box mt-2 mb-2 rounded-0 form-control"
+                                [formControlName]="attribute.Name" (change)="onSelectingOption($event.target.value, attribute, formGrp.name)">
+                                <option value="" selected>Select {{attribute.DisplayName}} {{attribute.IsRequired == true ? '*' : ''}}</option>
+                                <option *ngFor="let option of attribute.Options" [value]="option.Value">{{option.Value}}</option>
+                            </select>
+                            <div *ngIf="attribute.Type['Id'] == fieldType['Select']  && formGrp.formgrp.controls[attribute.Name].touched && formGrp.formgrp.controls[attribute.Name].hasError('required')">
+                                <small class="text-danger">{{attribute.DisplayName}} is required.</small>
+                            </div>
+                            <label class="custom-label-select mb-0" *ngIf="attribute.Type['Id'] == fieldType['ChildAttribute'] && formGrp.formgrp.controls[attribute.Name].value && formGrp.formgrp.controls[attribute.Name].value.length > 0  && childAttributes[attribute.ParentId] && childAttributes[attribute.ParentId].length > 0">
+                                Select {{attribute.DisplayName}}
+                            </label>
+                            <select *ngIf="attribute.Type['Id'] == fieldType['ChildAttribute']" class="custom-select-box mt-2 mb-2 rounded-0 form-control"
+                                [formControlName]="attribute.Name" (change)="onSelectingChildOption($event.target)">
+                                <option *ngFor="let option of childAttributes[attribute.ParentId]" [value]="option">{{option}}</option>
+                            </select>
+                            <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Text'] || attribute.Name.toLowerCase().includes('zip') || attribute.Name.toLowerCase().includes('price')" class="w-100"
+                                [ngClass]="{'required' : attribute.IsRequired == true, 'custom-wrap' : focusOut[attribute.Name] }">
+                                <input matInput placeholder="{{attribute.DisplayName}}" type="text" [formControlName]="attribute.Name" (focus)="focusOut[attribute.Name] = false"
+                                    (focusout)="focusOut[attribute.Name] = true; notify()">
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    {{attribute.DisplayName}} is required.
+                                </mat-error>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('invalidDecNumber') && !formGrp?.formgrp?.controls[attribute.Name].hasError('required') && attribute.Name.toLowerCase().includes('price')">
+                                    Please enter a valid number.
+                                </mat-error>
+                                <mat-error *ngIf="!formGrp?.formgrp?.controls[attribute.Name].hasError('required') && formGrp?.formgrp?.controls[attribute.Name].hasError('invalidZipcode') && attribute.Name.toLowerCase().includes('zip')">
+                                    {{zipcodeInvalidMessage}}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['TextArea']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                                <textarea matInput placeholder="{{attribute.DisplayName}}" [formControlName]="attribute.Name" (focusout)="notify()"></textarea>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    {{attribute.DisplayName}} is required.
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Number'] && !attribute.Name.toLowerCase().includes('zip') && !attribute.Name.toLowerCase().includes('price')" class="w-100"
+                                [ngClass]="{'required' : attribute.IsRequired == true }">
+                                <input matInput placeholder="{{attribute.DisplayName}}" type="number" [formControlName]="attribute.Name" (focusout)="notify()">
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    {{attribute.DisplayName}} is required.
+                                </mat-error>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('invalidDecNumber') && !formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    Please enter a valid number.
+                                </mat-error>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('invalidPhone') && !formGrp?.formgrp?.controls[attribute.Name].hasError('required') && attribute.Name.toLowerCase().includes('subscriber phone')">
+                                    Please enter a valid phone number.
+                                </mat-error>
+                            </mat-form-field>
+
+                            <!-- <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Date']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                                <input matInput placeholder="{{attribute.DisplayName}}" type="text" [formControlName]="attribute.Name" (change)="notify()">
+                                <input ngbDatepicker class="form-control rounded-0 d-none" (ngModelChange)="onModelChange($event, formGrp, attribute.Name)"
+                                    #d="ngbDatepicker" placeholder="MM-DD-YYYY" [formControlName]="attribute.Name +'_date'" navigation="arrows"
+                                    (dateSelect)="onDateSelection($event)" />
+                                <div class="input-group-append">
+                                    <button class="btn border-left-0 bg-white rounded-0" (click)="d.toggle()" type="button">
+                                        <mat-icon>date_range</mat-icon>
+                                    </button>
+                                </div>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    {{attribute.DisplayName}} is required.
+                                </mat-error>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('invalidDate') && !formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    Please enter a valid date.
+                                </mat-error>
+
+                            </mat-form-field> -->
+                            <div *ngIf="attribute.Type['Id'] == fieldType['Date']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                                <div class="w-100">
+                                    <small>{{attribute.DisplayName}}</small>
+                                </div>
+                                <div class="col-10 col-md-10 col-sm-12 form-group p-0">
+                                    <div class="input-group customdateSelect other-info-field">                                       
+                                        <input type="text" class="form-control rounded-0" [formControlName]="attribute.Name" (change)="notify()" readonly>
+                                        <input ngbDatepicker type="text" class="d-none form-control rounded-0" [formControlName]="attribute.Name +'_ngbdate'" (ngModelChange)="onDateChange($event, formGrp, attribute.Name)"
+                                        #d="ngbDatepicker" navigation="arrows" readonly/>
+                                        <button class="btn border-left-0 bg-white rounded-0 p-0" (click)="d.toggle()" type="button">
+                                            <mat-icon>date_range</mat-icon>
+                                        </button>
+                                        <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                            {{attribute.DisplayName}} is required.
+                                        </mat-error>
+                                        <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('invalidDate') && !formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                            Please enter a valid date.
+                                        </mat-error>
+                                    </div>                               
+                                </div>
+                            </div>
+
+                            <mat-form-field *ngIf="attribute.Type['Id'] == fieldType['Email']" class="w-100" [ngClass]="{'required' : attribute.IsRequired == true }">
+                                <input matInput placeholder="{{attribute.DisplayName}}" type="text" [formControlName]="attribute.Name" (focusout)="notify()">
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    {{attribute.DisplayName}} is required.
+                                </mat-error>
+                                <mat-error *ngIf="formGrp?.formgrp?.controls[attribute.Name].hasError('invalidEmail') && !formGrp?.formgrp?.controls[attribute.Name].hasError('required')">
+                                    {{emailInvalidMessage}}
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-checkbox type="checkbox" *ngIf="attribute.Type['Id'] == fieldType['Checkbox']" [ngClass]="{'required' : attribute.IsRequired == true }"
+                                [formControlName]="attribute.Name" (change)="notify()">{{attribute.DisplayName}}</mat-checkbox>
+
+                                
+                            <mat-checkbox type="checkbox" *ngIf="attribute.Type['Id'] == fieldType['TermsAndCondition']" [ngClass]="{'required' : attribute.IsRequired == true }"
+                                [formControlName]="attribute.Name" (change)="notify()"><a target="_blank" href="{{ subscriptionTermsUrl }}">{{attribute.DisplayName}}</a>
+                            </mat-checkbox>
+                            <mat-error *ngIf="attribute.Type['Id'] == fieldType['TermsAndCondition'] && formGrp?.formgrp?.controls[attribute.Name].hasError('requiredTrue')">
+                                {{attribute.DisplayName}} is required.
+                            </mat-error>
+                               
+                        </div>
+                    </div>
+                </form>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <mat-accordion *ngIf="upsellVisible" upsell>
+            <mat-expansion-panel [expanded]="true" class="custom-panel mb-4 border">
+                <mat-expansion-panel-header class="bg-light pl-5">
+                    <mat-panel-title>
+                        {{ UpgradeListingHeading }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div boolupsell *ngIf="booleanTypeUpsells.length > 0">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>{{ HighlightAdHeading}}</h3>
+                        </div>
+                    </div>
+                    <div groupbool *ngFor="let booleanTypeUpsells of groupBooleanTypeUpsells; let i = index" class="row mb-4">
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <mat-checkbox type="checkbox" class="pr-2 col-12" *ngFor="let upsell of booleanTypeUpsells.upsellArray" [checked]="upsell.IsChecked == true"
+                                    (change)="checkBoxGroupOneClicked(i, upsell)" [checked]="order.AttributeValues[upsell.Name].Value == true">{{upsell.DisplayName}}</mat-checkbox>
+                            </div>
+                        </div>
+                        <!--<div class="col-12 col-md-6">
+                            <img *ngIf="booleanTypeUpsells?.name" [src]="assetsHostUrl + '/assets/images/adTemplates/attributeImages/subgroupImages/' +  booleanTypeUpsells.name +'.jpg'"
+                                class="placeholder-img img-fluid w-50" />
+                        </div> -->
+                    </div>
+                    <div nullsubgroup *ngFor="let checkboxWithNullSubgroup of booleanTypeUpsellsWithNullSubGroup" class="row">
+                        <div class="col-12 col-md-6">
+                            <mat-checkbox type="checkbox" class="pr-2" [disabled]="checkboxWithNullSubgroup.Name === 'Legacy_lite'" [checked]="checkboxWithNullSubgroup.IsChecked == true" (change)="subGroupCheckboxClicked(checkboxWithNullSubgroup)">{{checkboxWithNullSubgroup.DisplayName}}</mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div imageupsell *ngIf="imageTypeUpsells.length > 0" class="my-2 row">
+                    <div class="col-12 col-md-12">
+                        <h3 class="mb-2">Add photos:</h3>
+                    </div>
+                    <div *ngFor="let imageList of imageTypeUpsells; let i = index" class="col-md-12" [formGroup]="imageTypeUpsellForm">
+                        <div class="row">
+                            <mat-checkbox class="col-md-5" [checked]="imageList.IsChecked" (change)="photosCheckboxClicked(imageList, i, $event)" [formControlName]="imageList.Name">
+                                {{imageList.DisplayName}}
+                            </mat-checkbox>
+
+                        </div>
+                        <div *ngIf="imageList.IsChecked" class="row">
+                            <div class="col-12 col-md-12">
+                                <p>Please upload images with size (w x h) {{imageList.ImageWidth}} x {{imageList.ImageHeight}}
+                                    or matching aspect ratio.</p>
+                            </div>
+                            <div class="image-list-item col-12 col-sm-6 col-md-4 mb-4" *ngFor="let image of imageList.ImageList;let photoIndex = index">
+                                <div class="bg-light text-center py-2">
+                                    <h4 class="pt-2 mb-1">Photo {{photoIndex + 1}}</h4>
+                                    <div *ngIf="image.isImageUploaded ;else defaultPhoto" class="row">
+                                        <div class="col-12 col-md-12">
+                                            <button mat-icon-button auto-test="cropImage" (click)="openImageEditor(photoIndex, imageList, 'original')">
+                                                <mat-icon>crop</mat-icon>
+                                            </button>
+                                            <button mat-icon-button auto-test="clearImage" (click)="deletePhoto(imageList, photoIndex)">
+                                                <mat-icon>clear</mat-icon>
+                                            </button>
+                                        </div>
+                                        <div class="col-12 col-md-12">
+                                            <img src="/orders/GetImageListAttributeImage/{{systemName}}/{{systemKey}}/{{imageList.Id}}/{{photoIndex}}?ts={{date}}" class="placeholder-img"
+                                            />
+                                        </div>
+                                    </div>
+                                    <ng-template #defaultPhoto>
+                                        <img [src]="'wwwroot/assets/img/photo.jpg'" class="placeholder-img" />
+                                    </ng-template>
+                                    <div class="btn-file py-3 col-10 col-sm-8 col-md-10 col-lg-7">
+                                        <input [formControl]="photoInput" title="Upload Image" class="help-icon" type="file" (change)="fileUpload($event,imageList, photoIndex)"
+                                        />
+                                        <button title="Upload Image" mat-raised-button color="primary" auto-test="uploadImage">
+                                            Select an Image
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p *ngIf="isErrorMessageShown" class="text-danger col-12 col-md-12">{{errorMessage}}</p>
+                        </div>
+
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

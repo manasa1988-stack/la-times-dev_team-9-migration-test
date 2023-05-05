@@ -1,0 +1,312 @@
+<div *ngIf="((rows === null || rows === undefined || rows.length <= 0) && !filterApplied); else tableContent">
+  <h3 class="text-center pt-3">We are not able to find any orders for you!</h3>
+</div>
+<ng-template #tableContent>
+  <div *ngIf="rows.length <= 0 && filterApplied; else tableList">
+    <h3 class="text-center pt-3">No data found for current filter selection!</h3>
+  </div>
+  <ng-template #tableList>
+    <div class="" *ngFor="let row of rows; let index = index">
+      <div class="row py-2 orderSummary border-top border-bottom" (click)="expand(row, index)">
+
+        <!--<div class="row pt-2" (click)="expand(row, index)"> -->
+        <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4  px-0" *ngIf="showChecks; else arrowIcon">
+          <mat-checkbox class="m-2" [checked]="row.isChecked" [id]="row.AdSSId" (change)="orderSelected(row.AdSSId, $event)" (click)="$event.stopPropagation()">
+          </mat-checkbox>
+          <a href="javascript:void(null);" class="align-top">{{row.AdSSId}}</a>
+        </div>
+
+        <ng-template #arrowIcon>
+          <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4  px-0">
+            <span class="m-2 d-none d-md-inline">
+              <i *ngIf="row.isCollapsed; else downArrow" class="fa fa-caret-right"></i>
+              <ng-template #downArrow>
+                <i class="fa fa-caret-down"></i>
+              </ng-template>
+            </span>
+            <span class="align-top ml-4 m-md-0" *ngIf="isDraft"> {{row.AdSSId}}</span>
+            <span class="align-top ml-4 m-md-0" *ngIf="!isDraft" [ngClass]="{'text-muted font-italic': row.AditId == 0}">
+              <span *ngIf="row.AditId == 0">P-</span>{{row.AditId > 0 ? row.AditId : row.AdSSId}}</span>
+            <span class="align-bottom text-muted ml-4 d-block d-sm-none" *ngIf="!isDraft">{{row.Status.Name}}</span>
+          </div>
+
+        </ng-template>
+
+        <div class="col-md-2 col-lg-2 d-none d-xl-none">
+          {{row.LastUpdated | date: "MM/dd/yyyy" }}
+        </div>
+
+        <div class="col-xl-3 col-lg-2 d-none d-xl-block">
+          <span class="pr-5"> {{row.LastUpdated | date: "MM/dd/yyyy" }}</span>
+          <span class="">
+            {{row.FirstRunDate | date:"MM/dd/yyyy" }}
+          </span>
+        </div>
+
+
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 text-wrap">
+          <div class="d-block font-italic" *ngIf="row.IsObitOrder">{{row.Description}}</div> {{row.PackageDescription}} </div>
+        <div class="col-md-2 col-lg-2 d-md-block d-none text-wrap"> {{row.OrderNotes}} </div>
+        <div class="col-xl-1 col-sm-2 d-none d-sm-block "> {{row.Price | currency: "USD"}} </div>
+        <div class="col-xl-1 col-lg-2 col-md-1 col-sm-2 d-none d-sm-block "> {{isDraft ? 'Draft' : row.Status.Name}} </div>
+
+
+        <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-3 text-right ">
+          <span class="action-btn d-inline-block position-relative" *ngIf="row.IsCreatedInAdSS && (!row.PreventOrderUpdates || row.IsQueued)">
+            <button mat-mini-fab color="primary" (click)="toggleAction(row, index);$event.stopPropagation()">
+              <mat-icon>dehaze</mat-icon>
+            </button>
+          </span>
+
+          <div *ngIf="row.isActionClicked && !row.IsDraft" class="fab-buttons text-right button-row">
+            <a title="Edit" mat-mini-fab class="bg-secondary" *ngIf="row.IsCreatedInAdSS" auto-test="editOrder" [routerLink]="!row.IsQueued ? '/orders/' + row.AditId : '/queued/' + row.AdSSId"
+              (click)="$event.stopPropagation()">
+              <mat-icon>mode_edit</mat-icon>
+            </a>
+
+            <button title="Cancel" mat-mini-fab class="bg-secondary" *ngIf="row.AllowOrderCancellation && !row.IsAdItInReadOnlyMode"
+              (click)="allowOrderCancellation(row);$event.stopPropagation()" auto-test="cancelOrder">
+              <mat-icon>clear</mat-icon>
+            </button>
+            <button title="Renew" mat-mini-fab class="bg-secondary" *ngIf="row.AllowOrderRenewal" auto-test="renewOrder" (click)="renew(row);$event.stopPropagation()">
+              <mat-icon>autorenew</mat-icon>
+            </button>
+            <a title="Print" mat-mini-fab class="bg-secondary" *ngIf="row.ShowCustomerProof" href="/api/order/printproof/{{row.AdSSId}}"
+              (click)="$event.stopPropagation()" target="_blank" auto-test="printOrder">
+              <mat-icon>print</mat-icon>
+            </a>
+          </div>
+          <div *ngIf="row.isActionClicked && row.IsDraft" class="fab-buttons text-right button-row">
+            <!-- <button title="Continue Building" mat-mini-fab class="bg-secondary" auto-test="continueBuilding" >
+              <mat-icon>build</mat-icon>
+            </button> -->
+            <a title="Continue Building" mat-mini-fab class="bg-secondary" routerLink="/drafts/{{row.AdSSId}}/configure" (click)="$event.stopPropagation()"
+              auto-test="continueBuilding">
+              <mat-icon>build</mat-icon>
+            </a>
+            <button title="Delete" mat-mini-fab class="bg-secondary" (click)="deleteOne(row);$event.stopPropagation()" auto-test="deleteDraft">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="w-100"></div>
+      </div>
+      <div class="row d-none d-md-block bg-white orderSummaryDetail">
+        <div class="col-md-12 " id="collapse_{{ row.AdSSId }}" [ngbCollapse]="row.isCollapsed">
+          <div *ngIf="showSpinnerForOrder[index]; else showDetails" class="py-2 border-light">
+            <mat-spinner [diameter]="45"></mat-spinner>
+          </div>
+          <ng-template #showDetails>
+            <div *ngIf="!row.order; else showRow" class="my-2">
+              <error-alert></error-alert>
+            </div>
+            <ng-template #showRow>
+              <div [ngClass]="{'strikethrough': row.Status.Name === 'Cancelled'}">
+                <div class="row py-2 bg-white border">
+                  <div class="col-md-4">
+                    <span class="pr-2">SERVICE TYPE:</span> {{row.order?.ServiceType}}
+                  </div>
+                  <div class="col-md-4" *ngIf="row.order?.Status.Name != 'Queued' && row.order?.SubmitDate !== null">
+                    <span class="pr-2">PURCHASE DATE:</span> {{row.order?.SubmitDate | date:"MM/dd/yyyy" }}
+                  </div>
+                  <div class="col-md-4" *ngIf="row.order?.Status.Name == 'Cancelled'">
+                    <span class="pr-2">CANCELLATION DATE:</span> {{row.order?.LastUpdated | date:"MM/dd/yyyy" }}
+                  </div>
+                  <div class="col-md-4" *ngIf="row.order?.AttributeValues?.DFPCampaignName?.Value !== null">
+                    <span class="pr-2">CAMPAIGN NAME:</span> {{row.order?.AttributeValues?.DFPCampaignName?.Value}}
+                  </div>
+                  <div class="col-md-2" *ngIf="row.order?.AdvSoldToCustomerName !== null">
+                    <span class="pr-2">SOLD TO ACCOUNT:</span> {{row.order?.AdvSoldToCustomerName}}
+                  </div>
+                  <div class="col" *ngIf="row.order?.IsDeadlinePassed">
+                    <mat-icon class="text-warning small" placement="bottom" ngbTooltip="Deadline to edit this order has passed">warning</mat-icon>
+                  </div>
+                </div>
+
+                <div class="row py-2 border bg-light small text-muted m-0">
+                  <div class="col-md-3">
+                    PUBLICATION
+                  </div>
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-3">
+                        PACKAGE DETAILS
+                      </div>
+                      <div class="col-md-3">
+                        SIZE
+                      </div>
+                      <div class="col-md-6">
+                        <div class="row">
+                          <div class="col-md-5">
+                            RUN DATES
+                          </div>
+                          <div class="col-md-7">
+                            AD PREVIEW
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row py-3 bg-light border m-0" *ngFor="let innerRow of row.order?.OrderItems; let innerIndex = index">
+
+                  <div class="col-md-3">
+                    <span *ngIf="innerRow?.Section">
+                      <img class="w-75 mh-100" [src]="assetsHostUrl + 'assets/images/products/'+ innerRow.Section.Product.Id +'/logo.png'" [alt]="innerRow?.Section.Product.Name"
+                      />
+                    </span>
+                  </div>
+
+                  <div class="col-md-9">
+                    <div class="row mb-2">
+                      <div class="col-md-3">
+                        <div *ngIf="innerRow?.IsDfpOrderItem; else onlineOrderItemTargets">
+                          <div *ngIf="innerRow?.Section && innerRow?.Section?.Name">Section: {{innerRow?.Section?.Name}}</div>
+                          <div *ngIf="innerRow?.Subsection && innerRow?.Subsection?.Name">Subsection: {{innerRow?.Subsection?.Name}}</div>
+                          <div *ngIf="innerRow?.DfpGeoTargettingStates">State: {{innerRow?.DfpGeoTargettingStates}}</div>
+                          <div *ngIf="innerRow?.DfpGeoTargettingCities">City: {{innerRow?.DfpGeoTargettingCities}}</div>
+                        </div>
+                        <ng-template #onlineOrderItemTargets>
+                          <div *ngIf="innerRow?.Section">
+                            {{ innerRow?.Section.Name }}
+                          </div>
+                          <!-- Need to add a condition to check if onlineorderitem-->
+                          <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] && innerRow?.Section?.HasTargets && innerRow?.TargetType">
+
+                            - {{ innerRow?.TargetType.DisplayName }}
+                            <div>
+                              {{ innerRow?.SelectedTargetNames }}
+                            </div>
+                            <!-- </div> -->
+                          </div>
+                        </ng-template>
+                        <div *ngIf="innerRow?.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] && innerRow?.showLines">
+                          {{ innerRow?.NumberOfLinesOfCurrentAdMaterial }} Lines
+                        </div>
+                        <div *ngIf="innerRow?.TypeId == orderItemTypes['PrintClassifiedsOrderItem'] || innerRow?.TypeId == orderItemTypes['PrintDisplayOrderItem']">
+                          {{innerRow?.IsColor ? 'Color: Yes' : 'Color: No'}}
+                        </div>
+
+                        <div *ngFor="let zone of innerRow?.Zones">
+                          {{zone.Name}}
+                        </div>
+
+                        <div *ngIf="(row?.order?.IsDocumentUpload || row?.order?.IsDocumentUploadRequired) && innerRow?.LstLegalDocs?.length > 0">
+                          <div>
+                            Upload Ad Doc:
+                          </div>
+                          <div class="uploaddoclist" *ngIf="innerRow?.LstLegalDocs?.length > 0">
+                            <div class="document_list_icon text-wrap" *ngFor="let doc of innerRow?.LstLegalDocs">
+                              <a class="v-align-top" [href]="'/api/configure/DownloadLegalFile/' + doc.OrderId +'/' + doc.DocumentName">{{doc.DocumentName}}</a>
+                            </div>
+                          </div>
+                         
+
+                          <!-- <div *ngIf="innerRow?.LstLegalDocs?.length > 0">
+                              <ul class="uploaddoclist-dashboard pl-0">
+                                <li *ngFor="let doc of innerRow?.LstLegalDocs">
+                                  <a [href]="'/api/configure/DownloadLegalFile/' + doc.OrderId +'/' + doc.DocumentName">{{doc.DocumentName}}</a>
+                                </li>
+                              </ul>
+                            </div> -->
+                        </div>
+
+                      </div>
+
+                      <div class="col-md-3 text-wrap">
+                        <span *ngIf="innerRow?.AdSize">{{innerRow?.AdSize?.Name}}</span>
+                      </div>
+
+                      <div class="col-md-6">
+                        <div class="row mb-2" *ngIf="innerRow?.AllToBePublishedAdMaterial.length == 0">
+                          <div class="col-md-5">
+                            <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                              <div *ngIf="innerRow?.IsDfpOrderItem">
+                                Impression:
+                                <span> {{ innerRow?.NumImpressions }}</span>
+                              </div>
+                              <div *ngIf="!innerRow?.IsDfpOrderItem">
+                                {{ innerRow?.ImpressionsName}}
+                              </div>
+                            </div>
+
+                            <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem'] || innerRow?.TypeId == orderItemTypes['OnlineClassifiedsOrderItem']; else printOrderItem">
+                              <div>
+                                {{ innerRow?.RunDateString }}
+                              </div>
+
+                            </div>
+                            <ng-template #printOrderItem>
+                              <div *ngFor="let runDate of innerRow?.RunDates">
+                                {{ runDate | date:"MM/dd/yyyy, EE" }}
+                              </div>
+                            </ng-template>
+
+
+                          </div>
+                          <div class="col-md-7" *ngIf="innerRow?.AdMaterialUrl && innerRow?.IsShowAdmaterialPreview">
+                            <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                              <!-- Needto add check for can show adpreview condition && isShowAdmaterialPreview-->
+                              <a [href]="innerRow?.ClickThroughUrl" (click)="validClickThroughUrl(innerRow)" target="_blank" [title]="innerRow?.ClickThroughUrl"
+                                class="small d-inline-block text-center">Click through url
+                                <i class="fa fa-link"></i>
+                              </a>
+                            </div>
+                            <img [src]="innerRow?.AdMaterialUrl" class="imgWithinParent img-fluid" />
+                          </div>
+                        </div>
+
+                        <div class="row mb-2" *ngFor="let adMaterial of innerRow?.AllToBePublishedAdMaterial">
+                          <div class="col-md-5">
+                            <div *ngFor="let runDate of adMaterial.RunDates">
+                              {{ runDate | date:"MM/dd/yyyy, EE" }}
+                            </div>
+                          </div>
+                          <div class="col-md-7">
+                            <div *ngIf="innerRow?.TypeId == orderItemTypes['OnlineDisplayOrderItem']">
+                              <!-- Needto add check for can show adpreview condition && isShowAdmaterialPreview-->
+                              <a [href]="innerRow?.ClickThroughUrl" target="_blank" [title]="innerRow?.ClickThroughUrl">Click-Through URL</a>
+                            </div>
+
+                            <img *ngIf="adMaterial?.AdMaterialUrl && innerRow?.IsShowAdmaterialPreview" [src]="adMaterial?.AdMaterialUrl" class="imgWithinParent img-fluid"
+                            />
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12" *ngIf="innerRow?.UpsellAttributes.length > 0">
+                        <div class="text-muted my-2">
+                          <strong class="d-inline-block align-middle text-uppercase">Upgrade(s):</strong>
+                        </div>
+                        <ul class="ml-2">
+                          <div *ngFor="let upsellAttribute of innerRow?.UpsellAttributes">
+                            <li *ngIf="upsellProcessed[innerRow.Id][upsellAttribute.Name]">
+                              {{upsellAttribute.DisplayName}}
+                              <ul class="list-inline row pt-3" *ngIf="upsellAttribute.IsImageListType">
+                                <li class="list-inline-item col-md-2 mr-0" *ngFor="let photoUrl of upsellProcessed[innerRow.Id][upsellAttribute.Name]">
+                                  <img *ngIf="photoUrl" [src]="photoUrl" class="img-fluid" />
+                                  <img *ngIf="!photoUrl" [src]="'wwwroot/assets/img/no_image.png'" class="img-fluid" />
+                                </li>
+                              </ul>
+                            </li>
+                          </div>
+                        </ul>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </ng-template>
+
+          </ng-template>
+        </div>
+      </div>
+
+    </div>
+  </ng-template>
+</ng-template>

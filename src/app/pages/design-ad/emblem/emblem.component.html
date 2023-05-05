@@ -1,0 +1,23 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+    <h4 class="modal-title text-uppercase">{{title}}</h4>
+    <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="emblemClose" (click)="onClose()">
+      <mat-icon aria-label="Close">close</mat-icon>
+    </button>
+  </div>
+  <div class="modal-body px-4 pt-0" [ngSwitch]="type">
+    <div class="row" *ngSwitchCase="'emblem'">
+      <div class="col-4 col-md-2 mb-3" *ngFor="let emblem of emblemImages">
+        <div class="cursor-pointer" auto-test="emblemSelected" (click)="emblemSelected(emblem)">
+          <img class="img-fluid" [src]="emblem">
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngSwitchCase="'logo'">
+        <div class="col-4 col-md-2 mb-3 cursor-pointer" *ngFor="let logo of logoLibrary">
+          <div auto-test="logoSelected" (click)="logoSelected(logo)">
+            <img class="img-fluid" [src]="logo.Url">
+          </div>
+        </div>
+      </div>
+  </div>

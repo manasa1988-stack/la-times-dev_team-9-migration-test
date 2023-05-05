@@ -1,0 +1,54 @@
+.title {
+    font-weight: bold;
+    border-bottom: solid 1px rgba(0,0,0,0.6);
+}
+
+.body {
+    min-width: 0;
+    min-height: 6.25em;
+}
+
+.footer {
+    text-align: right;
+}
+
+.modalBody {
+    padding: 2rem;
+}
+
+.submit-btn {
+    width: 100%;
+    display: inline-flex;
+}
+
+.submit-btn .mat-raised-button.mat-primary {
+    background-color: #db3021 !important;
+}
+
+img {
+    width: 100%;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+button {
+    width: 100%;
+    height: 3rem;
+    margin-bottom: 1rem;
+    margin-left: 0;
+}
+
+@media screen and (min-width:768px) {
+    .submit-btn {
+        width: auto;
+    }
+
+    .body {
+        min-width: 23.5rem;
+    }
+
+    button {
+        width: 8rem;
+        margin-bottom: 0;
+        margin-left: 1rem;
+    }
+}

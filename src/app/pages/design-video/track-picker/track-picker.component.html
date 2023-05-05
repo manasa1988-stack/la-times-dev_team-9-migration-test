@@ -1,0 +1,28 @@
+<div class="row pt-4">
+    <div class="col-12 col-md-6 mb-4">
+        <h4><strong>Select Audio track</strong></h4>
+        <!--p>Current track: Audio track {{getTrackNumber()}}</p-->
+        <track-picker-modal
+            [audioTracks]="audioTracks"
+            [selectedTrack]="selectedTrack"
+            (_saveParent)="saveParentFromComponent($event)"
+        ></track-picker-modal>
+        <ng-container *ngFor="let track of [selectedTrack]">
+            <audio controls>
+                <source src="{{track}}" type="audio/mp3">
+                Your browser does not support the audio element.
+            </audio>
+        </ng-container>
+    </div>
+    <!--div class="col-12 col-md-6 mb-4">
+        <button
+            class="mat-stroked-button"
+            title=""
+            mat-raised-button
+            (click)="openTrackDialog()"
+            color="Base">
+            Select a track
+        </button>
+    </div-->
+</div>
+

@@ -1,0 +1,131 @@
+<div class="card progress-summary mb-3 rounded-0" *ngIf="orderItems !== undefined">
+  <div class="card-header font-weight-bold">
+    Progress Summary
+    <small class="pl-1"> {{orderItems.length}} of {{order?.HasMultipleConfigurableItems ? order.OrderItems.length : 1}} {{order?.HasMultipleConfigurableItems
+      ? 'components' : 'component'}} completed</small>
+  </div>
+
+
+  <div class="card-body" *ngIf="!order?.HasMultipleConfigurableItems; else multipleProducts">
+    <div *ngIf="currentOrderItem.IsOrderItemConfigurable" class="row">
+
+      <div class="col-12 col-md-6 col-lg-5" [ngClass]="order.isOtherInfoVisible ? '' : 'col-sm-5'">
+        <ul class="list-inline mb-0 progresssummary-status-list">
+          <li class="list-inline-item mr-0 text-center" auto-test="switchTab0" (click)="switchTab(0)">
+            <i class="fa fa-calendar fa-2x" [ngClass]="currentOrderItem.isScheduleCompleted ? 'text-success' : 'text-danger'" aria-hidden="true"></i>
+            <div class="text-muted small">
+              <i class="fa fa-check-circle text-success" *ngIf="currentOrderItem?.isScheduleCompleted" aria-hidden="true"></i>
+              SCHEDULE
+            </div>
+          </li>
+          <li class="my-2 d-inline-block align-top">
+            <i class="material-icons text-muted">chevron_right</i>
+          </li>
+          <li class="list-inline-item mr-0 text-center" auto-test="switchTab1" (click)="switchTab(1)">
+
+            <i class="fa fa-laptop fa-2x" [ngClass]="currentOrderItem.isLayoutCompleted ? 'text-success' : 'text-danger'" aria-hidden="true"></i>
+            <div class="text-muted small">
+              <i class="fa fa-check-circle text-success" *ngIf="currentOrderItem?.isLayoutCompleted" aria-hidden="true"></i>
+              LAYOUT
+            </div>
+          </li>
+
+          <li class="my-2 d-inline-block align-top" *ngIf="order.isOtherInfoVisible">
+            <i class="material-icons text-muted">chevron_right</i>
+          </li>
+
+          <li class="list-inline-item mr-0 text-center" *ngIf="order.isOtherInfoVisible" auto-test="switchTab2" (click)="switchTab(2)">
+            <i class="material-icons text-success fa-2x" [ngClass]="currentOrderItem.isOtherInfoCompleted ? 'text-success' : 'text-danger'"
+              aria-hidden="true">note_add</i>
+            <div class="text-muted small">
+              <i class="fa fa-check-circle text-success" *ngIf="currentOrderItem?.isOtherInfoCompleted" aria-hidden="true"></i>
+              OTHER INFO</div>
+          </li>
+
+          <li class="my-2 d-inline-block align-top" *ngIf="order.isOtherInfoVisible && isWibbitzProduct()">
+            <i class="material-icons text-muted">chevron_right</i>
+          </li>
+
+          <li class="list-inline-item mr-0 text-center" *ngIf="order.isOtherInfoVisible && isWibbitzProduct()" auto-test="switchTab3" (click)="switchTab(3)">
+            <i
+              class="fa fa-film fa-2x"
+              [ngClass]="currentOrderItem?.isLayoutCompleted ? 'text-success' : 'text-danger'"
+              aria-hidden="true"></i>
+            <div class="text-muted small">
+              <i class="fa fa-check-circle text-success" *ngIf="currentOrderItem?.isLayoutCompleted" aria-hidden="true"></i>
+              VIDEO</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-7" [ngClass]="order.isOtherInfoVisible ? '' : 'col-sm-7'">
+        <div class="pr-1 d-inline-block status-icon float-left float-sm-none">
+          <i [ngClass]="currentOrderItem.IsOrderItemComplete  ? 'fa fa-check-circle text-success' : 'fa fa-times-circle-o text-danger'"
+            aria-hidden="true"></i>
+        </div>
+        <a (click)="moveToTopView()">{{currentOrderItem?.Section?.Product?.Name}} - {{currentOrderItem?.SectionAndPositionName}}
+          <span *ngIf="currentOrderItem?.IsDfpOrderItem && currentOrderItem?.Subsection"> - {{currentOrderItem?.Subsection.Name}} </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <ng-template #multipleProducts>
+    <div class="card-body">
+      <div *ngFor="let orderItem of order.OrderItems">
+        <div *ngIf="orderItem.IsOrderItemConfigurable" class="row mb-2">
+          <div class="col-12 col-md-5 col-lg-4" [ngClass]="order.isOtherInfoVisible ? '' : 'col-sm-5'">
+            <ul class="list-inline mb-0 progresssummary-status-list">
+              <li class="list-inline-item mr-0 text-center" [ngClass]="orderItem?.isScheduleCompleted ? '' : 'ml-2'" auto-test="switchTab0">
+                <i class="fa fa-calendar fa-2x" *ngIf="currentOrderItemId == orderItem.Id" [ngClass]="orderItem.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true" (click)="switchTab(0)"></i>
+                <a class="fa fa-calendar fa-2x" *ngIf="currentOrderItemId != orderItem.Id" [ngClass]="orderItem.isScheduleCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true" (click)="navigateProduct(orderItem.Id, 0)"></a>
+                <div class="text-muted small">
+                  <i class="fa fa-check-circle text-success" *ngIf="orderItem?.isScheduleCompleted" aria-hidden="true"></i>
+                  SCHEDULE</div>
+              </li>
+              <li class="my-2 d-inline-block align-top">
+                <i class="material-icons text-muted">chevron_right</i>
+              </li>
+              <li class="list-inline-item mr-0 text-center" [ngClass]="orderItem?.isLayoutCompleted ? '' : 'ml-2'" auto-test="switchTab1">
+                <i class="fa fa-laptop fa-2x" *ngIf="currentOrderItemId == orderItem.Id" [ngClass]="orderItem.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true" (click)="switchTab(1)"></i>
+                <a class="fa fa-laptop fa-2x" *ngIf="currentOrderItemId != orderItem.Id" (click)="navigateProduct(orderItem.Id, 1)" [ngClass]="orderItem.isLayoutCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true"></a>
+                <div class="text-muted small">
+                  <i class="fa fa-check-circle text-success" *ngIf="orderItem?.isLayoutCompleted" aria-hidden="true"></i>
+                  LAYOUT</div>
+              </li>
+
+              <li class="my-2 d-inline-block align-top" *ngIf="order.isOtherInfoVisible">
+                <i class="material-icons text-muted">chevron_right</i>
+              </li>
+
+              <li class="list-inline-item mr-0 text-center" [ngClass]="orderItem?.isOtherInfoCompleted ? '' : 'ml-2'" *ngIf="order.isOtherInfoVisible" auto-test="switchTab2" (click)="switchTab(2)">
+                <i class="material-icons text-success fa-2x" *ngIf="currentOrderItemId == orderItem.Id" [ngClass]="orderItem.isOtherInfoCompleted ? 'text-success' : 'text-danger'"
+                  aria-hidden="true">note_add</i>
+                <a (click)="navigateProduct(orderItem.Id, 2)" *ngIf="currentOrderItemId != orderItem.Id">
+                  <i class="material-icons text-success fa-2x" [ngClass]="orderItem.isOtherInfoCompleted ? 'text-success' : 'text-danger'"
+                    aria-hidden="true">note_add</i>
+                </a>
+                <div class="text-muted small">
+                  <i class="fa fa-check-circle text-success" *ngIf="orderItem?.isOtherInfoCompleted" aria-hidden="true"></i>
+                  OTHER INFO</div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-12 col-md-7 col-lg-7" [ngClass]="order.isOtherInfoVisible ? '' : 'col-sm-7'">
+            <div class="pr-1 d-inline-block status-icon float-left float-sm-none">
+              <i [ngClass]="orderItem.IsOrderItemComplete  ? 'fa fa-check-circle text-success' : 'fa fa-times-circle-o text-danger'" aria-hidden="true"></i>
+            </div>
+            <a (click)="scrollTop(orderItem.Id)">{{orderItem?.Section?.Product?.Name}} - {{orderItem?.SectionAndPositionName}}
+              <span *ngIf="orderItem?.IsDfpOrderItem && orderItem?.Subsection"> - {{orderItem?.Subsection.Name}} </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</div>

@@ -1,0 +1,40 @@
+.msgWrap {
+    padding: 10px;
+    background: #6699ff;
+}
+  .msgContent {
+    color: white;
+    font-weight: normal;
+}
+
+.custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+  }
+  .custom-day.today {
+    background-color: #6c757d;
+  }
+  .custom-day.selected {
+    background-color: rgb(252, 249, 68);
+  }
+  .custom-day.range{
+    border: 2px;
+    border-color: rgb(252, 249, 68);
+    //color: white;
+  }
+  .custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+  }
+  .custom-day.discounted {
+    background-color: #d2f8d1;
+  }
+  .custom-day:hover {
+    border: 1px solid #ffc107;
+  }
+  .custom-day.disabled {
+    color: #a8a8a8;
+    cursor: not-allowed;
+  }

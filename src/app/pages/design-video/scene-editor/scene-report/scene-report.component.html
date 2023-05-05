@@ -1,0 +1,11 @@
+<div
+    class="alert alert-danger alert-messages mt-4"
+    [ngClass]="{'hide': !hasErrors()}"
+    *ngIf="helper"
+    >
+    <div *ngFor="let error of helper">
+        <ng-container *ngIf="error[1]">
+            <i class="fa fa-exclamation-triangle mt-1"></i> {{parseError(error)}}
+        </ng-container>
+    <div>
+</div>

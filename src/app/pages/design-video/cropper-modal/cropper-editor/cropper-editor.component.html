@@ -1,0 +1,148 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+    <h4>Photo Upload</h4>
+    <button
+        mat-icon-button type="button"
+        class="p-0 m-0 close"
+        aria-label="Close"
+        (click)="closeModal()"
+        >
+        <mat-icon aria-label="Close">close</mat-icon>
+    </button>
+</div>
+<div class="modal-body px-4 pt-0">
+    <div class="border-bottom border-dark">
+        <div class="row mb-3 upload-btn">
+            <div class="pb-1 col-12 col-sm-6 col-md-6 col-lg-4 btn-file">
+                <input
+                class="--hidden"
+                #uploader
+                #fileUpload
+                type="file"
+                accept="image/jpeg"
+                (change)="_uploadImage($event)" />
+
+                <button
+                    title="Upload Image"
+                    mat-raised-button color="primary"
+                    class="btn-block"
+                    (click)="fileUpload.click()"
+                    auto-test="uploadImage">
+                    <mat-icon>file_upload</mat-icon>
+                    UPLOAD IMAGE
+                </button>
+            </div>
+            <div class="col-md-5 small pb-1 ">
+                <p class="mb-0 text-muted pb-0">
+                    <b>File types:</b>
+                    JPG
+                </p>
+                <p class="mb-0 text-muted pb-0">
+                    <b>Max. file size:</b> 10 MB
+                </p>
+                <p class="mb-0 text-muted pb-0"><b>Recommended dimensions:</b> At least <b>{{minWidth}}</b> x <b>{{minHeight}}</b> px</p>
+            </div>
+        </div>
+        <div class="row py-2">
+            <div class="col-md-12">
+                <div class="warning mb-2" *ngIf="sizeError">
+                    <i class="material-icons warning" style="transform: translateY(5px);">warning</i>
+                    File is too large, maximum permitted file size is: 10MB
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-3" >
+        <div class="col-12 text-center">
+            <button
+                title="Rotate"
+                mat-mini-fab class="bg-secondary"
+                (click)="rotateRight()">
+                <mat-icon class="rotate-icon">rotate_90_degrees_ccw</mat-icon>
+            </button>
+            <button
+                title="Zoom In"
+                mat-mini-fab
+                class="bg-secondary"
+                (click)="zoomIn()">
+                <mat-icon>zoom_in</mat-icon>
+            </button>
+            <button
+                title="Zoom Out"
+                mat-mini-fab class="bg-secondary"
+                (click)="zoomOut()"
+                >
+                <mat-icon>zoom_out</mat-icon>
+            </button>
+            <button
+                title="Flip Vertically"
+                mat-mini-fab
+                class="bg-secondary"
+                (click)="flipVertical()">
+                <mat-icon>swap_vert</mat-icon>
+            </button>
+            <button
+                title="Flip Horizontally"
+                mat-mini-fab
+                class="bg-secondary"
+                (click)="flipHorizontal()">
+                <mat-icon>swap_horiz</mat-icon>
+            </button>
+            <button
+                title="Reset"
+                mat-mini-fab
+                class="bg-secondary"
+                (click)="reset()">
+                <mat-icon>undo</mat-icon>
+            </button>
+            </div>
+            <div class="col-12 mt-2 text-center" >
+        </div>
+    </div>
+
+
+    <div class="row position-relative">
+        <div class="col-12 cropper-loading" *ngIf="!cropperReady">
+            <div class="loading-flag">
+                <mat-spinner
+                    [diameter]="60">
+                </mat-spinner>
+            </div>
+        </div>
+        <div class="col-md-12"
+            [ngStyle]="{
+                'height': cropperReady ? 'auto' : '0',
+                'overflow': cropperReady ? 'none' : 'hidden'
+            }">
+            <div class="cropperImageContainer">
+                <angular-cropper
+                    (touchstart)="cropperTouchStart($event)"
+                    #angularCropper
+                    [cropperOptions]="config"
+                    [imageUrl]="url"
+                    (ready)="ready($event)"
+                    (crop)="cropperChange($event)"
+                    >
+                </angular-cropper>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalfooter my-3">
+        <button
+            [disabled]="!isValidSource()"
+            mat-raised-button color="primary"
+            class="text-uppercase mr-2"
+            (click)="crop()"
+            >
+            accept & continue
+        </button>
+
+        <button
+            mat-raised-button color="accent"
+            class="text-uppercase"
+            (click)="closeModal()"
+            >
+            Cancel</button>
+    </div>
+</div>

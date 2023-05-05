@@ -1,0 +1,111 @@
+.scene-editor {
+    background-color: #fafafa;
+    margin: 0;
+    padding-top: 1rem;
+}
+
+.row {
+    margin: 0;
+}
+
+.--relative {
+    position: relative;
+    width: 60px;
+}
+
+.warning-icon {
+    font-size: 1.34rem;
+    color: red;
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    height: 2rem;
+}
+
+.warning-icon-yellow {
+    font-size: 1.34rem;
+    color: #fbbc05;
+    position: absolute;
+    top: -0.5rem;
+    right: 0.5rem;
+    height: 2rem;
+}
+
+.--red {
+    color: red;
+}
+
+.--input-col {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.--input-col-left {
+    padding-right: 0.4375rem;
+}
+
+.--input-col-right {
+    padding-left: 0.4375rem;
+}
+
+::ng-deep .mat-form-field-flex {
+    background: white;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.card-body {
+    position: relative;
+}
+
+.card-body::after {
+    content: '';
+    float: left;
+    padding-top: 60%;
+}
+
+.card-body-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.card-footer {
+    text-align: center;
+}
+
+.button-maring-r {
+    margin-right: 1rem;
+}
+
+.preview img {
+    width: 100%;
+}
+
+.loading-container {
+    position: relative;
+    display: flex;
+    background-color: white;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    margin: 0;
+
+    .loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+
+        p {
+            text-align: center;
+        }
+    }
+}
+
+.loading-container::after {
+    content: '';
+    float: left;
+    padding-top: 56%;
+}

@@ -1,0 +1,51 @@
+{
+  "Results": [
+    {
+      "AdSSId": 2893415,
+      "AditId": 6263541,
+      "IsExpiredInAdit": false,
+      "LastUpdated": "2018-03-20T03:23:09.393",
+      "FirstRunDate": "2018-03-26T00:00:00",
+      "LastRunDate": null,
+      "OrderNotes": null,
+      "ServiceType": "Self Service",
+      "Package": "legacy.com - legacy.com",
+      "Price": 140.59,
+      "Status": 2,
+      "IsDraft": false,
+      "IsQueued": false,
+      "IsExpired": false,
+      "IsCreatedInAdSS": true,
+      "IsRenewable": false,
+      "IsOrderCancelable": false,
+      "PurchaseDate": "2018-03-19T00:00:00",
+      "Adslist": [
+        {
+          "PublicationImage": "https://advertising-latimes.tribstage.com/Assets/Images/products/2251/logo.png",
+          "PublicationName": "Los Angeles Times",
+          "Details": "Obituaries 7 Lines Color: Yes Full Run",
+          "Size": "One-Column",
+          "Rundates": [
+            "2018-03-26T00:00:00"
+          ],
+          "AdPreview": "https://advertising-latimes.tribstage.com/Orders/GetAdMaterialPreview?orderId=2616346&adMaterialId=415174&externalAdMaterialId=1&isColor=True&previewSize=2&systemName=adss&systemKey=2616346&cacheBust=043505"
+        },
+        {
+          "PublicationImage": "https://advertising-latimes.tribstage.com/Assets/Images/products/2223/logo.png",
+          "PublicationName": "legacy.com",
+          "Details": "legacy.com",
+          "Size": "",
+          "Rundates": [
+            "2018-03-26T00:00:00",
+            "2018-03-26T00:00:00"
+          ],
+          "AdPreview": "https://advertising-latimes.tribstage.com/Orders/GetAdMaterialPreview?orderId=2616288&adMaterialId=415105&externalAdMaterialId=1&isColor=False&previewSize=2&systemName=adss&systemKey=2616288&cacheBust=073812"
+        }
+      ]
+    }
+  ],
+  "PageSize": 25,
+  "PageNumber": 1,
+  "Total": 1,
+  "NumberOfPages": 1
+}

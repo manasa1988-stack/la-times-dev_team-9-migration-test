@@ -1,0 +1,46 @@
+<!-- <div class="my-3" [ngSwitch]="code">
+    <div *ngSwitchCase="'OrderNotFound'">
+        <h1>Order not found. Please check the url and try again.</h1>
+        <p>Error code: 3008</p>
+        <h3>
+            <strong>Suggestions: </strong>
+        </h3>
+
+        <p>Contact customer support at {{customerSupport?.Phone}} or {{customerSupport?.CustomerSupportEmail}} for additional information.</p>
+    </div>
+
+    <div *ngSwitchCase="'UnAuthorized'">
+        <h1>You are not authorized to view this page</h1>
+        <p>Error code: 401</p>
+        <h3>
+            <strong>Suggestions: </strong>
+        </h3>
+
+        <p>Contact customer support at {{customerSupport?.Phone}} or {{customerSupport?.CustomerSupportEmail}} for additional information.</p>
+        <p>Please try your request at a later time.</p>
+    </div>  
+    <div *ngSwitchCase="'Error'">
+        <h1>Error Occurred from Server</h1>
+        <p>Error code: 500</p>
+        <h3>
+            <strong>Suggestions: </strong>
+        </h3>
+
+        <p>Contact customer support at {{customerSupport?.Phone}} or {{customerSupport?.CustomerSupportEmail}} for additional information.</p>
+        <p>Please try your request at a later time.</p>
+    </div>  
+
+</div> -->
+
+<div class="my-3">
+    <div>
+        <h1 innerHtml="{{customError?.Message}}"></h1>
+        <p>Error code: {{customError?.Code}}</p>
+        <h3>
+            <strong>Suggestions: </strong>
+        </h3>
+        <div class="col-md-12">
+        <p *ngFor="let suggestion of customError?.Suggestions" >{{suggestion}}</p>
+        </div>
+    </div>
+</div>

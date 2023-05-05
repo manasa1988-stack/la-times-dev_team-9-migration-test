@@ -1,0 +1,50 @@
+.title {
+    font-weight: bold;
+}
+
+.body {
+    min-width: 0;
+    min-height: 6.25em;
+    max-height: 50vh
+}
+
+.footer {
+    text-align: right;
+}
+
+.hidden {
+    display: none;
+}
+
+.--hidden {
+    display: none;
+}
+
+.submit-btn {
+    width: 100%;
+    display: inline-flex;
+}
+
+button {
+    width: 100%;
+    height: 3rem;
+    margin-bottom: 2rem;
+    margin-left: 0;
+}
+
+@media screen and (min-width:768px) {
+    .submit-btn {
+        width: auto;
+    }
+
+    .body {
+        min-width: 23.5rem;
+    }
+
+    button {
+        width: 8rem;
+        margin-bottom: 0;
+        margin-left: 1rem;
+    }
+}
+

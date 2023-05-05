@@ -1,0 +1,77 @@
+<div *ngIf="!isDataReady; else dataReady">
+  <mat-spinner></mat-spinner>
+</div>
+
+<ng-template #dataReady>
+
+  <div *ngIf="displayError">
+    <error-alert></error-alert>
+  </div>
+
+  <div class="row mb-2" *ngIf="!displayError">
+    <div class="col-md-10 admin-top-nav">
+      <ul class="list-inline">
+        <li class="list-inline-item" *ngFor="let portal of portals">
+          <a href="{{portal.ProdHost}}" class="btn btn-outline-primary">{{portal.Name}}</a>
+        </li>
+        <li class="list-inline-item">
+          <a href="/admin/portal/regression" class="btn btn-outline-primary">Regression</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-2 pl-0">
+      <ul class="list-inline text-right">
+        <li class="list-inline-item">
+          <a class="" href="/dashboard">
+            Dashboard
+          </a>
+        </li>
+        <li class="list-inline-item">
+          <a class="" href="/my-orders">
+            Orders
+          </a>
+        </li>
+        <li class="list-inline-item">
+          <a class="" href="/draftorders">
+            Drafts</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!displayError">
+    <div class="col-md-12">
+      <h1>REGRESSION LINKS - {{environmentName}}</h1>
+    </div>
+    <div class="col-md-12 admin-portal-tabs regression-table">
+      <div class="row border-bottom border-top py-2 bg-secondary text-white mx-0">
+        <div class="col-5 py-2">
+          <i class="material-icons pr-2 header-flash-icon">flash_on</i> BU - PRODUCT TYPE - SECTION
+        </div>
+        <div class="col-3 py-2">
+          POSITION
+        </div>
+        <div class="col-4 py-2">
+          DESCRIPTION
+        </div>
+      </div>
+
+      <div class="row row-hover border-bottom mx-0" *ngFor="let regressionLink of regressionLinks">
+        <div class="col-5 py-2">
+          <span class="flash-icon">
+            <i class="material-icons" *ngIf="regressionLink.PortalProductGroupLink.IsRegression">flash_on</i>
+          </span>
+          <a [href]="'/orders/create?' + regressionLink.PortalProductGroupLink.QueryString" target="blank">{{regressionLink.BusinessUnitName + ' - ' + regressionLink.ProductGroupName + ' - ' + regressionLink.PortalProductGroupLink.SectionName}}</a>
+        </div>
+        <div class="col-3 py-2 bg-light ">
+          {{regressionLink.PortalProductGroupLink.PositionName}}
+        </div>
+        <div class="col-4 py-2">
+          {{regressionLink.PortalProductGroupLink.Description}}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ng-template>

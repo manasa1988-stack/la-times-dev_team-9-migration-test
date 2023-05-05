@@ -1,0 +1,40 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+    <h3>{{buUnit.MarketName}} ({{buUnit.Code}}): {{state.Name}}</h3>
+
+    <button mat-icon-button type="button" (click)="activeModal.close()">
+        <mat-icon aria-label="Close" class="margin-top-neg10">close</mat-icon>
+    </button>
+</div>
+
+<div class="modal-body px-4 pt-0">
+    <div class="row my-4">
+        <div class="col-md-6">Search City:
+            <input type="text" [formControl]="searchText" />
+        </div>
+        <div class="col-md-6">
+            <a class="text-primary" (click)="updateCheckValue(true)"><u>Select All</u></a>
+            <a class="text-primary pl-2" (click)="updateCheckValue(false)"><u>Deselect All</u></a>
+        </div>
+    </div>
+    <div class="row my-4 custom-scroll">
+        <div class="col-12" *ngIf="!isCitiesReady; else showCitiesTemplate">
+            <mat-spinner [diameter]="60"></mat-spinner>
+        </div>
+        <ng-template #showCitiesTemplate>
+            <div *ngIf="selectedCities === undefined || selectedCities === null; else showCities">
+                <error-alert></error-alert>
+            </div>
+            <ng-template #showCities>
+                <div class="col-md-12" *ngFor="let city of cities | search: searchText.value">
+                    <mat-checkbox type="checkbox" [checked]="city.IsChecked" (change)="updateCheckValue($event.checked, city)">{{city.Name}}</mat-checkbox>
+                </div>
+            </ng-template>
+        </ng-template>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button mat-raised-button color="accent" class="float-right mx-2" (click)="activeModal.close()">Cancel</button>
+            <button mat-raised-button color="primary" class="float-right mx-2" (click)="saveSelectedCities()">Proceed</button>
+        </div>
+    </div>
+</div>

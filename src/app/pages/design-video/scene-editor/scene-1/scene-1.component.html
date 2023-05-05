@@ -1,0 +1,153 @@
+<form #sceneBody="ngForm" *ngIf="sceneHelper">
+    <div class="row pt-4">
+        <div class="col-12 --input-col mb-2">
+            <p
+                class="--red"
+                *ngIf="
+                    sceneHelper.model.firstName.length + (package === 'SDT' && sceneHelper.model.nickName ? sceneHelper.model.nickName.length : 0) + (sceneHelper.model.middleName ? sceneHelper.model.middleName.length : 0) + sceneHelper.model.lastName.length + (package === 'SDT'?3:2) > 78
+                    || sceneHelper.currentLines?.name > sceneHelper.lineLimits?.name
+                    "
+                >
+                Name is too long <span *ngIf="sceneHelper.currentLines?.name > sceneHelper.lineLimits?.name">({{sceneHelper.currentLines?.name}}/{{sceneHelper.lineLimits?.name}} lines)</span>
+            </p>
+        </div>
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    spellcheck
+                    matInput placeholder="First name"
+                    #firstNameInput="ngModel"
+                    name="firstNameInput"
+                    required
+                    [(ngModel)]="sceneHelper.model.firstName"
+                    (ngModelChange)="validate($event, 'firstName')">
+                <mat-hint *ngIf="!firstNameInput.valid">
+                    <span class="mat-error">First name is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!firstNameInput.valid">
+                    First name is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div
+            class="col-12 --input-col mb-4"
+            *ngIf="package === 'SDT' || package == 'LAT'"
+            >
+            <mat-form-field class="w-100">
+                <input
+                    spellcheck
+                    matInput placeholder="Middle Name"
+                    #middleNameInput="ngModel"
+                    name="middleNameInput"
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.middleName">
+            </mat-form-field>
+        </div>
+        <div
+            class="col-12 --input-col mb-4"
+            *ngIf="package === 'SDT'">
+            <mat-form-field class="w-100">
+                <input
+                    spellcheck
+                    matInput placeholder="Nick Name"
+                    #nickNameInput="ngModel"
+                    name="nickNameInput"
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.nickName">
+                <mat-hint *ngIf="!nickNameInput.valid">
+                    <span class="mat-error">Nick name is <strong>required</strong></span>
+                </mat-hint>
+            </mat-form-field>
+        </div>
+        <div class="col-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    spellcheck
+                    matInput placeholder="Last name"
+                    #lastNameInput="ngModel"
+                    required
+                    name="lastNameInput"
+                    [(ngModel)]="sceneHelper.model.lastName"
+                    (ngModelChange)="validate($event, 'lastName')">
+                <mat-hint *ngIf="!lastNameInput.valid">
+                    <span class="mat-error">Last name is <strong>required</strong></span>
+                </mat-hint>
+                <mat-error *ngIf="!lastNameInput.valid">
+                    Last name is <strong>required</strong>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 --input-col --input-col-left  mb-1">
+            <mat-form-field class="w-100">
+                <input
+                    matInput
+                    [matDatepicker]="birthPicker"
+                    placeholder="Birth Date"
+                    #birthDateInput="ngModel"
+                    readonly
+                    name="birthDateInput"
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.birthDate">
+                <mat-datepicker-toggle matSuffix [for]="birthPicker"></mat-datepicker-toggle>
+                <mat-datepicker #birthPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6 --input-col --input-col-right mb-1">
+            <mat-form-field class="w-100">
+                <input
+                    matInput
+                    [matDatepicker]="deathPicker"
+                    placeholder="Death Date"
+                    readonly
+                    #deathDateInput="ngModel"
+                    name="deathDateInput"
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.deathDate">
+                <mat-datepicker-toggle matSuffix [for]="deathPicker"></mat-datepicker-toggle>
+                <mat-datepicker #deathPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-12 mb-4 move-up">
+            <span class="inline-button" (click)="clearDate()">Remove Dates</span>
+        </div>
+        <div class="col-12 col-md-6 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <input
+                    spellcheck
+                    matInput
+                    placeholder="Age"
+                    maxlength="10"
+                    #ageInput="ngModel"
+                    name="ageInput"
+                    (ngModelChange)="_updateInfo()"
+                    [(ngModel)]="sceneHelper.model.age">
+            </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-12 --input-col mb-4">
+            <mat-form-field class="w-100">
+                <textarea
+                    spellcheck
+                    rows="5"
+                    matInput
+                    placeholder="Text"
+                    maxlength="150"
+                    (keydown.enter)="$event.preventDefault()"
+                    (ngModelChange)="sceneHelper.model.description = $event.replace(regexp,'')"
+                    (ngModelChange)="_updateInfo()"
+                    #descriptionInput="ngModel"
+                    name="description"
+                    [ngModel]="sceneHelper.model.description">
+                </textarea>
+                <mat-hint *ngIf="sceneHelper.currentLines.description > sceneHelper.lineLimits?.description">
+                    <span class="mat-error">Text is too long</span>
+                </mat-hint>
+                <mat-hint
+                    [ngClass]="{'mat-error': sceneHelper.currentLines.description > sceneHelper.lineLimits?.description}"
+                    align="end">{{sceneHelper.model.description?.length}} / 150 characters, {{sceneHelper.currentLines.description}}/{{sceneHelper.lineLimits?.description}} lines</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,35 @@
+﻿<div class="row border-bottom border-top py-2">
+    <div *ngIf="isDraft; else orderType" class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4 px-0 ">
+        <span class="ml-4">DRAFT#</span>
+    </div>
+    <ng-template #orderType>
+        <div class="col-xl-1 col-lg-2 col-md-2 col-sm-2 col-4">
+            <span>ORDER#</span>
+        </div>
+    </ng-template>
+    <div class="col-xl-3 col-lg-2 d-none d-xl-block">
+        <span class="d-inline-block pr-5"> LAST SAVED</span>
+        <span class="d-inline-block">
+            RUN DATE
+            <mat-icon class="font-13 help-icon" placement="bottom" ngbTooltip="Click on the packages below to view complete list of run dates">help</mat-icon>
+        </span>
+    </div>
+    <div class="col-md-2 col-lg-2 d-none d-xl-none">
+        LAST SAVED
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 ">
+        PACKAGE
+    </div>
+    <div class="col-md-2 col-lg-2 d-md-block d-none">
+        NOTES
+    </div>
+    <div class="col-xl-1 col-sm-2 d-none d-sm-block">
+        PRICE
+    </div>
+    <div class="col-xl-1 col-lg-2 col-md-1 col-sm-2 d-none d-sm-block">
+        STATUS
+    </div>
+    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-3 text-right">
+        ACTION
+    </div>
+</div>

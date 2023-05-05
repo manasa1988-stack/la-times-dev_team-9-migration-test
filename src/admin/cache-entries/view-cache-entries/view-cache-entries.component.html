@@ -1,0 +1,23 @@
+<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase">Cache Values : {{cacheKey}}</h4>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" (click)="onClose()">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <div class="row">
+    <mat-form-field class="example-full-width col-12" *ngFor="let cacheValue of cacheValues;let index = index">
+      <div class="mb-3">
+        <span class="font-weight-bold"> {{cacheValue.Server}}</span>
+          <span class="status_indicator">
+            <i class="material-icons" [ngClass]="(index == 0 || (index > 0 && cacheValue.Values == cacheValues[index-1].Values)) ? 'text-success' : 'text-danger'">
+              fiber_manual_record
+            </i>
+          </span>
+      </div>
+      <div>
+        <textarea matInput matTextareaAutosize [value]="cacheValue.Values"></textarea>
+      </div>
+    </mat-form-field>
+  </div>
+</div>

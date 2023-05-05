@@ -1,0 +1,41 @@
+﻿<mat-list class="p-0">
+  <div *ngIf="!isDataReady; else dataReady">
+    <mat-spinner></mat-spinner>
+  </div>
+  <ng-template #dataReady>
+    <div class="w-100">
+      <div *ngIf="cards === null; else showCardsList">
+          <error-alert></error-alert>
+      </div>
+
+      <ng-template #showCardsList>
+        <mat-list-item *ngFor="let card of cards">
+          <!-- <div class="col-md-8 align-text-top pl-0"> -->
+          <div class="col-5 col-sm-6 align-text-top p-0" >
+            <p mat-line class="mb-0"> {{card.TypeName}} </p>
+            <p mat-line class="mb-0"> {{card.Number | slice:-8 | creditcardnumber}} </p>
+            <p mat-line class="mb-0" [ngClass]="card.IsExpired ? 'text-danger' : ''"> {{card.ExpirationMonth }}/{{card.ExpirationYear }}
+              <span class="small" *ngIf="card.IsExpired">(expired)</span>
+            </p>
+          </div>
+          <!-- <div class="col-md-4 pl-0 pr-0"> -->
+          <div *ngIf="!isReadOnly" class="col-7 col-sm-6 p-0 text-right creditcard-actionbtns">
+            <button mat-icon-button (click)="editCard(card)" title="Edit" auto-test="editCard">
+              <mat-icon>mode_edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteCreditCard(card)" title="Delete" auto-test="deleteCard">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button (click)="setPrimaryCard(card)" title="Primary" auto-test="primaryCard" [disabled]="card.IsExpired">
+              <!-- <mat-icon class="ml-2">star_border</mat-icon>
+            <span class="d-block position-relative t-20"><u>Primary</u></span>-->
+              <mat-icon class="">{{card.IsPrimary ? 'star_rate' : 'star_border'}}</mat-icon>
+              <span *ngIf="card.IsPrimary" class="mat-caption d-block">Primary</span>
+            </button>
+          </div>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </ng-template>
+    </div>
+  </ng-template>
+</mat-list>

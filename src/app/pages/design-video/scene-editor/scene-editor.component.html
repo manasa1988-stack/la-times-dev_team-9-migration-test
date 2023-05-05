@@ -1,0 +1,422 @@
+<div class="row scene-editor" *ngIf="scene" #sceneEditor>
+    <div class="col-12 col-md-6 mb-4">
+        <div class="loading-container" *ngIf="!scene">
+            <div class="loading">
+                <mat-progress-spinner mode="indeterminate" [diameter]="30" class="align-middle d-inline-block"></mat-progress-spinner>
+                <p>Loading scene</p>
+            </div>
+        </div>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_01_PERSON.name">
+            <scene-1-preview
+                [sceneHelper]="sceneHelper"
+                [scene]="scene"
+                (setCoverSrc)="setCoverSrc.emit($event)">
+            </scene-1-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_03.name">
+            <scene-2-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-2-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_02_EVENTS.name">
+            <scene-3-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-3-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_04.name">
+            <scene-4-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-4-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_05.name">
+            <scene-5-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-5-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_06.name">
+            <scene-6-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-6-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_07.name">
+            <scene-7-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-7-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_08.name">
+            <scene-8-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-8-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_09.name">
+            <scene-9-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-9-preview>
+        </ng-container>
+
+        <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_10.name">
+            <scene-10-preview #preview
+                [helper]="sceneHelper"
+                [scene]="scene">
+            </scene-10-preview>
+        </ng-container>
+
+        <div class="controls pt-4">
+            <button
+                class="button-maring-r"
+                mat-raised-button
+                [disabled]="scene.isDefaultScene"
+                (click)="deleteConfirm()"
+                color="basic">
+                Delete
+            </button>
+
+            <button
+                class="button-maring-r"
+                mat-raised-button
+                (click)="_duplicateScene()"
+                color="basic">
+                Duplicate
+            </button>
+
+            <!--button
+                class="button-maring-r"
+                mat-raised-button
+                [disabled]="scene.isDefaultScene"
+                (click)="deleteConfirm()"
+                color="basic">
+                Change Layout
+            </button-->
+        </div>
+
+        <scene-report [helper]="parsedHelper()">
+        </scene-report>
+
+        <div *ngIf="scene" style="display:none;">
+            <ng-container *ngFor="let path of [getLayoutImage_1()]">
+                <img width="200px" src="{{path}}">
+            </ng-container>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 mb-4">
+        <mat-tab-group class="scene-editor-tabs" (selectedTabChange)="onSequenceChangeEvent($event)">
+            <mat-tab label="Info">
+                <ng-template mat-tab-label>
+                    <div class="my-3 --relative">
+                        <i class="material-icons">
+                            text_fields
+                        </i>
+
+                        <p class="my-0">
+                            Info
+                        </p>
+                        <i
+                            class="material-icons warning-icon"
+                            *ngIf="!isInfoValid()"
+                            >
+                            error_outline
+                        </i>
+                    </div>
+                </ng-template>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_01_PERSON.name">
+                    <scene-1
+                        [sceneHelper]="sceneHelper"
+                        [package]="package"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-1>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_03.name">
+                    <scene-2
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-2>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_02_EVENTS.name">
+                    <scene-3
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-3>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_04.name">
+                    <scene-4
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-4>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_05.name">
+                    <scene-5
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-5>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_06.name">
+                    <scene-6
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-6>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_07.name">
+                    <scene-7
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-7>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_08.name">
+                    <scene-8
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-8>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_09.name">
+                    <scene-9
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-9>
+                </ng-container>
+
+                <ng-container *ngIf="scene?.name === LAYOUTS.LAT_SCENE_10.name">
+                    <scene-10
+                        [sceneHelper]="sceneHelper"
+                        (updateInfo)="_updateInfo()"
+                        (update)="_update()">
+                    </scene-10>
+                </ng-container>
+            </mat-tab>
+
+            <mat-tab label="Media 1" *ngIf="isMedia1Available()">
+                <ng-template mat-tab-label>
+                    <div class="my-1 --relative">
+                        <i class="material-icons">
+                            photo
+                        </i>
+
+                        <p class="my-0">
+                            Image 1
+                        </p>
+                        <i class="material-icons warning-icon" *ngIf="!isMediaValid(target_1())">error_outline</i>
+                    </div>
+                </ng-template>
+
+                <gallery-panel
+                    [payload]="payload"
+                    [wibbitzOrderId]="wibbitzOrderId"
+                    [aditId]="aditId"
+                    [sceneHelper]="sceneHelper"
+                    [target]="target_1()"
+                    [mediaData]="sceneHelper.media_1_data"
+                    [attributeId]="getLayoutGuid_1()"
+                    [layoutId]="getLayoutId()"
+                    [draftId]="draftId"
+                    (refreshPayload)="_refresh()"
+                    [images]="images"
+                    [layoutImage]="getLayoutImage_1()"
+                    [printAdImage]="printAdImage"
+                    (setImage)="_updateImage($event)"
+                    >
+                </gallery-panel>
+            </mat-tab>
+
+            <mat-tab label="Media 2" *ngIf="isMedia2Available()">
+                <ng-template mat-tab-label>
+                    <div class="my-1 --relative">
+                        <i class="material-icons">
+                            photo
+                        </i>
+
+                        <p class="my-0">
+                            Image 2
+                        </p>
+                        <i class="material-icons warning-icon" *ngIf="!isMediaValid(target_2)">error_outline</i>
+                    </div>
+                </ng-template>
+
+                <gallery-panel
+                    [payload]="payload"
+                    [wibbitzOrderId]="wibbitzOrderId"
+                    [aditId]="aditId"
+                    [sceneHelper]="sceneHelper"
+                    [target]="target_2"
+                    [mediaData]="sceneHelper.media_2_data"
+                    [attributeId]="getLayoutGuid_2()"
+                    [layoutId]="getLayoutId()"
+                    [draftId]="draftId"
+                    (refreshPayload)="_refresh()"
+                    [images]="images"
+                    [layoutImage]="getLayoutImage_2()"
+                    [printAdImage]="printAdImage"
+                    (setImage)="_updateImage($event)"
+                    >
+                </gallery-panel>
+            </mat-tab>
+
+            <mat-tab label="Media 3" *ngIf="isMedia3Available()" [disabled]="!getLayoutImage_1() || !getLayoutImage_2()">
+                <ng-template mat-tab-label>
+                    <div class="my-1 --relative">
+                        <i class="material-icons">
+                            photo
+                        </i>
+
+                        <p class="my-0">
+                            Image 3
+                        </p>
+                    </div>
+                </ng-template>
+
+                <gallery-panel
+                    [payload]="payload"
+                    [wibbitzOrderId]="wibbitzOrderId"
+                    [aditId]="aditId"
+                    [sceneHelper]="sceneHelper"
+                    [target]="target_3"
+                    [mediaData]="sceneHelper.media_3_data"
+                    [attributeId]="getLayoutGuid_3()"
+                    [layoutId]="getLayoutId()"
+                    [draftId]="draftId"
+                    (refreshPayload)="_refresh()"
+                    [images]="images"
+                    [layoutImage]="getLayoutImage_3()"
+                    [printAdImage]="printAdImage"
+                    (setImage)="_updateImage($event)"
+                    >
+                </gallery-panel>
+            </mat-tab>
+
+            <mat-tab label="Media 4" *ngIf="isMedia4Available()" [disabled]="!getLayoutImage_3()">
+                <ng-template mat-tab-label>
+                    <div class="my-1 --relative">
+                        <i class="material-icons">
+                            photo
+                        </i>
+
+                        <p class="my-0">
+                            Image 4
+                        </p>
+                    </div>
+                </ng-template>
+
+                <gallery-panel
+                    [payload]="payload"
+                    [wibbitzOrderId]="wibbitzOrderId"
+                    [aditId]="aditId"
+                    [sceneHelper]="sceneHelper"
+                    [target]="target_4"
+                    [mediaData]="sceneHelper.media_4_data"
+                    [attributeId]="getLayoutGuid_4()"
+                    [layoutId]="getLayoutId()"
+                    [draftId]="draftId"
+                    (refreshPayload)="_refresh()"
+                    [images]="images"
+                    [layoutImage]="getLayoutImage_4()"
+                    [printAdImage]="printAdImage"
+                    (setImage)="_updateImage($event)"
+                    >
+                </gallery-panel>
+            </mat-tab>
+
+            <mat-tab label="Media 5" *ngIf="isMedia5Available()" [disabled]="!getLayoutImage_4()">
+                <ng-template mat-tab-label>
+                    <div class="my-1 --relative">
+                        <i class="material-icons">
+                            photo
+                        </i>
+
+                        <p class="my-0">
+                            Image 5
+                        </p>
+                    </div>
+                </ng-template>
+                <gallery-panel
+                    [payload]="payload"
+                    [wibbitzOrderId]="wibbitzOrderId"
+                    [aditId]="aditId"
+                    [sceneHelper]="sceneHelper"
+                    [target]="target_5"
+                    [mediaData]="sceneHelper.media_5_data"
+                    [attributeId]="getLayoutGuid_5()"
+                    [layoutId]="getLayoutId()"
+                    [draftId]="draftId"
+                    (refreshPayload)="_refresh()"
+                    [images]="images"
+                    [layoutImage]="getLayoutImage_5()"
+                    [printAdImage]="printAdImage"
+                    (setImage)="_updateImage($event)"
+                    >
+                </gallery-panel>
+            </mat-tab>
+
+            <mat-tab label="Media 6" *ngIf="isMedia6Available()" [disabled]="!getLayoutImage_5()">
+                <ng-template mat-tab-label>
+                    <div class="my-1 --relative">
+                        <i class="material-icons">
+                            photo
+                        </i>
+
+                        <p class="my-0">
+                            Image 6
+                        </p>
+                    </div>
+                </ng-template>
+
+                <gallery-panel
+                    [payload]="payload"
+                    [wibbitzOrderId]="wibbitzOrderId"
+                    [aditId]="aditId"
+                    [sceneHelper]="sceneHelper"
+                    [target]="target_6"
+                    [mediaData]="sceneHelper.media_6_data"
+                    [attributeId]="getLayoutGuid_6()"
+                    [layoutId]="getLayoutId()"
+                    [draftId]="draftId"
+                    (refreshPayload)="_refresh()"
+                    [images]="images"
+                    [layoutImage]="getLayoutImage_6()"
+                    [printAdImage]="printAdImage"
+                    (setImage)="_updateImage($event)"
+                    >
+                </gallery-panel>
+            </mat-tab>
+        </mat-tab-group>
+
+    </div>
+</div>
+
+<message-modal
+    (primaryAction)="_deleteScene()"
+    #showDeleteConfirmation
+    >
+</message-modal>

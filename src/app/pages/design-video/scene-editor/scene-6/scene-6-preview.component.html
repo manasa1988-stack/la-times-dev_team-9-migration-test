@@ -1,0 +1,177 @@
+<div class="loading-container" *ngIf="loading">
+    <div class="loading">
+        <mat-progress-spinner mode="indeterminate" [diameter]="30" class="align-middle d-inline-block"></mat-progress-spinner>
+        <p>Creating previews</p>
+    </div>
+</div>
+
+<ngu-carousel
+    #slides
+    class="slide-ad"
+    (onMove)="onmoveFn($event)"
+    [inputs]="carouselTileTwo">
+    <ngu-tile NguCarouselItem class="--tile">
+      <div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer1>
+        <div class="preview-frame" [style.transform]="previewTransform" #source1>
+            <div class="beige-block"></div>
+            <div class="red-block"></div>
+            <div class="black-block"></div>
+            <div class="image-block"
+                [ngStyle]="{'background-image': 'url(' + media1 + ')'}">
+            </div>
+            <div class="caption-block left" *ngIf="name1">{{name1}}</div>
+            <div class="text-block">
+                <div class="text" [ngStyle]="{'display': text1 ? 'block' : 'none'}" #descriptionBlock>
+                    <div #descriptionBlockContent>{{text1}}</div>
+                </div>
+                <div class="text-decoration"></div>
+            </div>
+        </div>
+      </div>
+    </ngu-tile>
+
+    <ngu-tile NguCarouselItem class="--tile">
+      <div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer2>
+          <div class="preview-frame" [style.transform]="previewTransform" #source2>
+              <div class="beige-block"></div>
+              <div class="red-block"></div>
+              <div class="black-block"></div>
+              <div class="image-block"
+                  [ngStyle]="{'background-image': 'url(' + media2 + ')'}">
+              </div>
+              <div class="caption-block right" *ngIf="name2">{{name2}}</div>
+              <div class="text-block">
+                  <div class="text" *ngIf="text1">{{text1}}</div>
+                  <div class="text-decoration"></div>
+              </div>
+          </div>
+      </div>
+    </ngu-tile>
+
+    <ngu-tile NguCarouselItem class="--tile" [ngStyle]="{'display': media3 ? 'block' : 'none'}">
+      <div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer3>
+          <div class="preview-frame" [style.transform]="previewTransform" #source3>
+              <div class="beige-block"></div>
+              <div class="red-block"></div>
+              <div class="black-block"></div>
+              <div class="image-block"
+                  [ngStyle]="{'background-image': 'url(' + media3 + ')'}">
+              </div>
+              <div class="caption-block left" *ngIf="name3">{{name3}}</div>
+              <div class="text-block">
+                  <div class="text" *ngIf="text1">{{text1}}</div>
+                  <div class="text-decoration"></div>
+              </div>
+          </div>
+      </div>
+    </ngu-tile>
+
+    <ngu-tile NguCarouselItem class="--tile" [ngStyle]="{'display': media4 ? 'block' : 'none'}">
+      <div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer4>
+          <div class="preview-frame" [style.transform]="previewTransform" #source4>
+              <div class="beige-block"></div>
+              <div class="red-block"></div>
+              <div class="black-block"></div>
+              <div class="image-block"
+                  [ngStyle]="{'background-image': 'url(' + media4 + ')'}">
+              </div>
+              <div class="caption-block right" *ngIf="name4">{{name4}}</div>
+              <div class="text-block">
+                  <div class="text" *ngIf="text1">{{text1}}</div>
+                  <div class="text-decoration"></div>
+              </div>
+          </div>
+      </div>
+    </ngu-tile>
+
+    <ngu-tile NguCarouselItem class="--tile" [ngStyle]="{'display': media5 ? 'block' : 'none'}">
+      <div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer5>
+          <div class="preview-frame" [style.transform]="previewTransform" #source5>
+              <div class="beige-block"></div>
+              <div class="red-block"></div>
+              <div class="black-block"></div>
+              <div class="image-block"
+                  [ngStyle]="{'background-image': 'url(' + media5 + ')'}">
+              </div>
+              <div class="caption-block left" *ngIf="name5">{{name5}}</div>
+              <div class="text-block">
+                  <div class="text" *ngIf="text1">{{text1}}</div>
+                  <div class="text-decoration"></div>
+              </div>
+          </div>
+      </div>
+    </ngu-tile>
+
+    <ngu-tile NguCarouselItem class="--tile" [ngStyle]="{'display': media6 ? 'block' : 'none'}">
+      <div class="preview-container" [ngStyle]="{'display': !loading ? 'flex' : 'none'}" #previewContainer6>
+          <div class="preview-frame" [style.transform]="previewTransform" #source6>
+              <div class="beige-block"></div>
+              <div class="red-block"></div>
+              <div class="black-block"></div>
+              <div class="image-block"
+                  [ngStyle]="{'background-image': 'url(' + media6 + ')'}">
+              </div>
+              <div class="caption-block right" *ngIf="name6">{{name6}}</div>
+              <div class="text-block">
+                  <div class="text" *ngIf="text1">{{text1}}</div>
+                  <div class="text-decoration"></div>
+              </div>
+          </div>
+      </div>
+    </ngu-tile>
+
+    <button NguCarouselPrev class="leftRs">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <button NguCarouselNext class="rightRs">
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </button>
+
+    <ul NguCarouselPoint class="controls mt-4" *ngIf="!loading">
+        <li (click)="carousel.moveTo(0)" class="slider-dot">
+            <i
+                class="fa fa-circle"
+                aria-hidden="true"
+                [ngClass]="{'active': currentSlide === 0}">
+            </i>
+        </li>
+        <li (click)="carousel.moveTo(1)" class="slider-dot">
+            <i
+                class="fa fa-circle"
+                aria-hidden="true"
+                [ngClass]="{'active': currentSlide === 1}">
+            </i>
+        </li>
+        <li (click)="carousel.moveTo(2)" class="slider-dot" *ngIf="media3">
+            <i
+                class="fa fa-circle"
+                aria-hidden="true"
+                [ngClass]="{'active': currentSlide === 2}">
+            </i>
+        </li>
+
+        <li (click)="carousel.moveTo(3)" class="slider-dot" *ngIf="media4">
+            <i
+                class="fa fa-circle"
+                aria-hidden="true"
+                [ngClass]="{'active': currentSlide === 3}">
+            </i>
+        </li>
+        <li (click)="carousel.moveTo(4)" class="slider-dot" *ngIf="media5">
+            <i
+                class="fa fa-circle"
+                aria-hidden="true"
+                [ngClass]="{'active': currentSlide === 4}">
+            </i>
+        </li>
+
+        <li (click)="carousel.moveTo(5)" class="slider-dot" *ngIf="media6">
+            <i
+                class="fa fa-circle"
+                aria-hidden="true"
+                [ngClass]="{'active': currentSlide === 5}">
+            </i>
+        </li>
+    </ul>
+
+</ngu-carousel>

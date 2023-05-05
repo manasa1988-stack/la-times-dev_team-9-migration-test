@@ -1,0 +1,31 @@
+﻿<h1 class="text-uppercase">Order details - {{environmentName}}</h1>
+<div class="">
+  <div class="col-12">
+    <form [formGroup]="orderDetailsForm">
+
+      <mat-form-field>
+        <input matInput type="number" placeholder="Order number" formControlName="orderId">
+      </mat-form-field>
+      <mat-checkbox formControlName="isAdit">Is Adit order</mat-checkbox>
+
+    </form>
+  </div>
+  <div class="col-12">
+    <button (click)="getOrderSummary()" color="primary" mat-raised-button class="text-uppercase">SEARCH</button>
+  </div>
+</div>
+<div class="row m-0 py-5">
+  <div *ngIf="!isDataReady; else dataReady">
+    <mat-spinner></mat-spinner>
+  </div>
+  <ng-template #dataReady>
+    <div *ngIf="displayError; else orderSummary">
+      <error-alert></error-alert>
+    </div>
+    <ng-template #orderSummary>
+      <div *ngIf="order?.AdSSId > null" class="my-3 col-12">
+        <order-summary [order]="order" (notify)="reload($event)"></order-summary>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

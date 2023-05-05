@@ -1,0 +1,14 @@
+<mat-accordion>
+        <mat-expansion-panel [expanded]="true " class="custom-panel mb-4 border ">
+            <mat-expansion-panel-header class="bg-light pl-5 ">
+                <mat-panel-title>
+                    Select ad size
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row col-12 col-md-12 ">
+                <carousel class="slider-wrapper selectad-size " [order]="order " [currentOrderItem]="currentOrderItem
+            " [itemsList]="adSizeList "
+                    [type]=" 'layout' " (passEvent)="onNotify($event) "></carousel>
+            </div>
+        </mat-expansion-panel>
+</mat-accordion>

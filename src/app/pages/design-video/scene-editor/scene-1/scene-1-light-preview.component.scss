@@ -1,0 +1,106 @@
+.preview-container {
+    display: block;
+    overflow: hidden;
+    width: 0;
+    height: 0;
+    padding-bottom: 0;
+}
+
+.preview-frame {
+
+
+    .red-block {
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 271px;
+        height: 460px;
+        z-index: 3;
+        background-color: #dc0037;
+    }
+
+    .image-block {
+        display: block;
+        top: 70px;
+        left: 140px;
+        width: 556px;
+        height: 556px;
+        position: absolute;
+        z-index: 3;
+        overflow: hidden;
+        background-color: black;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .age {
+        position: absolute;
+        color: #e8e8e8;
+        top: 480px;
+        left: 95px;
+        display: block;
+        font-size: 60px;
+        line-height: 80px;
+        font-family: 'FrankRuhlLibre-Medium';
+        z-index: 4;
+        border-bottom: solid;
+        border-bottom-width: 8px;
+        border-bottom-color: #ff0047;
+    }
+
+    .text-block {
+        position: absolute;
+        height: auto;
+        top: 75px;
+        left: 740px;
+        width: 375px;
+        position: relative;
+        z-index: 2;
+
+        .name-block {
+            color: #ff0049;
+            font-size: 45px;
+            line-height: 60px;
+            font-family: 'FrankRuhlLibre-Medium';
+            width: auto;
+            margin-bottom: 15px;
+            max-width: 100%;
+            max-height: 240px;
+            overflow: hidden;
+        }
+
+        .dates-block {
+            color: #e8e8e8;
+            font-size: 30px;
+            line-height: 40px;
+            width: 100%;
+            font-family: 'FrankRuhlLibre-Medium';
+            max-height: 80px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .desc-block {
+            box-shadow: #ff0040;
+            padding: 18px;
+            background-color: white;
+            width: 100%;
+            -webkit-box-shadow: 20px 20px 0px 0px rgba(255,0,64,1);
+            -moz-box-shadow: 20px 20px 0px 0px rgba(255,0,64,1);
+            box-shadow: 20px 20px 0px 0px rgba(255,0,64,1);
+
+            .text {
+                color: #050505;
+                font-size: 20px;
+                line-height: 31px;
+                font-weight: normal;
+                max-height: 155px;
+                width: 310px;
+                overflow: hidden;
+                font-family: 'FiraSans-Medium';
+            }
+        }
+
+    }
+}

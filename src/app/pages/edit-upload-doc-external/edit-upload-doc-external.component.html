@@ -1,0 +1,35 @@
+<div>
+    <div class="row py-3" *ngIf="!isDocumentsLoaded">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="row" *ngIf="isDocumentsLoaded">
+        <div class="col-md-12">
+            Upload document for ad approval process.
+        </div>
+        <div class="mb-2 col-12 col-sm-2 col-md-2 col-lg-2 btn-file cursor-pointer">
+            <label class="btn-block" class="custom-file-upload" for="file-upload">
+                <mat-icon>file_upload</mat-icon>
+                <span>UPLOAD</span>
+            </label>
+            <input title="Upload" type="file" (change)="uploadLegalDoc($event)" id="file-upload" class="d-none" />
+        </div>
+        <div class="col-md-12">
+            You can upload a .JPG,.JPEG,.PDF,.DOC,.DOCX file.Maximum permitted file size is 10.0 MB.
+        </div>
+        <div class="col-md-12" *ngIf="showUploadDocErrorMessage">
+            <mat-error *ngFor="let err of uploadDocErrorMessage">{{err}}</mat-error>
+        </div>
+        <div class="col-md-12" *ngIf="uploadDocExternal?.LstApiUploadLegalDoc?.length > 0">
+            <hr>
+        </div>
+        <div class="row uploaddoclist mx-2 w-100" *ngIf="uploadDocExternal?.LstApiUploadLegalDoc?.length > 0">
+            <div class="col-12 col-md-4 document_list_icon text-wrap" *ngFor="let doc of uploadDocExternal?.LstApiUploadLegalDoc">
+                <a class="v-align-top" [href]="'/api/configure/DownloadLegalFile/' + doc.OrderId +'/' + doc.DocumentName">{{doc.DocumentName}}</a>
+                <button mat-icon-button auto-test="removeLegalDoc" class="v-align-top" (click)="removeLegalDoc(doc)">
+                    <i class="material-icons v-align-top">delete</i>
+                </button>
+
+            </div>
+        </div>    
+    </div>
+</div>

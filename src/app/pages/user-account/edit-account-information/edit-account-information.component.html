@@ -1,0 +1,132 @@
+﻿<div class="modal-header border-dark m-3 p-0 px-1 border-medium">
+  <h4 class="modal-title text-uppercase">Edit Account Information</h4>
+  <button mat-icon-button type="button" class="p-0 m-0 close" aria-label="Close" auto-test="closeAccountInformation" (click)="onClose()" [disabled]="isFormDisabled">
+    <mat-icon aria-label="Close">close</mat-icon>
+  </button>
+</div>
+<div class="modal-body px-4 pt-0">
+  <form [formGroup]="accountInformationForm" auto-test="submitForm" (ngSubmit)="submitForm(accountInformationForm.value)" novalidate>
+    <fieldset [disabled]="isFormDisabled">
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="First Name" type="text" formControlName="firstName">
+            <mat-error *ngIf="accountInformationForm.controls.firstName.hasError('required')">
+              {{firstNameRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.firstName.hasError('maxlength') && !accountInformationForm.controls.firstName.hasError('required')">
+              {{firstNameMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.firstName.hasError('invalidCharacterString') && !accountInformationForm.controls.firstName.hasError('maxlength') && !accountInformationForm.controls.firstName.hasError('required')">
+              {{invalidFirstNameMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Last Name" type="text" formControlName="lastName">
+            <mat-error *ngIf="accountInformationForm.controls.lastName.hasError('required')">
+              {{lastNameRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.lastName.hasError('maxlength') && !accountInformationForm.controls.lastName.hasError('required')">
+              {{lastNameMaxLengthMessage}}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.lastName.hasError('invalidCharacterString') && !accountInformationForm.controls.lastName.hasError('maxlength') && !accountInformationForm.controls.lastName.hasError('required')">
+              {{invalidLastNameMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Phone Number" type="tel" formControlName="phoneNumber" maxlength='{{phoneNumberMaxLength}}'>
+            <mat-error *ngIf="accountInformationForm.controls.phoneNumber.hasError('required')">
+              {{phoneNumberRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="(accountInformationForm.controls.phoneNumber.hasError('maxlength') || accountInformationForm.controls.phoneNumber.hasError('minlength')) && !accountInformationForm.controls.phoneNumber.hasError('required')">
+              {{phoneNumberInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Street Address" type="text" formControlName="streetAddress">
+            <mat-error *ngIf="accountInformationForm.controls.streetAddress.hasError('maxlength')">
+              {{addressMaxLengthMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-xl-6 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="City" type="text" formControlName="city">
+            <mat-error *ngIf="accountInformationForm.controls.city.hasError('required')">
+              {{ cityRequiredMessage }}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.city.hasError('maxlength') && !accountInformationForm.controls.city.hasError('required')">
+              {{ cityMaxLengthMessage }}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.city.hasError('invalidCharacterString') && !accountInformationForm.controls.city.hasError('maxlength') && !accountInformationForm.controls.city.hasError('required')">
+              {{ invalidCityMessage }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="col-12 col-xl-3 mb-2 mt-n8">
+          <small class="state text-muted">State</small>
+          <small class="state required-color">*</small>
+          <select placeholder="State" formControlName="state" class="custom-select-box mt-n5 rounded-0 form-control required">
+              <option value="" disabled>State</option>
+            <option *ngFor="let state of states" [value]="state.Key">{{ state.Value }}</option>
+          </select>
+          <div *ngIf="accountInformationForm.controls.state.touched && accountInformationForm.controls.state.hasError('required')">
+            <small class="required-color">{{stateRequiredMessage}}</small>
+          </div>
+        </div>
+        <div class="col-12 col-xl-3 mb-2">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Zip Code" formControlName="zipCode">
+            <mat-error *ngIf="accountInformationForm.controls.zipCode.hasError('required')">
+              {{zipCodeRequiredMessage}}
+            </mat-error>
+            <mat-error *ngIf="accountInformationForm.controls.zipCode.hasError('invalidZipcode') && !accountInformationForm.controls.zipCode.hasError('required')">
+              {{zipCodeInvalidMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" *ngIf="userDetails?.IsBusinessUser">
+        <div class="col-12 col-xl-6 mb-2 mt-3">
+          <mat-form-field class="w-100 required">
+            <input matInput placeholder="Business Name" type="text" formControlName="businessName">
+            <mat-error *ngIf="accountInformationForm.controls.businessName.hasError('required')">
+              {{businessNameRequiredMessage}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-xl-6 mb-2">
+          <small class="state text-muted">Business Type</small>
+          <small class="state required-color">*</small>
+          <select placeholder="Business Type" formControlName="businessType" class="custom-select-box rounded-0 form-control required">
+            <option value="" disabled>Business Type</option>
+            <option *ngFor="let businessType of businessTypes" [value]="businessType.SubcategoryCode">
+              {{ businessType.SubcategoryName }}</option>
+          </select>
+          <div *ngIf="accountInformationForm.controls.businessType.touched && accountInformationForm.controls.businessType.hasError('required')">
+            <small class="required-color">{{businessTypeRequiredMessage}}</small>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="!serverResponse?.IsSuccess">
+        <error-message [serverResponse]="serverResponse"></error-message>
+      </div>
+      <div class="modal-footer border-0 d-flex justify-content-start pl-0">
+        <button mat-raised-button color="primary" [disabled]="isFormDisabled" auto-test="saveAccountInformation" class="text-uppercase"
+          type="submit" value="Submit Form">Save</button>
+      </div>
+    </fieldset>
+  </form>
+</div>

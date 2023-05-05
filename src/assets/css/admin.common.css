@@ -1,0 +1,113 @@
+/*** Admin ***/
+.admin-portal-tabs mat-tab-group .mat-tab-body-wrapper .mat-tab-body-content .row-hover:hover div.col-4,
+.admin-portal-tabs mat-tab-group .mat-tab-body-wrapper .mat-tab-body-content .classified-tab-view .row-hover:hover div.col-4,
+.row-hover:hover div.col-4, .row-hover:hover div.col-3, .row-hover:hover div.col-5{
+    background-color:#fff9ce!important;
+    cursor: pointer;
+}
+.classified-tab-view .description{
+    word-wrap: break-word;
+}
+.flash-icon{
+    width:24px;
+    display: inline-block;
+} 
+.flash-icon i, .header-flash-icon{
+        font-size: 17px;
+        position: relative;
+        top: 5px;
+} 
+.regression-table .flash-icon{
+    float: left;
+}
+.adminSettings td:first-child {
+    width: 25%;
+}
+.adminSettings td:nth-child(2) textarea, .adminSettings ngb-alert > div.alert {
+    width: 87%;
+}
+.adminSettings td:nth-child(3) {
+    width: 10%;
+}
+
+.clearcache-btn{
+    position: absolute!important;
+    right: 9px;
+    top: 7px;
+} 
+.theme-settings-table table th, .theme-settings-table table td{
+    padding:10px;
+}
+.linkA{
+    color: #007bff!important;
+    cursor: pointer;
+}
+.publication-col span{
+    display: block;
+    word-wrap: break-word;
+}
+.order-queue td{
+    width: 20%;
+}
+.order-queue td:nth-child(4){
+    width: 10%;
+}
+
+.orderid-input{
+    width: 25%;
+}
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+.market-settings .mat-card {
+    cursor: pointer;
+}
+.mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled) {
+    opacity: 1;
+  } 
+  .status_indicator i{
+    position: relative;
+    top: 7px;
+}
+.timeZone {
+    z-index: 1050;
+}
+.orderQ-spinner .mat-progress-spinner {
+    left: 32vw;
+}
+
+.custom-scroll {
+    overflow-y: auto;
+    height: 55vh;
+}
+
+.margin-top-neg10 {
+    margin-top: -10px;
+}
+
+.digital-settings .mat-expansion-indicator::after {
+    color: coral;
+}
+
+.border-dotted {
+    border: black 1px dotted;
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .processorders-panel.sticky-top.sticky-me{
+     /* width:80.2%; /*denny's change*/
+      width:100%; /*chinmay's change*/
+      position: fixed!important;
+      left:0px;
+    }
+  }
+  /*----MS Edge Browser CSS Start----*/
+  @supports (-ms-ime-align:auto) {
+    .processorders-panel.sticky-top{
+      width:80.2%;
+      position: fixed!important;
+    }
+  }

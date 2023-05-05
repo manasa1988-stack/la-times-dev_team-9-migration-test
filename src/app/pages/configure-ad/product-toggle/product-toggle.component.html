@@ -1,0 +1,18 @@
+<div class="row prev-next-warpper">
+  <div class="col-md-4 pr-0" *ngIf="isOnConfigure">
+    <a class="prev help-icon" *ngIf="orderNumber > 0" (click)="clickPrevious()">
+      <u>PREVIOUS PRODUCT</u>
+    </a>
+  </div>
+  <div class="col-md-4 d-none d-md-block text-center">
+    {{orderNumber + 1}} of {{ order.OrderItems.length }}
+  </div>
+  <div class="col-md-4 pl-0 text-right" *ngIf="isOnConfigure">
+    <a class="next help-icon" *ngIf="orderNumber < (order.OrderItems.length - 1)" (click)="clickNext()">
+      <u>NEXT PRODUCT</u>
+    </a>
+  </div>
+  <div class="col-12 d-md-none text-center">
+    {{orderNumber + 1}} of {{ order.OrderItems.length }}
+  </div>
+</div>

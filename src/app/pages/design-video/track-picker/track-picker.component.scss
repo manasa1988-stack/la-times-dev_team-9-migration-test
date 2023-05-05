@@ -1,0 +1,62 @@
+.--scene-card {
+    width: 14.35rem;
+    display: inline-flex;
+    margin: 0.5rem;
+}
+
+.card-body {
+    position: relative;
+}
+
+.scene-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 65vh;
+    overflow-y: auto;
+}
+
+.card-body::after {
+    content: '';
+    float: left;
+    padding-top: 60%;
+}
+
+.card-body-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+img {
+    width: 100%;
+}
+
+.card-footer {
+    text-align: left;
+}
+
+::ng-depp .card {
+    border-width: 0.125rem;
+}
+
+::ng-deep .card-footer {
+    border: none;
+    background-color: transparent;
+}
+
+.--align-right {
+    text-align: right;
+}
+
+button {
+    width: 10rem;
+    height: 3rem;
+}
+
+.row {
+    padding: 0;
+    margin: 0;
+}

@@ -1,0 +1,18 @@
+<div *ngIf="!isDataReady; else dataReady">
+  <mat-spinner></mat-spinner>
+</div>
+<ng-template #dataReady>
+  <div *ngIf="(customerSupport === null || customerSupport === undefined); else showCustomerSupp">
+    <error-alert></error-alert>
+  </div>
+  <ng-template #showCustomerSupp>
+    <p class="mb-2 mt-0" *ngIf="customerSupport?.Phone">
+      <mat-icon class="float-left mr-1">call</mat-icon>
+      <strong>{{customerSupport?.Phone}}</strong>
+    </p>
+    <p class="mb-0" *ngIf="customerSupport?.CustomerSupportEmail">
+      <span class="mr-1">&#64;</span>
+      <a href="mailto:{{customerSupport?.CustomerSupportEmail}}">{{customerSupport?.CustomerSupportEmail}}</a>
+    </p>
+  </ng-template>
+</ng-template>

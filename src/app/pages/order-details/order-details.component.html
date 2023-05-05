@@ -1,0 +1,56 @@
+﻿<div>
+  <div class="row mb-2">
+    <div class="col-md-12">
+      <h4 class="d-inline-block text-uppercase theme b-b-4 pb-2 font-weight-bold">Order Details</h4>
+      <div *ngIf="orderId || order?.IsAdItInReadOnlyMode" class="d-inline-block">
+        <i class="fa fa-caret-right mx-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+        <h4 class="text-uppercase theme pb-2 px-1 d-none d-md-inline-block">Edit Order</h4>
+        <i class="fa fa-caret-right mx-2 d-none d-md-inline-block"  aria-hidden="true"></i>
+        <h4 class=" text-uppercase theme pb-2 px-1 d-none d-md-inline-block">Confirmation</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-1" *ngIf="order?.IsAdItInReadOnlyMode">
+    <div class="col-md-12">
+      <p class="text-white ng-danger">
+        <mat-icon>warning</mat-icon> Please note, because of scheduled system updates, your profile and orders are unable to be edited
+        at this time. Also, newly placed orders may have a 24-48 hour delay before appearing back later or contact us at
+        1-800-528-4637, ext. 73445 or {{customerSupportEmail}} with any requests.</p>
+    </div>
+  </div>
+
+  <div id="print-section">
+
+    <div *ngIf="errorMessage && errorMessage != ''; else showOrder" class="my-3">
+      <error-alert [errorMessage]="errorMessage"></error-alert>
+    </div>
+
+    <ng-template #showOrder>
+      <product-summary *ngIf="isOrderLoaded; else showLoading" 
+                        [adssId]="adssId" 
+                        [orderId]="orderId" 
+                        [order]="order" 
+                        [allowUpdates]="true" 
+                        [showAttributes]="true" 
+                        [showOrderNumberHeader]="true" 
+                        [showPriceSummary]="true"
+                        [upsellProcessed]="upsellProcessed"
+                        (getValues)="reload($event)"></product-summary>
+      <ng-template #showLoading>
+        <mat-spinner class="row my-5"></mat-spinner>
+      </ng-template>
+    </ng-template>
+
+    <div *ngIf="marketSettings" class="row my-4">
+      <div class="col">
+        <strong class="d-block">Customer care information</strong>
+        <div class="small">
+          Need assistance? Contact our Customer support team at {{marketSettings.Phone}} {{marketSettings.HoursOfOperation}} or e-mail
+          us at
+          <a href="mailto:{{marketSettings.CustomerSupportEmail}}">{{marketSettings.CustomerSupportEmail}}</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
